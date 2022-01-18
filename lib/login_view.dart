@@ -32,6 +32,22 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
           children: [
             Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/FishingBoatSilhuette.jpg",
+                    width: 200,
+                  ),
+                  const Text(
+                    "Fishing. inc.",
+                    style: TextStyle(
+                        color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: Form(
                   key: _formKey,
