@@ -104,20 +104,18 @@ class _LoginViewState extends State<LoginView> {
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: Column(children: <Widget>[
-                          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                            ButtonTheme(
-                                minWidth: 250.0,
-                                height: 100.0,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                    ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState!.validate()) {}
-                                    },
-                                    child: const Text('Sign In'))),
-                          ]),
+                          ButtonTheme(
+                              minWidth: 250.0,
+                              height: 100.0,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {}
+                                  },
+                                  child: const Text('Sign In'))),
                           TextButton(
                               onPressed: () {
                                 Navigator.push(
