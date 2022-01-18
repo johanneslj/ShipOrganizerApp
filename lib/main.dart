@@ -40,17 +40,20 @@ TextTheme textTheme = const TextTheme(
   headline3: TextStyle(color: Color(0xff13293d)),
   headline4: TextStyle(color: Color(0xff13293d)),
   headline5: TextStyle(color: Color(0xff13293d)),
-  headline6: TextStyle(color: Color(0xff13293d)),
+  headline6: TextStyle(color: Color(0xffe8f1f2)),
   subtitle1: TextStyle(color: Color(0xff13293d)),
   subtitle2: TextStyle(color: Color(0xff13293d)),
   bodyText1: TextStyle(color: Color(0xff13293d)),
   bodyText2: TextStyle(color: Color(0xff13293d)),
   caption: TextStyle(color: Color(0xff13293d)),
-  button: TextStyle(color: Color(0xff13293d)),
+  button: TextStyle(color: Color(0xffe8f1f2)),
   overline: TextStyle(color: Color(0xff13293d)),
 );
 
-AppBarTheme appBarTheme = const AppBarTheme(color: Color(0xff13293d));
+AppBarTheme appBarTheme = const AppBarTheme(
+    color: Color(0xff13293d),
+    titleTextStyle: TextStyle(color: Color(0xffe8f1f2), fontWeight: FontWeight.bold),
+);
 ButtonThemeData buttonThemeData = const ButtonThemeData(buttonColor: Color(0xff1b98e0));
 
 class MyApp extends StatelessWidget {
