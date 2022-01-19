@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +64,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localeListResolutionCallback: (locales, supportedLocales) {
+
+          print('device locales=$locales supported locales=$supportedLocales');
+
+          for (Locale locale in locales!) {
+            // if device language is supported by the app,
+            // return it to set it as current app language
+            if (supportedLocales.contains(locale)) {
+              return locale;
+            }
+          }
+          return const Locale("nb", "");
+        },
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("en", "US"),
+        Locale("nb", "NO")
+      ],
       title: 'Ship Organizer',
       theme: theme,
       routes: {
@@ -101,16 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            Text(widget.title),
+            Text(AppLocalizations.of(context)!.helloWorld),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
