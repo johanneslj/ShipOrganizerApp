@@ -31,9 +31,7 @@ ColorScheme colorScheme = const ColorScheme(
     onSurface: Color(0xff13293d),
     onBackground: Color(0xff13293d),
     onError: Color(0xfff2e8e8),
-    brightness: Brightness.dark
-);
-
+    brightness: Brightness.dark);
 
 TextTheme textTheme = const TextTheme(
   headline1: TextStyle(color: Color(0xff13293d)),
@@ -52,8 +50,8 @@ TextTheme textTheme = const TextTheme(
 );
 
 AppBarTheme appBarTheme = const AppBarTheme(
-    color: Color(0xff13293d),
-    titleTextStyle: TextStyle(color: Color(0xffe8f1f2), fontWeight: FontWeight.bold),
+  color: Color(0xff13293d),
+  titleTextStyle: TextStyle(color: Color(0xffe8f1f2), fontWeight: FontWeight.bold),
 );
 ButtonThemeData buttonThemeData = const ButtonThemeData(buttonColor: Color(0xff1b98e0));
 
@@ -64,25 +62,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        localeListResolutionCallback: (locales, supportedLocales) {
-
-          print('device locales=$locales supported locales=$supportedLocales');
-
-          for (Locale locale in locales!) {
-            // if device language is supported by the app,
-            // return it to set it as current app language
-            if (supportedLocales.contains(locale)) {
-              return locale;
-            }
-          }
-          return const Locale("nb", "");
-        },
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-      ],
       supportedLocales: const [
         Locale("en", "US"),
-        Locale("nb", "NO")
+        Locale("nb", "NO")],
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (Locale locale in locales!) {
+          // if device language is supported by the app,
+          // return it to set it as current app language
+          if (supportedLocales.contains(locale)) {
+            return locale;
+          }
+        }
+        // If no device language is supported by the app,
+        // Return Norwegian bokmål as the default language in the app
+        return const Locale("nb", "NO");
+      },
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,
@@ -115,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
-          ));
+              ));
     });
   }
 
