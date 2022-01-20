@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 
 import 'config/theme_config.dart';
 
@@ -81,13 +82,35 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            TextButton(
+              child: Text("Login view"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+                        ))
+              },
+            ),
+            TextButton(
+              child: Text("Select department"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (SelectDepartmentView()) //ForgotPasswordPage())),
+                    ))
+              },
+            ),
+            TextButton(
+              child: Text("Set new password"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+                    ))
+              },
+            )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
