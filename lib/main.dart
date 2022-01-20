@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config/theme_config.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -15,6 +15,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: const [
+        Locale("en", "US"),
+        Locale("nb", "NO")],
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (Locale locale in locales!) {
+          // if device language is supported by the app,
+          // return it to set it as current app language
+          if (supportedLocales.contains(locale)) {
+            return locale;
+          }
+        }
+        // If no device language is supported by the app,
+        // Return Norwegian bokmål as the default language in the app
+        return const Locale("nb", "NO");
+      },
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+      ],
       title: 'Ship Organizer',
       theme: theme,
       routes: {
@@ -46,23 +64,19 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
-          ));
+              ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            Text(widget.title),
+            Text(AppLocalizations.of(context)!.helloWorld),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
