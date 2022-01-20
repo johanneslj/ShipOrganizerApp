@@ -13,6 +13,7 @@ ThemeData theme = ThemeData(
   textButtonTheme: textButtonTheme,
   textTheme: textTheme,
   inputDecorationTheme: inputDecorationTheme,
+  iconTheme: iconTheme,
 );
 
 /*
@@ -78,8 +79,8 @@ TextTheme textTheme = TextTheme(
   headline6: TextStyle(color: colorScheme.onPrimary),
   subtitle1: TextStyle(color: colorScheme.primary),
   subtitle2: TextStyle(color: colorScheme.primary),
-  bodyText1: TextStyle(color: colorScheme.primary),
-  bodyText2: TextStyle(color: colorScheme.primary),
+  bodyText1: TextStyle(color: colorScheme.primary, fontSize: 25, fontWeight: FontWeight.normal),
+  bodyText2: TextStyle(color: colorScheme.primary, fontSize: 20),
   caption: TextStyle(color: colorScheme.primary),
   button: TextStyle(color: colorScheme.onPrimary),
   overline: TextStyle(color: colorScheme.primary),
@@ -88,5 +89,10 @@ TextTheme textTheme = TextTheme(
 TextStyle textStyle = TextStyle(
   inherit: true,
   fontSize: 20.0,
+);
+
+IconThemeData iconTheme = IconThemeData(
+  color: colorScheme.primary,
+  size: 30,
 );
 

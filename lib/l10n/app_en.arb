@@ -8,5 +8,6 @@
   "sendCode": "Send code",
   "verificationCode": "Verification code",
   "invalidCode" : "Invalid code",
-  "errorHappened": "Something bad happened... Please close the app and try again."
+  "errorHappened": "Something bad happened... Please close the app and try again.",
+  "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view"
 }
