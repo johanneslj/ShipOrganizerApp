@@ -27,7 +27,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xff13293D),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         body: Center(
             child: SingleChildScrollView(
                 child: Column(
@@ -57,23 +57,15 @@ class _LoginViewState extends State<LoginView> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Email",
-                            style: TextStyle(color: Color(0xffE8F1F2), fontSize: 20)),
+                        Text("Email",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary, fontSize: 20)),
                         TextFormField(
                           validator: (val) =>
                               val!.isEmpty || !val.contains("@") ? "Enter a valid email" : null,
                           // Username text field
                           controller: emailController,
-                          decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xffE8F1F2),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  style: BorderStyle.none,
-                                ),
-                              ),
-                              hintText: 'Email'),
+                          decoration: const InputDecoration(hintText: 'Email'),
                         ),
                       ],
                     ),
@@ -81,22 +73,13 @@ class _LoginViewState extends State<LoginView> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Password",
-                            style: TextStyle(color: Color(0xffE8F1F2), fontSize: 20)),
+                        Text("Password",
+                            style: TextStyle(
+                                fontSize: 20, color: Theme.of(context).colorScheme.onPrimary)),
                         TextFormField(
                           // Password text field
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                            filled: true,
-                            fillColor: Color(0xffE8F1F2),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 2,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                            hintText: 'Password',
-                          ),
+                          decoration: const InputDecoration(hintText: 'Password'),
                           obscureText: true,
                         ),
                       ],
@@ -108,10 +91,6 @@ class _LoginViewState extends State<LoginView> {
                               minWidth: 250.0,
                               height: 100.0,
                               child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  ),
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
                                       Navigator.push(
@@ -122,8 +101,7 @@ class _LoginViewState extends State<LoginView> {
                                               ));
                                     }
                                   },
-                                  child: const Text('Sign In', style: TextStyle(
-                                      color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),))),
+                                  child: const Text('Sign In'))),
                           TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -135,7 +113,6 @@ class _LoginViewState extends State<LoginView> {
                               },
                               child: const Text('Forgot Password?',
                                   style: TextStyle(
-                                    color: Color(0xff1B98E0),
                                     decoration: TextDecoration.underline,
                                   ))),
                         ]))
