@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../main.dart';
 
+/// A class which enables an admin to create a new user
+/// An admin enters the new users full name, email and what departments
+/// they should have access too
+/// When the "create user" button is pressed the backend handles the call
+/// and sends a simple email to the new user who can then create a password in the app
+/// and start using the app
 class CreateUser extends StatefulWidget {
   const CreateUser({Key? key}) : super(key: key);
 
@@ -24,9 +30,10 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    String dropdownValue = 'One';
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 150),
         child: Column(children: [
           Form(
               key: _formKey,
@@ -35,15 +42,16 @@ class _CreateUserState extends State<CreateUser> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Email",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary, fontSize: 20)),
+                    Text(AppLocalizations.of(context)!.email,
+                        style:
+                            TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 20)),
                     TextFormField(
-                      validator: (val) =>
-                          val!.isEmpty || !val.contains("@") ? AppLocalizations.of(context)!.enterValidEmail : null,
+                      validator: (val) => val!.isEmpty || !val.contains("@")
+                          ? AppLocalizations.of(context)!.enterValidEmail
+                          : null,
                       // Email Address text field
                       controller: emailController,
-                      decoration: const InputDecoration(hintText: 'Email'),
+                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
                     ),
                   ],
                 ),
@@ -52,13 +60,36 @@ class _CreateUserState extends State<CreateUser> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text((AppLocalizations.of(context)!.fullName),
-                        style: TextStyle(
-                            fontSize: 20, color: Theme.of(context).colorScheme.primary)),
+                        style:
+                            TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary)),
                     TextFormField(
                       // Full Name text field
                       controller: fullNameController,
                       decoration: InputDecoration(hintText: AppLocalizations.of(context)!.fullName),
                     ),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      value: dropdownValue,
+                      style: Theme.of(context).textTheme.headline5,
+                      icon: const Icon(Icons.arrow_drop_down),
+                      elevation: 16,
+                      underline: Container(
+                        height: 2,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      },
+                      items: <String>['One', 'Two', 'Free', 'Four']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: Theme.of(context).textTheme.headline5,),
+                        );
+                      }).toList(),
+                    )
                   ],
                 ),
                 Padding(
@@ -78,7 +109,7 @@ class _CreateUserState extends State<CreateUser> {
                                           ));
                                 }
                               },
-                              child: const Text('Create User'))),
+                              child: Text(AppLocalizations.of(context)!.createUser))),
                     ]))
               ])),
         ]),

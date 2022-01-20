@@ -1,21 +1,13 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
+  "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
+  "confirm": "confirm",
+  "createUser": "Create User",
   "email": "E-mail:",
   "enterValidEmail": "Enter a valid e-mail",
-  "sendCode": "Send code",
-  "verificationCode": "Verification code",
-  "invalidCode" : "Invalid code",
   "errorHappened": "Something bad happened... Please close the app and try again.",
-  "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
-  "confirm": "confirm"
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    },
-    "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
-    "enterValidEmail": "You have to enter a valid e-mail",
-    "fullName": "Full Name"
+  "fullName": "Full Name",
+  "helloWorld": "Hello World!",
+  "invalidCode": "Invalid code",
+  "sendCode": "Send code",
+  "verificationCode": "Verification code"
 }

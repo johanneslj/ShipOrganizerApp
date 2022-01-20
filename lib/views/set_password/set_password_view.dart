@@ -127,7 +127,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
-        Text(AppLocalizations.of(context)!.enterEmail,
+        Text(AppLocalizations.of(context)!.email,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
           validator: (value) => value!.isEmpty || !value.contains("@")
@@ -135,9 +135,9 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               : null,
           // Username text field
           controller: emailController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterEmail),
+          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
         ),
-        Text(AppLocalizations.of(context)!.enterEmail,
+        Text(AppLocalizations.of(context)!.email,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
           validator: (value) => value!.isEmpty || !value.contains("@")
@@ -145,7 +145,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               : null,
           // Username text field
           controller: emailController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.enterEmail),
+          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
