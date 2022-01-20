@@ -1,20 +1,45 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/main.dart';
 
 class DepartmentCard extends StatelessWidget {
-  final String department;
+  final String departmentName;
 
-  const DepartmentCard({Key? key, required this.department}) : super(key: key);
+  const DepartmentCard({Key? key, required this.departmentName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Row(children: [
-      Expanded(child: InkWell(
+    return Column(
+      children: [
+        InkWell(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    departmentName,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                  )
+                ],
+              ),
+            ),
+            onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => (MyApp()) //ForgotPasswordPage())),
+                          ))
+                }),
+        const Divider(
+          color: Color(0xffD3D6D7),
+        ),
+      ],
+    );
 
-      ))
-    ],);
+    throw UnimplementedError();
   }
-
 }
