@@ -1,6 +1,12 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    }
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "enterEmail": "E-mail:",
+  "enterValidEmail": "Enter a valid e-mail",
+  "sendCode": "Send code",
+  "verificationCode": "Verification code",
+  "invalidCode" : "Invalid code",
+  "errorHappened": "Something bad happened... Please close the app and try again."
 }

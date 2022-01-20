@@ -1,3 +1,9 @@
 {
-  "helloWorld": "Hei Verden!"
+  "helloWorld": "Hei Verden!",
+  "enterEmail": "E-post",
+  "enterValidEmail": "Skriv en gyldig e-postadresse",
+  "sendCode": "Send kode",
+  "verificationCode": "Verifikasjonskode",
+  "invalidCode": "Ugyldig kode",
+  "errorHappened": "Noe galt har hendt... Vennligst lukk appen og prøv på nytt."
 }
