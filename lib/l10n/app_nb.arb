@@ -1,4 +1,6 @@
 {
   "helloWorld": "Hei Verden!",
-  "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se"
+  "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se",
+  "enterValidEmail": "Du må skrive en gyldig e-post",
+  "fullName": "Fullt navn"
 }
