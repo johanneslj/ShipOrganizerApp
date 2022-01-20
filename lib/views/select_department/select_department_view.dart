@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import '../../../main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectDepartmentView extends StatelessWidget {
   SelectDepartmentView({
@@ -13,14 +14,17 @@ class SelectDepartmentView extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: Center(
-      child: Column(children: [
-
-        Column(
-          children: getDepartments(departments),
-        )
-      ]),
-    ));
+      body: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+        child: Column(children: [
+          Text(AppLocalizations.of(context)!.accessToMultipleDepartments, textAlign: TextAlign.center,),
+          Column(
+            children: getDepartments(departments),
+          )
+        ]),
+      )),
+    );
   }
 
   List<Widget> getDepartments(List<String> departments) {

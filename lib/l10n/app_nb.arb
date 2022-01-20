@@ -1,3 +1,4 @@
 {
-  "helloWorld": "Hei Verden!"
+  "helloWorld": "Hei Verden!",
+  "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se"
 }

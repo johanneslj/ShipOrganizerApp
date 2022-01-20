@@ -2,5 +2,6 @@
     "helloWorld": "Hello World!",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
-    }
+    },
+    "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
 }
