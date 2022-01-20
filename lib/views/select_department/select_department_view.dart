@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import '../../../main.dart';
@@ -8,7 +9,7 @@ class SelectDepartmentView extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final List<String> departments = <String>["heia", "Kult", "Sjallabis"];
+  final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +17,18 @@ class SelectDepartmentView extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+        padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
         child: Column(children: [
-          Text(AppLocalizations.of(context)!.accessToMultipleDepartments, textAlign: TextAlign.center,),
-          Column(
-            children: getDepartments(departments),
-          )
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: Text(AppLocalizations.of(context)!.accessToMultipleDepartments,
+                textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+          ),
+          Expanded(
+            child: Column(
+              children: getDepartments(departments),
+            ),
+          ),
         ]),
       )),
     );
