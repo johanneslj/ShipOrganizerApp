@@ -81,10 +81,19 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               height: 100.0,
               child: ElevatedButton(
                   onPressed: () => {
-                        setState(() {
-                          page = 2;
-                          // TODO Send verification code to email
-                        })
+                        // Prompts user to enter valid email before trying to send code.
+                        if (emailController.text.isEmpty || !emailController.text.contains("@"))
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(AppLocalizations.of(context)!.enterValidEmail)))
+                          }
+                        else
+                          {
+                            setState(() {
+                              page = 2;
+                              // TODO Send verification code to email
+                            })
+                          }
                       },
                   child: Text(AppLocalizations.of(context)!.sendCode))),
         )
@@ -118,7 +127,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   height: 100.0,
                   child: ElevatedButton(
                       onPressed: () => {
-                            // TODO Verify code
+                            // TODO Verify code with API
                             if (verificationCodeController.text == "12345")
                               {
                                 setState(() {
@@ -126,7 +135,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                                 })
                               }
                           },
-                      child: Text(AppLocalizations.of(context)!.sendCode))),
+                      child: Text(AppLocalizations.of(context)!.verifyCode))),
             ]))
       ]),
     );
@@ -182,9 +191,12 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               height: 100.0,
               child: ElevatedButton(
                   onPressed: () => {
+                        // Gives feedback to user with a snack bar if trying to confirm invalid password.
                         if (_isButtonDisabled)
                           {
-                            // TODO Display toast with error message
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text(AppLocalizations.of(context)!.enterValidPasswordShort)))
                           }
                         else
                           {
@@ -199,6 +211,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     );
   }
 
+  /// Just in case :)
   Widget errorPage() {
     return Text(AppLocalizations.of(context)!.errorHappened);
   }

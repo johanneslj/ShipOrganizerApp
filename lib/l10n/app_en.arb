@@ -15,5 +15,6 @@
   "newPassword": "New password",
   "confirmPassword": "Confirm password",
   "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
+  "enterValidPasswordShort": "Enter a valid password.",
   "passwordsMustMatch": "Passwords do not match."
 }

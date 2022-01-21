@@ -14,7 +14,8 @@ ThemeData theme = ThemeData(
     textTheme: textTheme,
     inputDecorationTheme: inputDecorationTheme,
     iconTheme: iconTheme,
-    disabledColor: const Color(0xff76acb2));
+    disabledColor: disabledColor,
+    snackBarTheme: snackBarTheme);
 
 /*
  Color scheme for app.
@@ -33,6 +34,9 @@ ColorScheme colorScheme = const ColorScheme(
     onBackground: Color(0xff13293d),
     onError: Color(0xfff2e8e8),
     brightness: Brightness.dark);
+
+// Some extra colors
+const Color disabledColor = Color(0xff76acb2);
 
 AppBarTheme appBarTheme = AppBarTheme(
   color: colorScheme.primary,
@@ -107,4 +111,9 @@ TextStyle textStyle = TextStyle(
 IconThemeData iconTheme = IconThemeData(
   color: colorScheme.primary,
   size: 30,
+);
+
+SnackBarThemeData snackBarTheme = SnackBarThemeData(
+  backgroundColor: disabledColor,
+  contentTextStyle: textTheme.bodyText2,
 );
