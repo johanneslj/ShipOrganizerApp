@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
-import '../../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/config/theme_config.dart' as theme;
 
 /// This view is used for letting the user set a new password.
 ///
@@ -18,6 +16,7 @@ class SetPasswordView extends StatefulWidget {
 class _SetPasswordViewState extends State<SetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
 
   int page = 1;
@@ -58,9 +57,9 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         // Enter email to get verification code
         Text(AppLocalizations.of(context)!.email, style: Theme.of(context).textTheme.headline6),
         TextFormField(
-          validator: (value) => value!.isEmpty || !value.contains("@")
-              ? AppLocalizations.of(context)!.enterValidEmail
-              : null,
+          validator: (value) => value!.isNotEmpty && emailRegex.hasMatch(value)
+              ? null
+              : AppLocalizations.of(context)!.enterValidEmail,
           // Username text field
           controller: emailController,
           decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
@@ -75,7 +74,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               child: ElevatedButton(
                   onPressed: () => {
                         // Prompts user to enter valid email before trying to send code.
-                        if (emailController.text.isEmpty || !emailController.text.contains("@"))
+                        if (emailController.text.isEmpty || !emailRegex.hasMatch(emailController.text))
                           {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(AppLocalizations.of(context)!.enterValidEmail)))
