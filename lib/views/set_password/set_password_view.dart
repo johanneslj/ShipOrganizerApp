@@ -23,7 +23,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   int page = 1;
 
   bool _isButtonDisabled = true;
-  ButtonStyle? confirmPasswordButtonStyle;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController verificationCodeController = TextEditingController();
@@ -32,8 +31,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    confirmPasswordButtonStyle = _isButtonDisabled ? theme.disabledElevatedButtonStyle : null;
-
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Center(
