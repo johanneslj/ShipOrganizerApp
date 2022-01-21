@@ -22,10 +22,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   int page = 1;
 
-  String email = "";
-  String verificationCode = "";
-  String newPassword = "";
-
   bool _isButtonDisabled = true;
   ButtonStyle? confirmPasswordButtonStyle;
 
@@ -153,9 +149,14 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         Text(AppLocalizations.of(context)!.newPassword,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
-          validator: (value) => !passwordRegex.hasMatch(value!)
-              ? AppLocalizations.of(context)!.enterValidPassword
-              : null,
+          validator: (value) {
+            if (!passwordRegex.hasMatch(value!)) {
+              _isButtonDisabled = true;
+              return AppLocalizations.of(context)!.enterValidPassword;
+            } else {
+              return null;
+            }
+          },
           controller: passwordController,
           decoration: InputDecoration(hintText: AppLocalizations.of(context)!.newPassword),
           obscureText: true,
@@ -169,6 +170,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             // Displays error message if passwords do not match.
             // If all password entry is correct, button is enabled.
             if (value.toString() != passwordController.text) {
+              _isButtonDisabled = true;
               return AppLocalizations.of(context)!.passwordsMustMatch;
             } else if (passwordRegex.hasMatch(passwordController.text)) {
               _isButtonDisabled = false;
