@@ -6,9 +6,14 @@
   "email": "E-mail:",
   "enterValidEmail": "Enter a valid e-mail",
   "sendCode": "Send code",
+  "verifyCode": "Verify code",
   "verificationCode": "Verification code",
-  "invalidCode" : "Invalid code",
+  "invalidCode": "Invalid code",
   "errorHappened": "Something bad happened... Please close the app and try again.",
-  "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
-  "confirm": "confirm"
+  "accessToMultipleDepartments": "You have access to multiple departments please pick the one you want to view",
+  "confirm": "Confirm",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
+  "passwordsMustMatch": "Passwords do not match."
 }
