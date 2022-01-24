@@ -1,7 +1,20 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    },
-    "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view"
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "email": "E-mail:",
+  "enterValidEmail": "Enter a valid e-mail",
+  "sendCode": "Send code",
+  "verifyCode": "Verify code",
+  "verificationCode": "Verification code",
+  "invalidCode": "Invalid code",
+  "errorHappened": "Something bad happened... Please close the app and try again.",
+  "accessToMultipleDepartments": "You have access to multiple departments please pick the one you want to view",
+  "confirm": "Confirm",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
+  "enterValidPasswordShort": "Enter a valid password.",
+  "passwordsMustMatch": "Passwords do not match."
 }

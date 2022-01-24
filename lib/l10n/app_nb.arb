@@ -1,4 +1,17 @@
 {
   "helloWorld": "Hei Verden!",
-  "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se"
+  "email": "E-post",
+  "enterValidEmail": "Skriv en gyldig e-postadresse",
+  "sendCode": "Send kode",
+  "verifyCode": "Verifiser kode",
+  "verificationCode": "Verifikasjonskode",
+  "invalidCode": "Ugyldig kode",
+  "errorHappened": "Noe galt har hendt... Vennligst lukk appen og prøv på nytt.",
+  "accessToMultipleDepartments": "Du har tilgang til flere departement, vennligst velg hvilket du vil se",
+  "confirm": "Bekreft",
+  "newPassword": "Nytt passord",
+  "confirmPassword": "Bekreft passord",
+  "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
+  "enterValidPasswordShort": "Ikke gyldig passord.",
+  "passwordsMustMatch": "Passordene er ikke like."
 }

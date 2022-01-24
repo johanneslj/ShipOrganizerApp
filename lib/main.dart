@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
+import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config/theme_config.dart';
@@ -64,8 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => (SelectDepartmentView()) //ForgotPasswordPage())),
-          ));
+          MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+              ));
     });
   }
 
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+                    MaterialPageRoute(builder: (context) => (SetPasswordView()) //ForgotPasswordPage())),
                     ))
               },
             )
