@@ -15,6 +15,7 @@ class LoginView extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginViewState();
 }
 
+/// State of the login view.
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
