@@ -72,7 +72,7 @@ InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
 
 TextTheme textTheme = TextTheme(
   headline1: TextStyle(color: colorScheme.onPrimary),
-  headline2: TextStyle(color: colorScheme.primary),
+  headline2: TextStyle(color: colorScheme.primary, fontSize: 20),
   headline3: TextStyle(color: colorScheme.primary),
   headline4: TextStyle(color: colorScheme.primary),
   headline5: TextStyle(color: colorScheme.primary),

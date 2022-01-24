@@ -9,5 +9,6 @@
   "helloWorld": "Hello World!",
   "invalidCode": "Invalid code",
   "sendCode": "Send code",
-  "verificationCode": "Verification code"
+  "verificationCode": "Verification code",
+  "selectDepartment": "Select Departments"
 }

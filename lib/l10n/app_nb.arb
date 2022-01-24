@@ -9,5 +9,6 @@
   "helloWorld": "Hei Verden!",
   "invalidCode": "Ugyldig kode",
   "sendCode": "Send kode",
-  "verificationCode": "Verifikasjonskode"
+  "verificationCode": "Verifikasjonskode",
+  "selectDepartment": "Velg departementer"
 }
