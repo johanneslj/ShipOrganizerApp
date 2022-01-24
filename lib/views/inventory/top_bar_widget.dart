@@ -12,21 +12,42 @@ class TopBar extends StatefulWidget {
       this.onMenuPressed,
       this.onSearch,
       this.filter,
+      this.onBarcode,
       this.controller,
       this.menuIcon,
       this.searchIcon,
       this.clearIcon,
-      this.filterIcon})
+      this.filterIcon,
+      this.barcodeIcon})
       : super(key: key);
 
+  /// Function called when the menu button is pressed.
   final void Function()? onMenuPressed;
+
+  /// Function called when search button is pressed.
   final void Function()? onSearch;
+
+  /// Function called when filter button is pressed.
   final void Function()? filter;
+
+  final void Function()? onBarcode;
+
+  /// Controller for search [TextField].
   final TextEditingController? controller;
+
+  /// Icon for menu button. If null [Icons.menu] is used.
   final Icon? menuIcon;
+
+  /// Icon for menu button. If null [Icons.search] is used.
   final Icon? searchIcon;
+
+  /// Icon for menu button. If null [Icons.clear] is used.
   final Icon? clearIcon;
+
+  /// Icon for menu button. If null [Icons.filter_alt_sharp] is used.
   final Icon? filterIcon;
+
+  final Icon? barcodeIcon;
 
   @override
   State<StatefulWidget> createState() => _TopBarState();
@@ -38,6 +59,8 @@ class _TopBarState extends State<TopBar> {
   void Function()? get _onSearch => widget.onSearch;
 
   void Function()? get _filter => widget.filter;
+
+  void Function()? get _onBarcode => widget.onBarcode;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +98,19 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ))),
             IconButton(
+              constraints: BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _onSearch,
                 icon: widget.searchIcon ??
                     Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
+                constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+
+                onPressed: _onBarcode,
+                icon: widget.barcodeIcon ??
+                    Icon(Icons.camera_alt_sharp, color: Theme.of(context).colorScheme.onPrimary)),
+            IconButton(
+                constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+
                 onPressed: _filter,
                 icon: widget.filterIcon ??
                     Icon(
