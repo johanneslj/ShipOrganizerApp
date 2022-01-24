@@ -1,5 +1,6 @@
 {
   "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se",
+  "companyName": "Bedrift navn",
   "confirm": "Bekreft",
   "confirmPassword": "Bekreft passord",
   "createUser": "Lag Bruker",
@@ -8,14 +9,18 @@
   "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
   "enterValidPasswordShort": "Ikke gyldig passord.",
   "errorHappened": "Noe galt har hendt... Vennligst lukk appen og prøv på nytt.",
+  "forgotPassword": "Glemt passord?",
   "fullName": "Fullt navn",
   "helloWorld": "Hei Verden!",
   "invalidCode": "Ugyldig kode",
+  "password": "Passord",
   "newPassword": "Nytt passord",
   "passwordsMustMatch": "Passordene er ikke like.",
   "selectDepartment": "Velg departementer",
   "selectedDepartments": "Valgte departmenter",
   "sendCode": "Send kode",
+  "signIn": "Logg inn",
   "verificationCode": "Verifikasjonskode",
   "verifyCode": "Verifiser kode"
+
 }

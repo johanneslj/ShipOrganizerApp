@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// A Class which supplies the login view for the app
 /// It is constructed by several different widgets
@@ -40,9 +41,9 @@ class _LoginViewState extends State<LoginView> {
                     "assets/FishingBoatSilhouette.jpg",
                     width: 200,
                   ),
-                  const Text(
-                    "Fishing. inc.",
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.companyName,
+                    style: const TextStyle(
                         color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -57,15 +58,18 @@ class _LoginViewState extends State<LoginView> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Email",
+                        Text(AppLocalizations.of(context)!.email,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary, fontSize: 20)),
                         TextFormField(
-                          validator: (val) =>
-                              val!.isEmpty || !val.contains("@") ? "Enter a valid email" : null,
+                          validator: (val) => val!.isEmpty || !val.contains("@")
+                              ? AppLocalizations.of(context)!.enterValidEmail
+                              : null,
                           // Username text field
                           controller: emailController,
-                          decoration: const InputDecoration(hintText: 'Email'),
+                          decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.email,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                         ),
                       ],
                     ),
@@ -73,13 +77,15 @@ class _LoginViewState extends State<LoginView> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Password",
+                        Text(AppLocalizations.of(context)!.password,
                             style: TextStyle(
                                 fontSize: 20, color: Theme.of(context).colorScheme.onPrimary)),
                         TextFormField(
                           // Password text field
                           controller: passwordController,
-                          decoration: const InputDecoration(hintText: 'Password'),
+                          decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.password,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                           obscureText: true,
                         ),
                       ],
@@ -101,7 +107,7 @@ class _LoginViewState extends State<LoginView> {
                                               ));
                                     }
                                   },
-                                  child: const Text('Sign In'))),
+                                  child: Text(AppLocalizations.of(context)!.signIn))),
                           TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -111,8 +117,8 @@ class _LoginViewState extends State<LoginView> {
                                             (const MyApp()) //TODO ForgotPasswordView())),
                                         ));
                               },
-                              child: const Text('Forgot Password?',
-                                  style: TextStyle(
+                              child: Text(AppLocalizations.of(context)!.forgotPassword,
+                                  style: const TextStyle(
                                     decoration: TextDecoration.underline,
                                   ))),
                         ]))

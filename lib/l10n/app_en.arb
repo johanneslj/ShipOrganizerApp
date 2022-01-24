@@ -1,5 +1,6 @@
 {
   "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
+  "companyName": "Company name",
   "confirm": "confirm",
   "confirmPassword": "Confirm password",
   "createUser": "Create User",
@@ -8,14 +9,17 @@
   "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
   "enterValidPasswordShort": "Enter a valid password.",
   "errorHappened": "Something bad happened... Please close the app and try again.",
+  "forgotPassword": "Forgot password?",
   "fullName": "Full Name",
   "helloWorld": "Hello World!",
   "invalidCode": "Invalid code",
   "newPassword": "New password",
+  "password": "Password",
   "passwordsMustMatch": "Passwords do not match.",
   "selectDepartment": "Select departments",
   "selectedDepartments": "Selected departments",
   "sendCode": "Send code",
+  "signIn": "Sign in",
   "verificationCode": "Verification code",
   "verifyCode": "Verify code"
 }

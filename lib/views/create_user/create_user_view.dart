@@ -51,11 +51,15 @@ class _CreateUserState extends State<CreateUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.createUser),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        title: Text(AppLocalizations.of(context)!.createUser, style: Theme.of(context).textTheme.headline6,),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: Column(children: [
             Form(
                 key: _formKey,
@@ -71,7 +75,6 @@ class _CreateUserState extends State<CreateUser> {
                         validator: (val) => val!.isEmpty || !val.contains("@")
                             ? AppLocalizations.of(context)!.enterValidEmail
                             : null,
-                        // Eler: emailController,
                         decoration: InputDecoration(
                             hintText: AppLocalizations.of(context)!.email,
                             hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
