@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 Theme configurations:
  ----------------------*/
 ThemeData theme = ThemeData(
-  primaryColor: colorScheme.primary,
-  colorScheme: colorScheme,
-  scaffoldBackgroundColor: colorScheme.background,
-  appBarTheme: appBarTheme,
-  buttonTheme: buttonThemeData,
-  elevatedButtonTheme: elevatedButtonTheme,
-  textButtonTheme: textButtonTheme,
-  textTheme: textTheme,
-  inputDecorationTheme: inputDecorationTheme,
-  iconTheme: iconTheme,
-);
+    primaryColor: colorScheme.primary,
+    colorScheme: colorScheme,
+    scaffoldBackgroundColor: colorScheme.background,
+    appBarTheme: appBarTheme,
+    buttonTheme: buttonThemeData,
+    elevatedButtonTheme: elevatedButtonTheme,
+    textButtonTheme: textButtonTheme,
+    textTheme: textTheme,
+    inputDecorationTheme: inputDecorationTheme,
+    iconTheme: iconTheme,
+    disabledColor: disabledColor,
+    snackBarTheme: snackBarTheme);
 
 /*
  Color scheme for app.
@@ -34,12 +35,16 @@ ColorScheme colorScheme = const ColorScheme(
     onError: Color(0xfff2e8e8),
     brightness: Brightness.dark);
 
+// Some extra colors
+const Color disabledColor = Color(0xff76acb2);
+
 AppBarTheme appBarTheme = AppBarTheme(
   color: colorScheme.primary,
   titleTextStyle: TextStyle(color: colorScheme.onPrimary, fontWeight: FontWeight.bold),
 );
 
-ButtonThemeData buttonThemeData = ButtonThemeData(buttonColor: colorScheme.secondary);
+ButtonThemeData buttonThemeData =
+    ButtonThemeData(buttonColor: colorScheme.secondary, disabledColor: const Color(0xff76acb2));
 
 ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
   style: ElevatedButton.styleFrom(
@@ -50,6 +55,18 @@ ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
         fontSize: 20,
         fontWeight: FontWeight.bold,
       )),
+);
+
+// Style for disabled elevated button.
+// Is not in material theme so needs to be called explicitly in code.
+ButtonStyle disabledElevatedButtonStyle = ElevatedButton.styleFrom(
+  primary: const Color(0xff76acb2),
+  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  textStyle: TextStyle(
+    color: colorScheme.onSecondary,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  ),
 );
 
 TextButtonThemeData textButtonTheme = TextButtonThemeData(
@@ -96,5 +113,7 @@ IconThemeData iconTheme = IconThemeData(
   size: 30,
 );
 
-
-
+SnackBarThemeData snackBarTheme = SnackBarThemeData(
+  backgroundColor: disabledColor,
+  contentTextStyle: textTheme.bodyText2,
+);
