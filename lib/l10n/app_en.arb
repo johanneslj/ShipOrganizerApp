@@ -1,8 +1,5 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
+  "createUser": "Create User",
   "email": "E-mail:",
   "enterValidEmail": "Enter a valid e-mail",
   "sendCode": "Send code",
@@ -17,4 +14,9 @@
   "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
   "enterValidPasswordShort": "Enter a valid password.",
   "passwordsMustMatch": "Passwords do not match."
+  "fullName": "Full Name",
+  "helloWorld": "Hello World!",
+  "invalidCode": "Invalid code",
+  "sendCode": "Send code",
+  "verificationCode": "Verification code"
 }

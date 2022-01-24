@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
@@ -110,7 +111,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => (SetPasswordView()) //ForgotPasswordPage())),
                     ))
               },
-            )
+            ),
+            TextButton(
+              child: Text("Add User"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (CreateUser()) //ForgotPasswordPage())),
+                    ))
+              },
+            ),
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 {
-  "helloWorld": "Hei Verden!",
+  "createUser": "Lag Bruker",
   "email": "E-post",
   "enterValidEmail": "Skriv en gyldig e-postadresse",
   "sendCode": "Send kode",
@@ -14,4 +14,9 @@
   "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
   "enterValidPasswordShort": "Ikke gyldig passord.",
   "passwordsMustMatch": "Passordene er ikke like."
+  "fullName": "Fullt navn",
+  "helloWorld": "Hei Verden!",
+  "invalidCode": "Ugyldig kode",
+  "sendCode": "Send kode",
+  "verificationCode": "Verifikasjonskode"
 }
