@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/widgets/multi_select_widget.dart';
 import '../../main.dart';
 
 /// A class which enables an admin to create a new user
@@ -19,22 +18,44 @@ class CreateUser extends StatefulWidget {
 class _CreateUserState extends State<CreateUser> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<String> departments = <String>["Dock", "Factory", "Bridge", "Quarters"];
+  List<String> departments = <String>[
+    "Dock",
+    "Factory",
+    "Bridge",
+    "Quarters",
+    "Ababa",
+    "Cook",
+    "Line"
+  ];
 
   String email = "";
   String fullName = "";
-  List<String> selectedDepartments = <String>[];
 
   TextEditingController emailController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
 
+  List<String> _selectedDepartments = <String>[];
+
+// This function is triggered when a checkbox is checked or unchecked
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedDepartments.add(itemValue);
+      } else {
+        _selectedDepartments.remove(itemValue);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //selectedDepartment = AppLocalizations.of(context)!.selectDepartment;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 150),
-        child: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.createUser),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 20),
           child: Column(children: [
             Form(
                 key: _formKey,
@@ -50,8 +71,7 @@ class _CreateUserState extends State<CreateUser> {
                         validator: (val) => val!.isEmpty || !val.contains("@")
                             ? AppLocalizations.of(context)!.enterValidEmail
                             : null,
-                        // Email Address text field
-                        controller: emailController,
+                        // Eler: emailController,
                         decoration: InputDecoration(
                             hintText: AppLocalizations.of(context)!.email,
                             hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
@@ -68,23 +88,40 @@ class _CreateUserState extends State<CreateUser> {
                       TextFormField(
                         // Full Name text field
                         controller: fullNameController,
-                        decoration:
-                            InputDecoration(hintText: AppLocalizations.of(context)!.fullName),
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.fullName,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: ElevatedButton(
-                            onPressed: _showMultiSelect,
-                            child: Text(AppLocalizations.of(context)!.selectDepartment)),
-                      ),
-                      Row(
-                        children: [
-                          Text(selectedDepartments
-                              .toString()
-                              .replaceAll("[", "")
-                              .replaceAll("]", ""))
-                        ],
-                      )
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          // Checkbox list where an admin can select what departments a new user
+                          // will have access to
+                          child: Column(
+                            children: [
+                              Text(AppLocalizations.of(context)!.selectDepartment),
+                              ListBody(
+                                children: departments
+                                    .map((item) => Theme(
+                                        data: ThemeData(
+                                            unselectedWidgetColor:
+                                                Theme.of(context).colorScheme.primary),
+                                        child: CheckboxListTile(
+                                          selected: _selectedDepartments.contains(item),
+                                          value: _selectedDepartments.contains(item),
+                                          activeColor: Theme.of(context).colorScheme.primary,
+                                          checkColor: Theme.of(context).colorScheme.onPrimary,
+                                          title: Text(
+                                            item,
+                                            style: Theme.of(context).textTheme.bodyText2,
+                                          ),
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          onChanged: (isChecked) => _itemChange(item, isChecked!),
+                                        )))
+                                    .toList(),
+                              ),
+                            ],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                          )),
                     ],
                   ),
                   Padding(
@@ -111,24 +148,5 @@ class _CreateUserState extends State<CreateUser> {
         ),
       ),
     );
-  }
-
-  void _showMultiSelect() async {
-    final List<String>? results = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return MultiSelect(
-          items: departments,
-          selectedItems: selectedDepartments,
-        );
-      },
-    );
-
-    // Update UI
-    if (results != null) {
-      setState(() {
-        selectedDepartments = results;
-      });
-    }
   }
 }
