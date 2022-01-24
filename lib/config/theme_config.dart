@@ -15,7 +15,8 @@ ThemeData theme = ThemeData(
     inputDecorationTheme: inputDecorationTheme,
     iconTheme: iconTheme,
     disabledColor: disabledColor,
-    snackBarTheme: snackBarTheme);
+    snackBarTheme: snackBarTheme,
+);
 
 /*
  Color scheme for app.
