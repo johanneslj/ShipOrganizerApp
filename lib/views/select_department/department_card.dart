@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/main.dart';
 
@@ -9,7 +8,6 @@ class DepartmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: [
         InkWell(
@@ -31,7 +29,7 @@ class DepartmentCard extends StatelessWidget {
             onTap: () => {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => (MyApp()) //ForgotPasswordPage())),
+                      MaterialPageRoute(builder: (context) => (const MyApp()) //ForgotPasswordPage())),
                           ))
                 }),
         const Divider(
@@ -40,6 +38,5 @@ class DepartmentCard extends StatelessWidget {
       ],
     );
 
-    throw UnimplementedError();
   }
 }
