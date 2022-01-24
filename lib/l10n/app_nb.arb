@@ -16,6 +16,7 @@
   "password": "Passord",
   "newPassword": "Nytt passord",
   "passwordsMustMatch": "Passordene er ikke like.",
+  "search": "Søk",
   "selectDepartment": "Velg departementer",
   "selectedDepartments": "Valgte departmenter",
   "sendCode": "Send kode",
