@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/main.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,6 +39,7 @@ class SelectDepartmentView extends StatelessWidget {
     for (String department in departments) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
+        nav: const MyApp(),
       );
       departmentCardList.add(departmentCard);
     }
