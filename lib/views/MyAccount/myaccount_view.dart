@@ -1,7 +1,4 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,12 +14,16 @@ class MyAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size(
-              MediaQuery.of(context).size.width, MediaQuery.of(context).viewPadding.top + 24.0),
-          child: TopBar(
-            onMenuPressed: _onMenuPressed,
-          )),
+      appBar: AppBar(
+          leading: IconButton(
+              onPressed: _onMenuPressed,
+              icon:
+                  Icon(
+                    Icons.menu,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+        title: Text(AppLocalizations.of(context)!.myAccount),
+      ),
       body: Center(
           child: Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
