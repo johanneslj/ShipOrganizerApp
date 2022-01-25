@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ship_organizer_app/main.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String departmentName;
+  final Widget nav;
 
-  const DepartmentCard({Key? key, required this.departmentName}) : super(key: key);
+  const DepartmentCard({Key? key, required this.departmentName,required this.nav}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class DepartmentCard extends StatelessWidget {
             onTap: () => {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => (MyApp()) //ForgotPasswordPage())),
+                      MaterialPageRoute(builder: (context) => (nav) //ForgotPasswordPage())),
                           ))
                 }),
         const Divider(
