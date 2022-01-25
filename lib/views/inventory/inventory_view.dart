@@ -14,18 +14,20 @@ class InventoryView extends StatefulWidget {
 
 /// State of the inventory view.
 class _InventoryViewState extends State<InventoryView> {
-  TextEditingController searchController = TextEditingController();
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size(
-                MediaQuery.of(context).size.width, MediaQuery.of(context).viewPadding.top + 24.0),
+            preferredSize:
+                // Creates top padding for the top bar so that it starts below status/notification bar.
+                Size(MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).viewPadding.top + 24.0),
             child: TopBar(
               onMenuPressed: _onMenuPressed,
               onSearch: _onSearch,
-              controller: searchController,
+              controller: _controller,
             )),
         body: SingleChildScrollView());
   }

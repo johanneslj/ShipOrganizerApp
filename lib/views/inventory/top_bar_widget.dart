@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,13 +11,13 @@ class TopBar extends StatefulWidget {
       this.onMenuPressed,
       this.onSearch,
       this.filter,
-      this.onBarcode,
+      this.onScan,
       this.controller,
       this.menuIcon,
       this.searchIcon,
       this.clearIcon,
       this.filterIcon,
-      this.barcodeIcon})
+      this.scanIcon})
       : super(key: key);
 
   /// Function called when the menu button is pressed.
@@ -30,7 +29,8 @@ class TopBar extends StatefulWidget {
   /// Function called when filter button is pressed.
   final void Function()? filter;
 
-  final void Function()? onBarcode;
+  /// Function called when the scan button in the top bar is pressed.
+  final void Function()? onScan;
 
   /// Controller for search [TextField].
   final TextEditingController? controller;
@@ -47,7 +47,7 @@ class TopBar extends StatefulWidget {
   /// Icon for menu button. If null [Icons.filter_alt_sharp] is used.
   final Icon? filterIcon;
 
-  final Icon? barcodeIcon;
+  final Icon? scanIcon;
 
   @override
   State<StatefulWidget> createState() => _TopBarState();
@@ -60,7 +60,7 @@ class _TopBarState extends State<TopBar> {
 
   void Function()? get _filter => widget.filter;
 
-  void Function()? get _onBarcode => widget.onBarcode;
+  void Function()? get _onScan => widget.onScan;
 
   @override
   Widget build(BuildContext context) {
@@ -98,18 +98,18 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ))),
             IconButton(
-              constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+              constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _onSearch,
                 icon: widget.searchIcon ??
                     Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
-                constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
 
-                onPressed: _onBarcode,
-                icon: widget.barcodeIcon ??
+                onPressed: _onScan,
+                icon: widget.scanIcon ??
                     Icon(Icons.camera_alt_sharp, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
-                constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
 
                 onPressed: _filter,
                 icon: widget.filterIcon ??
