@@ -16,8 +16,10 @@
   "passwordsMustMatch": "Passordene er ikke like.",
   "fullName": "Fullt navn",
   "helloWorld": "Hei Verden!",
-  "invalidCode": "Ugyldig kode",
-  "sendCode": "Send kode",
-  "verificationCode": "Verifikasjonskode",
-  "search": "Søk"
+  "search": "Søk",
+  "scanNewInventory": "Scan nytt inventar",
+  "map": "Kart",
+  "enterOrder": "Legg inn ordre",
+  "sendRecommended": "Send anbefalt inventar",
+  "logOut": "Logg ut"
 }

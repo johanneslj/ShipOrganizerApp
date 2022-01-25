@@ -16,8 +16,10 @@
   "passwordsMustMatch": "Passwords do not match.",
   "fullName": "Full Name",
   "helloWorld": "Hello World!",
-  "invalidCode": "Invalid code",
-  "sendCode": "Send code",
-  "verificationCode": "Verification code",
-  "search": "Search"
+  "search": "Search",
+  "scanNewInventory": "Scan new inventory",
+  "map": "Map",
+  "enterOrder": "Enter order",
+  "sendRecommended": "Send recommended inventory",
+  "logOut": "Sign out"
 }

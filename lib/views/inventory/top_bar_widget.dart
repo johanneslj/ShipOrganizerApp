@@ -54,7 +54,12 @@ class TopBar extends StatefulWidget {
 }
 
 class _TopBarState extends State<TopBar> {
-  void Function()? get _onMenuPressed => widget.onMenuPressed;
+  /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
+  void Function()? get _onMenuPressed =>
+      widget.onMenuPressed ??
+      () {
+        Scaffold.of(context).hasDrawer ? Scaffold.of(context).openDrawer() : null;
+      };
 
   void Function()? get _onSearch => widget.onSearch;
 
@@ -98,19 +103,17 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ))),
             IconButton(
-              constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
+                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _onSearch,
                 icon: widget.searchIcon ??
                     Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
                 constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
-
                 onPressed: _onScan,
                 icon: widget.scanIcon ??
                     Icon(Icons.camera_alt_sharp, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
                 constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
-
                 onPressed: _filter,
                 icon: widget.filterIcon ??
                     Icon(
