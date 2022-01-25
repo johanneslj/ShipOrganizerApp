@@ -28,6 +28,8 @@
   "administerUser" : "Administer user",
   "changeDepartment" : "Change department",
   "changePassword":"Change password" ,
-  "preferredInventory": "Preferred inventory"
+  "preferredInventory": "Preferred inventory",
+  "myAccount": "My sccount"
+
 
 }
