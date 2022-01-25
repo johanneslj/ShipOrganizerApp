@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config/theme_config.dart';
 
@@ -15,11 +16,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       supportedLocales: const [
         Locale("en", "US"),
         Locale("nb", "NO")],
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,
@@ -128,6 +130,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => (InventoryView()) //ForgotPasswordPage())),
+                    ))
+              },
+            ),
+            TextButton(
+              child: Text("MyAccount"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (MyAccount()) //ForgotPasswordPage())),
                     ))
               },
             ),
