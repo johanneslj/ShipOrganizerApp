@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 
+import 'inventory_widget.dart';
+
 /// View where the user can see the inventory for their department.
 ///
 ///
@@ -30,7 +32,7 @@ class _InventoryViewState extends State<InventoryView> {
               controller: _controller,
             )),
         drawer: SideMenu(),
-        body: SingleChildScrollView());
+        body: Inventory());
   }
 
   Function() _onSearch = () {
