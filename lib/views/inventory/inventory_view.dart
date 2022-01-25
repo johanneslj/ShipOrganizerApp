@@ -31,8 +31,11 @@ class _InventoryViewState extends State<InventoryView> {
               onSearch: _onSearch,
               controller: _controller,
             )),
-        drawer: SideMenu(),
-        body: Inventory());
+        drawer: const SideMenu(),
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Inventory(),
+        ));
   }
 
   Function() _onSearch = () {

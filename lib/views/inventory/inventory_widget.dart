@@ -16,6 +16,8 @@ class Inventory extends StatefulWidget {
 }
 
 class _InventoryState extends State<Inventory> {
+
+  // TODO Get items from API
   List<Item> items = [
     Item(name: "Name", ean13: "1432456789059", amount: 234),
     Item(name: "Product", ean13: "1432456789059", amount: 54),
@@ -40,17 +42,20 @@ class _InventoryState extends State<Inventory> {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
+          contentPadding: EdgeInsets.fromLTRB(8, 8, 8, 8),
             title: Text(
           items[index].name,
           style: Theme.of(context).textTheme.headline5,
           overflow: TextOverflow.ellipsis,
         ),
-          trailing: SizedBox(width: 130, child: Row(
+          trailing: SizedBox(
+              width: 160.0,
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
-            Text(items[index].amount.toString()),
-            IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.remove, size: 36.0)),
+            Text(items[index].amount.toString(), style: Theme.of(context).textTheme.headline5,),
+            IconButton(onPressed: () {}, icon: Icon(Icons.add, size: 36.0)),
           ],)),
         );
       },
