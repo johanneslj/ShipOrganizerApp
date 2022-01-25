@@ -103,17 +103,14 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ))),
             IconButton(
-                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _onSearch,
                 icon: widget.searchIcon ??
                     Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
-                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _onScan,
                 icon: widget.scanIcon ??
                     Icon(Icons.camera_alt_sharp, color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
-                constraints: const BoxConstraints(minHeight: 32, minWidth: 32),
                 onPressed: _filter,
                 icon: widget.filterIcon ??
                     Icon(
