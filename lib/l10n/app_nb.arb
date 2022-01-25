@@ -22,6 +22,11 @@
   "sendCode": "Send kode",
   "signIn": "Logg inn",
   "verificationCode": "Verifikasjonskode",
-  "verifyCode": "Verifiser kode"
-
+  "verifyCode": "Verifiser kode",
+  "registerNewUser": "Registrer ny bruker",
+  "sendBill": "Send faktura",
+  "administerUser" : "Administrer brukere",
+  "changeDepartment" : "Endre departement",
+  "changePassword":"Endre passord" ,
+  "preferredInventory": "Anbefalt beholdning"
 }

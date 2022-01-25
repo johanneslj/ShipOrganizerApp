@@ -22,5 +22,12 @@
   "sendCode": "Send code",
   "signIn": "Sign in",
   "verificationCode": "Verification code",
-  "verifyCode": "Verify code"
+  "verifyCode": "Verify code",
+  "registerNewUser": "Register new user",
+  "sendBill": "Send bill",
+  "administerUser" : "Administer user",
+  "changeDepartment" : "Change department",
+  "changePassword":"Change password" ,
+  "preferredInventory": "Preferred inventory"
+
 }
