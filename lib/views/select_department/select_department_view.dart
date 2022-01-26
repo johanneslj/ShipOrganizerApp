@@ -39,7 +39,7 @@ class SelectDepartmentView extends StatelessWidget {
     for (String department in departments) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
-        nav: const MyApp(),
+        destination: "/inventoryList",
       );
       departmentCardList.add(departmentCard);
     }
