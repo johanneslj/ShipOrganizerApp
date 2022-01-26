@@ -21,5 +21,9 @@
   "map": "Map",
   "enterOrder": "Enter order",
   "sendRecommended": "Send recommended inventory",
-  "logOut": "Sign out"
+  "logOut": "Sign out",
+  "howMany": "How many ",
+  "toAdd": " do you want to add?",
+  "toRemove": " do you want to remove?",
+  "cancel": "Cancel"
 }

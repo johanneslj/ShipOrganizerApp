@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 Theme configurations:
  ----------------------*/
 ThemeData theme = ThemeData(
-    primaryColor: colorScheme.primary,
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: colorScheme.background,
-    appBarTheme: appBarTheme,
-    buttonTheme: buttonThemeData,
-    elevatedButtonTheme: elevatedButtonTheme,
-    textButtonTheme: textButtonTheme,
-    textTheme: textTheme,
-    inputDecorationTheme: inputDecorationTheme,
-    iconTheme: iconTheme,
-    disabledColor: disabledColor,
-    snackBarTheme: snackBarTheme,
+  primaryColor: colorScheme.primary,
+  colorScheme: colorScheme,
+  scaffoldBackgroundColor: colorScheme.background,
+  appBarTheme: appBarTheme,
+  buttonTheme: buttonThemeData,
+  elevatedButtonTheme: elevatedButtonTheme,
+  textButtonTheme: textButtonTheme,
+  textTheme: textTheme,
+  inputDecorationTheme: inputDecorationTheme,
+  iconTheme: iconTheme,
+  disabledColor: disabledColor,
+  snackBarTheme: snackBarTheme,
+  dialogTheme: dialogTheme,
 );
 
 /*
@@ -70,6 +71,12 @@ ButtonStyle disabledElevatedButtonStyle = ElevatedButton.styleFrom(
   ),
 );
 
+DialogTheme dialogTheme = DialogTheme(
+  backgroundColor: colorScheme.primary,
+  contentTextStyle: textTheme.headline6,
+  alignment: Alignment.center
+);
+
 TextButtonThemeData textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
     primary: colorScheme.secondary,
@@ -104,7 +111,7 @@ TextTheme textTheme = TextTheme(
   overline: TextStyle(color: colorScheme.primary),
 );
 
-TextStyle textStyle = TextStyle(
+TextStyle textStyle = const TextStyle(
   inherit: true,
   fontSize: 20.0,
 );

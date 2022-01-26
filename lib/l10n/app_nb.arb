@@ -21,5 +21,9 @@
   "map": "Kart",
   "enterOrder": "Legg inn ordre",
   "sendRecommended": "Send anbefalt inventar",
-  "logOut": "Logg ut"
+  "logOut": "Logg ut",
+  "howMany": "Hvor mange ",
+  "toAdd": " ønsker du å legge til?",
+  "toRemove": " ønsker du å fjerne?",
+  "cancel": "Avbryt"
 }

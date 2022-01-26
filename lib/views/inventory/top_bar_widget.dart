@@ -6,18 +6,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// For use as app bar in scaffold, it needs to be wrapped in a [PreferredSize] widget.
 /// Allows custom functions as well as icons for buttons.
 class TopBar extends StatefulWidget {
-  const TopBar(
-      {Key? key,
-      this.onMenuPressed,
-      this.onSearch,
-      this.filter,
-      this.onScan,
-      this.controller,
-      this.menuIcon,
-      this.searchIcon,
-      this.clearIcon,
-      this.filterIcon,
-      this.scanIcon})
+  const TopBar({Key? key,
+    this.onMenuPressed,
+    this.onSearch,
+    this.filter,
+    this.onScan,
+    this.onClear,
+    this.controller,
+    this.menuIcon,
+    this.searchIcon,
+    this.clearIcon,
+    this.filterIcon,
+    this.scanIcon})
       : super(key: key);
 
   /// Function called when the menu button is pressed.
@@ -31,6 +31,8 @@ class TopBar extends StatefulWidget {
 
   /// Function called when the scan button in the top bar is pressed.
   final void Function()? onScan;
+
+  final void Function()? onClear;
 
   /// Controller for search [TextField].
   final TextEditingController? controller;
@@ -57,9 +59,11 @@ class _TopBarState extends State<TopBar> {
   /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
   void Function()? get _onMenuPressed =>
       widget.onMenuPressed ??
-      () {
-        Scaffold.of(context).hasDrawer ? Scaffold.of(context).openDrawer() : null;
-      };
+              () {
+            Scaffold
+                .of(context)
+                .hasDrawer ? Scaffold.of(context).openDrawer() : null;
+          };
 
   void Function()? get _onSearch => widget.onSearch;
 
@@ -67,11 +71,19 @@ class _TopBarState extends State<TopBar> {
 
   void Function()? get _onScan => widget.onScan;
 
+  void Function()? get _onClear => widget.onClear;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).viewPadding.top, 0, 0),
-        color: Theme.of(context).colorScheme.primary,
+        padding: EdgeInsets.fromLTRB(0, MediaQuery
+            .of(context)
+            .viewPadding
+            .top, 0, 0),
+        color: Theme
+            .of(context)
+            .colorScheme
+            .primary,
         child: Row(
           children: [
             IconButton(
@@ -79,7 +91,10 @@ class _TopBarState extends State<TopBar> {
                 icon: widget.menuIcon ??
                     Icon(
                       Icons.menu,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onPrimary,
                     )),
             Flexible(
                 child: Container(
@@ -90,9 +105,12 @@ class _TopBarState extends State<TopBar> {
                         contentPadding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                         hintText: AppLocalizations.of(context)!.search + "...",
                         suffixIcon: IconButton(
-                            onPressed: widget.controller?.clear,
+                            onPressed: _onClear ?? widget.controller?.clear,
                             icon: widget.clearIcon ??
-                                Icon(Icons.clear, color: Theme.of(context).colorScheme.primary)),
+                                Icon(Icons.clear, color: Theme
+                                    .of(context)
+                                    .colorScheme
+                                    .primary)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24.0),
                           borderSide: const BorderSide(
@@ -105,17 +123,26 @@ class _TopBarState extends State<TopBar> {
             IconButton(
                 onPressed: _onSearch,
                 icon: widget.searchIcon ??
-                    Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary)),
+                    Icon(Icons.search, color: Theme
+                        .of(context)
+                        .colorScheme
+                        .onPrimary)),
             IconButton(
                 onPressed: _onScan,
                 icon: widget.scanIcon ??
-                    Icon(Icons.camera_alt_sharp, color: Theme.of(context).colorScheme.onPrimary)),
+                    Icon(Icons.camera_alt_sharp, color: Theme
+                        .of(context)
+                        .colorScheme
+                        .onPrimary)),
             IconButton(
                 onPressed: _filter,
                 icon: widget.filterIcon ??
                     Icon(
                       Icons.filter_alt_sharp,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onPrimary,
                     ))
           ],
         ));
