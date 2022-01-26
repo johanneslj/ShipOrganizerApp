@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
+import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
@@ -57,7 +58,7 @@ class MyAccount extends StatelessWidget {
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
-      nav: const MyApp(),
+      nav: const InventoryView(),
     ));
     if(admin){
       departmentCardList.add(DepartmentCard(
