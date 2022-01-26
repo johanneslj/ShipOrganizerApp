@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,
@@ -121,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => (const MapView()) //ForgotPasswordPage())),
+                        builder: (context) => (MapView()) //ForgotPasswordPage())),
                     ))
               },
             ),
