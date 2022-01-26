@@ -11,34 +11,39 @@ import '../../main.dart';
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatelessWidget {
   final bool admin = true;
+
   const MyAccount({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.myAccount, style: Theme.of(context).textTheme.headline6,),
+        title: Text(
+          AppLocalizations.of(context)!.myAccount,
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       body: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
-            child: Column(
-                children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: Text("Full Name",// TODO: Get from user
-                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
-              ),
-               Expanded(
-                 child: Column(
-                   children: getMenuItems(admin, context)
-                 ),
-              ),
-            ]),
-          )),
+        padding:
+            const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+        child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: Text("Full Name", // TODO: Get from user
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyText1),
+          ),
+          Expanded(
+            child: Column(children: getMenuItems(admin, context)),
+          ),
+        ]),
+      )),
     );
 
     // TODO: implement build
@@ -46,7 +51,7 @@ class MyAccount extends StatelessWidget {
   }
 
   /// Gets the right menu items base on admin rights
-  List<Widget> getMenuItems(bool admin,BuildContext context) {
+  List<Widget> getMenuItems(bool admin, BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
@@ -60,7 +65,7 @@ class MyAccount extends StatelessWidget {
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/selectDepartmemnt",
     ));
-    if(admin){
+    if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
@@ -80,5 +85,4 @@ class MyAccount extends StatelessWidget {
     }
     return departmentCardList;
   }
-
 }

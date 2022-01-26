@@ -16,14 +16,12 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      supportedLocales: const [
-        Locale("en", "US"),
-        Locale("nb", "NO")],
+      supportedLocales: const [Locale("en", "US"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
           // if device language is supported by the app,
@@ -44,10 +42,10 @@ class MyApp extends StatelessWidget {
       theme: theme,
       routes: {
         '/': (BuildContext context) => const MyHomePage(title: 'Home'),
-        '/selectDepartmemnt': (context) =>  SelectDepartmentView(),
-        '/changePassword': (context) =>  const SetPasswordView(),
-        '/createUser': (context) =>  const CreateUser(),
-        '/inventoryList': (context) =>  const InventoryView(),
+        '/selectDepartmemnt': (context) => SelectDepartmentView(),
+        '/changePassword': (context) => const SetPasswordView(),
+        '/createUser': (context) => const CreateUser(),
+        '/inventoryList': (context) => const InventoryView(),
       },
     );
   }
@@ -74,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+          MaterialPageRoute(
+              builder: (context) => (LoginView()) //ForgotPasswordPage())),
               ));
     });
   }
@@ -97,7 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (LoginView()) //ForgotPasswordPage())),
                         ))
               },
             ),
@@ -106,8 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (SelectDepartmentView()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (SelectDepartmentView()) //ForgotPasswordPage())),
+                        ))
               },
             ),
             TextButton(
@@ -115,8 +118,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (SetPasswordView()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (SetPasswordView()) //ForgotPasswordPage())),
+                        ))
               },
             ),
             TextButton(
@@ -124,8 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (CreateUser()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (CreateUser()) //ForgotPasswordPage())),
+                        ))
               },
             ),
             TextButton(
@@ -133,8 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (InventoryView()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (InventoryView()) //ForgotPasswordPage())),
+                        ))
               },
             ),
             TextButton(
@@ -142,8 +151,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (MyAccount()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            (MyAccount()) //ForgotPasswordPage())),
+                        ))
               },
             ),
           ],
