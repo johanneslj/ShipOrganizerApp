@@ -50,32 +50,32 @@ class MyAccount extends StatelessWidget {
     List<Widget> departmentCardList = <Widget>[];
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
-      nav: const MyApp(),
+      destination: "/selectDepartmemnt",
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
-      nav: const SetPasswordView(),
+      destination: "/changePassword",
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
-      nav: const InventoryView(),
+      destination: "/selectDepartmemnt",
     ));
     if(admin){
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
-        nav: const CreateUser(),
+        destination: "/createUser",
       ));
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.sendBill,
-        nav: const MyApp(),
+        destination: "/selectDepartmemnt",
       ));
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUser,
-        nav: const MyApp(),
+        destination: "/selectDepartmemnt",
       ));
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.changeDepartment,
-        nav: const MyApp(),
+        destination: "/selectDepartmemnt",
       ));
     }
     return departmentCardList;
