@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 
 import '../../main.dart';
 
@@ -8,21 +10,16 @@ import '../../main.dart';
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatelessWidget {
   final bool admin = true;
-
   MyAccount({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
-              onPressed: _onMenuPressed,
-              icon:
-                  Icon(
-                    Icons.menu,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  )),
-        title: Text(AppLocalizations.of(context)!.myAccount),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(AppLocalizations.of(context)!.myAccount, style: Theme.of(context).textTheme.headline6,),
       ),
       body: Center(
           child: Padding(
@@ -46,20 +43,17 @@ class MyAccount extends StatelessWidget {
     // TODO: implement build
     throw UnimplementedError();
   }
-  Function() _onMenuPressed = () {
-    // TODO Render side menu
-  };
+
   /// Gets the right menu items base on admin rights
   List<Widget> getMenuItems(bool admin,BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
-  
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
       nav: const MyApp(),
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
-      nav: const MyApp(),
+      nav: const SetPasswordView(),
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
@@ -68,7 +62,7 @@ class MyAccount extends StatelessWidget {
     if(admin){
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
-        nav: const MyApp(),
+        nav: const CreateUser(),
       ));
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.sendBill,
