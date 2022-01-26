@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String departmentName;
-  final Widget nav;
+  final String destination;
 
-  const DepartmentCard({Key? key, required this.departmentName,required this.nav}) : super(key: key);
+  const DepartmentCard({Key? key, required this.departmentName,required this.destination}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +29,7 @@ class DepartmentCard extends StatelessWidget {
               ),
             ),
             onTap: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => (nav) //ForgotPasswordPage())),
-                          ))
+                  Navigator.pushNamed(context, destination)
                 }),
         const Divider(
           color: Color(0xffD3D6D7),
