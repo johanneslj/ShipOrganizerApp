@@ -10,7 +10,7 @@ import '../../main.dart';
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatelessWidget {
   final bool admin = true;
-  MyAccount({Key? key}) : super(key: key);
+  const MyAccount({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class MyAccount extends StatelessWidget {
                 children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 40),
-                child: Text("Full Name",
+                child: Text("Full Name",// TODO: Get from user
                     textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
               ),
                Expanded(
