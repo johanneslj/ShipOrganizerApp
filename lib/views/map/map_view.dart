@@ -60,6 +60,7 @@ class _MapViewState extends State<MapView> {
         ),
       ),
       body: GoogleMap(
+        myLocationEnabled: true,
         mapType: MapType.normal,
         onMapCreated: _onMapCreated,
         markers: Set<Marker>.of(markers.values),
