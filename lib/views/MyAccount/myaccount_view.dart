@@ -64,16 +64,18 @@ class MyAccount extends StatelessWidget {
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/selectDepartmemnt",
+
+    ));
+    departmentCardList.add(DepartmentCard(
+      departmentName: AppLocalizations.of(context)!.billing,
+      destination: "/sendBill",
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
       ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.sendBill,
-        destination: "/selectDepartmemnt",
-      ));
+
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUser,
         destination: "/selectDepartmemnt",
