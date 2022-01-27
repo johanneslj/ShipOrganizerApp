@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
+import 'package:ship_organizer_app/views/SendBill/send_bill_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
-
 import 'config/theme_config.dart';
 
 void main() {
@@ -46,6 +46,8 @@ class MyApp extends StatelessWidget {
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),
+        '/sendBill': (context) =>  Sendbill(),
+
       },
     );
   }
