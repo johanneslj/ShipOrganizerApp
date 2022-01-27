@@ -24,12 +24,15 @@
   "verificationCode": "Verification code",
   "verifyCode": "Verify code",
   "registerNewUser": "Register new user",
-  "sendBill": "Send bill",
   "administerUser" : "Administer user",
   "changeDepartment" : "Change department",
   "changePassword":"Change password" ,
   "preferredInventory": "Preferred inventory",
-  "myAccount": "My account"
+  "myAccount": "My account",
+  "billing" : "Bill",
+  "newBill" : "New",
+  "pending": "Pending",
+  "confirmed": "Confirmed"
 
 
 }
