@@ -32,6 +32,6 @@
   "billing" : "Faktura",
   "newBill" : "Ny",
   "pending": "Venter",
-  "confirmed": "Bekreftet"
-
+  "confirmed": "Bekreftet",
+  "changeImageSize" : "Trykk på bilde for å forstørre"
 }

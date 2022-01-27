@@ -32,7 +32,8 @@
   "billing" : "Bill",
   "newBill" : "New",
   "pending": "Pending",
-  "confirmed": "Confirmed"
+  "confirmed": "Confirmed",
+  "changeImageSize" : "Click on image to enhance image size"
 
 
 }
