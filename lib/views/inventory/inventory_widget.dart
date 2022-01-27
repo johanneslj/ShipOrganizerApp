@@ -6,10 +6,7 @@ import 'item.dart';
 /// Widget that displays the input items as a ListView.
 ///
 class Inventory extends StatelessWidget {
-  Inventory({Key? key,
-    this.onAdd,
-    this.onRemove,
-    this.items = const []}) : super(key: key);
+  Inventory({Key? key, this.onAdd, this.onRemove, this.items = const []}) : super(key: key);
 
   List<Item> items;
   Function()? onAdd;
@@ -32,12 +29,16 @@ class Inventory extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(onPressed: () => _onRemove(context, items[index]), icon: const Icon(Icons.remove, size: 36.0)),
+                    IconButton(
+                        onPressed: () => _onRemove(context, items[index]),
+                        icon: const Icon(Icons.remove, size: 36.0)),
                     Text(
                       items[index].amount.toString(),
                       style: Theme.of(context).textTheme.headline5,
                     ),
-                    IconButton(onPressed: () => _onAdd(context, items[index]), icon: const Icon(Icons.add, size: 36.0)),
+                    IconButton(
+                        onPressed: () => _onAdd(context, items[index]),
+                        icon: const Icon(Icons.add, size: 36.0)),
                   ],
                 )));
       },
@@ -48,25 +49,25 @@ class Inventory extends StatelessWidget {
 
   /// Creates a dialog to get amount to add, then handles adding the requested amount.
   void _onAdd(BuildContext context, Item item) {
-    showDialog(context: context, builder: (BuildContext context) {
-      return AddRemoveItemDialog(item: item, isAdd: true);
-    }).then((amount) => {
-      // TODO Implement with API. Add to call queue.
-      if (amount is int) {
-        item.amount += amount
-      }
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddRemoveItemDialog(item: item, isAdd: true);
+        }).then((amount) => {
+          // TODO Implement with API. Add to call queue.
+          if (amount is int) {item.amount += amount}
+        });
   }
 
   /// Creates a dialog to get amount to remove, then handles removing the requested amount.
   void _onRemove(BuildContext context, Item item) {
-    showDialog(context: context, builder: (BuildContext context) {
-      return AddRemoveItemDialog(item: item, isAdd: false);
-    }).then((amount) => {
-      // TODO Implement with API. Add to call queue.
-      if (amount is int) {
-        item.amount -= amount
-      }
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddRemoveItemDialog(item: item, isAdd: false);
+        }).then((amount) => {
+          // TODO Implement with API. Add to call queue.
+          if (amount is int) {item.amount -= amount}
+        });
   }
 }
