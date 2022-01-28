@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
-import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 
-import '../../main.dart';
 
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
@@ -45,9 +41,6 @@ class MyAccount extends StatelessWidget {
         ]),
       )),
     );
-
-    // TODO: implement build
-    throw UnimplementedError();
   }
 
   /// Gets the right menu items base on admin rights
@@ -78,10 +71,6 @@ class MyAccount extends StatelessWidget {
 
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUser,
-        destination: "/selectDepartmemnt",
-      ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.changeDepartment,
         destination: "/selectDepartmemnt",
       ));
     }
