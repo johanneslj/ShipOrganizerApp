@@ -40,9 +40,6 @@ class MyAccount extends StatelessWidget {
             ]),
           )),
     );
-
-    // TODO: implement build
-    throw UnimplementedError();
   }
 
   /// Gets the right menu items base on admin rights

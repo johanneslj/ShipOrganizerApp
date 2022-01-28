@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       supportedLocales: const [Locale("en", "US"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
@@ -45,10 +45,10 @@ class MyApp extends StatelessWidget {
       theme: theme,
       routes: {
         '/': (BuildContext context) => const MyHomePage(title: 'Home'),
-        '/selectDepartmemnt': (context) =>  SelectDepartmentView(),
-        '/changePassword': (context) =>  const SetPasswordView(),
-        '/createUser': (context) =>  const CreateUser(),
-        '/inventoryList': (context) =>  const InventoryView(),
+        '/selectDepartmemnt': (context) => SelectDepartmentView(),
+        '/changePassword': (context) => const SetPasswordView(),
+        '/createUser': (context) => const CreateUser(),
+        '/inventoryList': (context) => const InventoryView(),
       },
     );
   }
@@ -81,7 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (const LoginView()) //ForgotPasswordPage())),
+                    MaterialPageRoute(
+                        builder: (context) => (const LoginView()) //ForgotPasswordPage())),
                         ))
               },
             ),
@@ -110,7 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (const CreateUser()) //ForgotPasswordPage())),
+                    MaterialPageRoute(
+                        builder: (context) => (const CreateUser()) //ForgotPasswordPage())),
                         ))
               },
             ),
@@ -129,9 +131,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => (MapView()) //ForgotPasswordPage())),
-                    ))
+                    MaterialPageRoute(builder: (context) => (MapView()) //ForgotPasswordPage())),
+                        ))
               },
             ),
             TextButton(
@@ -140,7 +141,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => (MyAccount()) //ForgotPasswordPage())),
-                    ))
+                        ))
+              },
+            ),
+            TextButton(
+              child: Text("AdministerUsers"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (AdministerUsersView()) //ForgotPasswordPage())),
+                        ))
               },
             ),
           ],

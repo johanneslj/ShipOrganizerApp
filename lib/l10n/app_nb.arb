@@ -30,6 +30,8 @@
   "changeDepartment" : "Endre departement",
   "changePassword":"Endre passord" ,
   "preferredInventory": "Anbefalt beholdning",
-  "myAccount": "Min side"
-
+  "myAccount": "Min side",
+  "administerUsers": "Administrer brukere",
+  "delete": "Slett",
+  "name": "Navn"
 }
