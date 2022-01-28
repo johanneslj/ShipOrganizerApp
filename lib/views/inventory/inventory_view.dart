@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/entities/department.dart';
+import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'inventory_widget.dart';
@@ -8,7 +9,12 @@ import 'item.dart';
 
 /// View where the user can see the inventory for their department.
 ///
+/// Uses the [Inventory] widget to display the items. When adding or removing items a confirmation
+/// [AddRemoveItemDialog] pops up and prompts user for amount to add or remove of item.
 ///
+/// TODO User and API calls for inventory usage should be handled here.
+///
+/// TODO Implement caching to local storage to be able to close and open app offline, in case of no internet.
 class InventoryView extends StatefulWidget {
   const InventoryView({Key? key}) : super(key: key);
 
@@ -67,6 +73,7 @@ class _InventoryViewState extends State<InventoryView> {
             )),
         drawer: const SideMenu(),
         body: GestureDetector(
+          // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Inventory(items: displayedItems),
         ));

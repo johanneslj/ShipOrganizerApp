@@ -14,6 +14,7 @@ class Inventory extends StatelessWidget {
     this.onConfirm,
     this.isRecommended = false,
   }) : super(key: key);
+  Inventory({Key? key, this.onAdd, this.onRemove, this.items = const []}) : super(key: key);
 
   final List<Item> items;
   final Function()? onAdd;
@@ -66,7 +67,10 @@ class Inventory extends StatelessWidget {
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].name,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline5,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: SizedBox(
@@ -80,7 +84,8 @@ class Inventory extends StatelessWidget {
                       constraints: BoxConstraints.expand(width: 96),
                       child: TextField(
                         controller: _controllers[index],
-                        onEditingComplete: () => {
+                        onEditingComplete: () =>
+                        {
                           // TODO Implement with API.
                           items[index].amount = int.parse(_controllers[index].text)
                         },
@@ -89,9 +94,15 @@ class Inventory extends StatelessWidget {
                         decoration: InputDecoration(
                             constraints: const BoxConstraints(maxWidth: 200),
                             border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary,
+                                borderSide: BorderSide(color: Theme
+                                    .of(context)
+                                    .colorScheme
+                                    .primary,
                                     width: 4.0))),
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline5,
                       ),
                     ),
                   )
@@ -104,7 +115,10 @@ class Inventory extends StatelessWidget {
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].name,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline5,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: SizedBox(
@@ -117,7 +131,10 @@ class Inventory extends StatelessWidget {
                       icon: const Icon(Icons.remove, size: 36.0)),
                   Text(
                     items[index].amount.toString(),
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline5,
                   ),
                   IconButton(
                       onPressed: () => _onAdd(context, items[index]),
@@ -125,5 +142,30 @@ class Inventory extends StatelessWidget {
                 ],
               )));
     }
+  }
+
+
+  /// Creates a dialog to get amount to add, then handles adding the requested amount.
+  void _onAdd(BuildContext context, Item item) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddRemoveItemDialog(item: item, isAdd: true);
+        }).then((amount) => {
+          // TODO Implement with API. Add to call queue.
+          if (amount is int) {item.amount += amount}
+        });
+  }
+
+  /// Creates a dialog to get amount to remove, then handles removing the requested amount.
+  void _onRemove(BuildContext context, Item item) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddRemoveItemDialog(item: item, isAdd: false);
+        }).then((amount) => {
+          // TODO Implement with API. Add to call queue.
+          if (amount is int) {item.amount -= amount}
+        });
   }
 }

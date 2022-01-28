@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../main.dart';
@@ -19,100 +18,137 @@ class CreateUser extends StatefulWidget {
 class _CreateUserState extends State<CreateUser> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<String> departments = <String>["Dock", "Facotry", "Bridge", "Quarters"];
+  List<String> departments = <String>[
+    "Dock",
+    "Factory",
+    "Bridge",
+    "Quarters",
+    "Ababa",
+    "Cook",
+    "Line"
+  ];
 
   String email = "";
   String fullName = "";
-  List<String> selectedDepartments = <String>[];
 
   TextEditingController emailController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
 
+  List<String> _selectedDepartments = <String>[];
+
+// This function is triggered when a checkbox is checked or unchecked
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedDepartments.add(itemValue);
+      } else {
+        _selectedDepartments.remove(itemValue);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = 'One';
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 150),
-        child: Column(children: [
-          Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppLocalizations.of(context)!.email,
-                        style:
-                            TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 20)),
-                    TextFormField(
-                      validator: (val) => val!.isEmpty || !val.contains("@")
-                          ? AppLocalizations.of(context)!.enterValidEmail
-                          : null,
-                      // Email Address text field
-                      controller: emailController,
-                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text((AppLocalizations.of(context)!.fullName),
-                        style:
-                            TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary)),
-                    TextFormField(
-                      // Full Name text field
-                      controller: fullNameController,
-                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.fullName),
-                    ),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      value: dropdownValue,
-                      style: Theme.of(context).textTheme.headline5,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      elevation: 16,
-                      underline: Container(
-                        height: 2,
-                        color: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        title: Text(AppLocalizations.of(context)!.createUser, style: Theme.of(context).textTheme.headline6,),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          child: Column(children: [
+            Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppLocalizations.of(context)!.email,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary, fontSize: 20)),
+                      TextFormField(
+                        validator: (val) => val!.isEmpty || !val.contains("@")
+                            ? AppLocalizations.of(context)!.enterValidEmail
+                            : null,
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.email,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                       ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Free', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value, style: Theme.of(context).textTheme.headline5,),
-                        );
-                      }).toList(),
-                    )
-                  ],
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Column(children: [
-                      ButtonTheme(
-                          minWidth: 250.0,
-                          height: 100.0,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              (const MyApp()) //TODO push to inventory/default/home view
-                                          ));
-                                }
-                              },
-                              child: Text(AppLocalizations.of(context)!.createUser))),
-                    ]))
-              ])),
-        ]),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text((AppLocalizations.of(context)!.fullName),
+                          style: TextStyle(
+                              fontSize: 20, color: Theme.of(context).colorScheme.primary)),
+                      TextFormField(
+                        // Full Name text field
+                        controller: fullNameController,
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.fullName,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          // Checkbox list where an admin can select what departments a new user
+                          // will have access to
+                          child: Column(
+                            children: [
+                              Text(AppLocalizations.of(context)!.selectDepartment),
+                              ListBody(
+                                children: departments
+                                    .map((item) => Theme(
+                                        data: ThemeData(
+                                            unselectedWidgetColor:
+                                                Theme.of(context).colorScheme.primary),
+                                        child: CheckboxListTile(
+                                          selected: _selectedDepartments.contains(item),
+                                          value: _selectedDepartments.contains(item),
+                                          activeColor: Theme.of(context).colorScheme.primary,
+                                          checkColor: Theme.of(context).colorScheme.onPrimary,
+                                          title: Text(
+                                            item,
+                                            style: Theme.of(context).textTheme.bodyText2,
+                                          ),
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          onChanged: (isChecked) => _itemChange(item, isChecked!),
+                                        )))
+                                    .toList(),
+                              ),
+                            ],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                          )),
+                    ],
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Column(children: [
+                        ButtonTheme(
+                            minWidth: 250.0,
+                            height: 100.0,
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                (const MyApp()) //TODO push to inventory/default/home view
+                                            ));
+                                  }
+                                },
+                                child: Text(AppLocalizations.of(context)!.createUser))),
+                      ]))
+                ])),
+          ]),
+        ),
       ),
     );
   }
