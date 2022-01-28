@@ -26,7 +26,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   List<Item> displayedItems = [];
 
   // TODO Implement with API
-  Department selectedDepartment = Department(departmentName: "Bridge", rights: 1);
+  Department selectedDepartment = Department(departmentName: "Bridge");
 
   @override
   void initState() {

@@ -14,7 +14,6 @@ class Inventory extends StatelessWidget {
     this.onConfirm,
     this.isRecommended = false,
   }) : super(key: key);
-  Inventory({Key? key, this.onAdd, this.onRemove, this.items = const []}) : super(key: key);
 
   final List<Item> items;
   final Function()? onAdd;
@@ -35,30 +34,6 @@ class Inventory extends StatelessWidget {
       separatorBuilder: (BuildContext context, int index) =>
           Divider(color: Theme.of(context).colorScheme.primary),
     );
-  }
-
-  /// Creates a dialog to get amount to add, then handles adding the requested amount.
-  void _onAdd(BuildContext context, Item item) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddRemoveItemDialog(item: item, isAdd: true);
-        }).then((amount) => {
-          // TODO Implement with API. Add to call queue.
-          if (amount is int) {item.amount += amount}
-        });
-  }
-
-  /// Creates a dialog to get amount to remove, then handles removing the requested amount.
-  void _onRemove(BuildContext context, Item item) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddRemoveItemDialog(item: item, isAdd: false);
-        }).then((amount) => {
-          // TODO Implement with API. Add to call queue.
-          if (amount is int) {item.amount -= amount}
-        });
   }
 
   ListTile getListTile(BuildContext context, int index) {
