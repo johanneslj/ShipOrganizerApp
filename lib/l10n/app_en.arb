@@ -13,6 +13,7 @@
   "fullName": "Full Name",
   "helloWorld": "Hello World!",
   "invalidCode": "Invalid code",
+  "map": "Map",
   "newPassword": "New password",
   "password": "Password",
   "passwordsMustMatch": "Passwords do not match.",

@@ -13,6 +13,7 @@
   "fullName": "Fullt navn",
   "helloWorld": "Hei Verden!",
   "invalidCode": "Ugyldig kode",
+  "map": "Kart",
   "password": "Passord",
   "newPassword": "Nytt passord",
   "passwordsMustMatch": "Passordene er ikke like.",
