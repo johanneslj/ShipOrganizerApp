@@ -50,7 +50,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
-        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.name)],
+        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.email), Text("")],
       ),
     );
 
