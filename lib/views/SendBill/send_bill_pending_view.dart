@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// Class for the pending bills tab in the send_bill_view
@@ -37,6 +36,15 @@ class _pendingBill extends State<pendingBill> {
               AppLocalizations.of(context)!.changeImageSize,
               style: const TextStyle(
                 fontSize: 10.0,
+
+                color: Colors.black,
+              ),
+            ),
+            const Text(
+              "Department name here",
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             )
