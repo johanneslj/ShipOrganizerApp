@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
@@ -9,15 +11,15 @@ import 'item.dart';
 /// View where the user can see the inventory for their department.
 ///
 ///
-class InventoryView extends StatefulWidget {
-  const InventoryView({Key? key}) : super(key: key);
+class RecommendedInventoryView extends StatefulWidget {
+  const RecommendedInventoryView({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _InventoryViewState();
+  State<StatefulWidget> createState() => _RecommendedInventoryViewState();
 }
 
 /// State of the inventory view.
-class _InventoryViewState extends State<InventoryView> {
+class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
 
   List<Item> items = [];
@@ -31,21 +33,21 @@ class _InventoryViewState extends State<InventoryView> {
     super.initState();
     // TODO Get items from API, or from local cache if offline.
     items = [
-      Item(name: "Name", ean13: "1432456789059", amount: 234),
-      Item(name: "Product", ean13: "1432456789059", amount: 54),
+      Item(name: "Name", ean13: "1432456789059", amount: 200),
+      Item(name: "Product", ean13: "1432456789059", amount: 60),
       Item(name: "Test123", ean13: "1432456789059", amount: 72),
-      Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 22),
-      Item(name: "__234rfgg245", ean13: "1432456789059", amount: 234),
-      Item(name: "Product Name", ean13: "1432456789059", amount: 4),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
+      Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 40),
+      Item(name: "__234rfgg245", ean13: "1432456789059", amount: 300),
+      Item(name: "Product Name", ean13: "1432456789059", amount: 10),
+      Item(name: "Something", ean13: "1432456789059", amount: 100),
+      Item(name: "Yes", ean13: "1432456789059", amount: 900),
+      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 5),
+      Item(name: "Something", ean13: "1432456789059", amount: 90),
+      Item(name: "Yes", ean13: "1432456789059", amount: 800),
+      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 10),
+      Item(name: "Something", ean13: "1432456789059", amount: 150),
+      Item(name: "Yes", ean13: "1432456789059", amount: 1000),
+      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 10),
     ];
 
     displayedItems = items;
@@ -68,7 +70,10 @@ class _InventoryViewState extends State<InventoryView> {
         drawer: const SideMenu(),
         body: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Inventory(items: displayedItems),
+          child: Inventory(
+            items: displayedItems,
+            isRecommended: true,
+          ),
         ));
   }
 
@@ -85,7 +90,7 @@ class _InventoryViewState extends State<InventoryView> {
     // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
-    for (Item item in items ) {
+    for (Item item in items) {
       if (item.name.contains(query)) {
         result.add(item);
       } else if (item.productNumber != null) {
@@ -117,12 +122,30 @@ class _InventoryViewState extends State<InventoryView> {
   List<PopupMenuItem> getPopupMenuItems() {
     // TODO Get departments from API
     return [
-      PopupMenuItem(child: Text("Bridge"), value: 1,),
-      PopupMenuItem(child: Text("Factory"), value: 2,),
-      PopupMenuItem(child: Text("Deck"), value: 3,),
-      PopupMenuItem(child: Text("Storage"), value: 4,),
-      PopupMenuItem(child: Text("Office"), value: 5,),
-      PopupMenuItem(child: Text("Kitchen"), value: 6,),
+      PopupMenuItem(
+        child: Text("Bridge"),
+        value: 1,
+      ),
+      PopupMenuItem(
+        child: Text("Factory"),
+        value: 2,
+      ),
+      PopupMenuItem(
+        child: Text("Deck"),
+        value: 3,
+      ),
+      PopupMenuItem(
+        child: Text("Storage"),
+        value: 4,
+      ),
+      PopupMenuItem(
+        child: Text("Office"),
+        value: 5,
+      ),
+      PopupMenuItem(
+        child: Text("Kitchen"),
+        value: 6,
+      ),
     ];
   }
 }

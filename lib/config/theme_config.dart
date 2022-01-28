@@ -17,6 +17,7 @@ ThemeData theme = ThemeData(
   disabledColor: disabledColor,
   snackBarTheme: snackBarTheme,
   dialogTheme: dialogTheme,
+  popupMenuTheme: popUpMenuTheme,
 );
 
 /*
@@ -39,6 +40,7 @@ ColorScheme colorScheme = const ColorScheme(
 
 // Some extra colors
 const Color disabledColor = Color(0xff76acb2);
+const Color white = Color(0xffffffff);
 
 AppBarTheme appBarTheme = AppBarTheme(
   color: colorScheme.primary,
@@ -85,7 +87,7 @@ TextButtonThemeData textButtonTheme = TextButtonThemeData(
 
 InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
   filled: true,
-  fillColor: colorScheme.surface,
+  fillColor: const Color(0xffffffff),
   hintStyle: TextStyle(color: colorScheme.onSurface),
   border: const OutlineInputBorder(
     borderSide: BorderSide(
@@ -124,4 +126,10 @@ IconThemeData iconTheme = IconThemeData(
 SnackBarThemeData snackBarTheme = SnackBarThemeData(
   backgroundColor: disabledColor,
   contentTextStyle: textTheme.bodyText2,
+);
+
+PopupMenuThemeData popUpMenuTheme = PopupMenuThemeData(
+  textStyle: TextStyle(color: colorScheme.primary, fontSize: 24.0),
+  color: colorScheme.surface,
+  elevation: 10.0
 );

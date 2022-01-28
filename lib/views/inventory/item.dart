@@ -1,3 +1,5 @@
+import 'package:ship_organizer_app/entities/department.dart';
+
 /// Represents an item in the inventory.
 class Item {
   Item({required this.name, this.productNumber, this.ean13, required this.amount});

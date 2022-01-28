@@ -25,5 +25,6 @@
   "howMany": "Hvor mange ",
   "toAdd": " ønsker du å legge til?",
   "toRemove": " ønsker du å fjerne?",
-  "cancel": "Avbryt"
+  "cancel": "Avbryt",
+  "recommendedInventory": "Anbefalt inventar"
 }

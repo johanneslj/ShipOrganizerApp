@@ -25,5 +25,6 @@
   "howMany": "How many ",
   "toAdd": " do you want to add?",
   "toRemove": " do you want to remove?",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "recommendedInventory": "Recommended inventory"
 }
