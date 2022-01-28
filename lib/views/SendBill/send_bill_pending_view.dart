@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+/// Class for the pending bills tab in the send_bill_view
+/// This class is responsible for the view where the admin can
+/// check the bills that are not confirmed.
 class pendingBill extends StatefulWidget {
   const pendingBill({Key? key}) : super(key: key);
 

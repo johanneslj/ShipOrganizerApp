@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+/// Class for the confirmed bills tab in the send_bill_view
+/// This class is responsible for the view where the admin can
+/// check the bills that are confirmed.
+/// And for the normal user, can here set the bills as confirmed.
 class confimedBill extends StatefulWidget {
   const confimedBill({Key? key}) : super(key: key);
 

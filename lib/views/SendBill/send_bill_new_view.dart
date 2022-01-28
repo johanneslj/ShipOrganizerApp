@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// Class for the new bill tab in the send_bill_view
+/// This class is responsible for the creation of a new bill for
+/// confirmation. The class uses dropdownmenu and imageuploader
 class newBill extends StatefulWidget {
   const newBill({Key? key}) : super(key: key);
 
