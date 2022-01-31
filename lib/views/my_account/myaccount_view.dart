@@ -71,7 +71,7 @@ class MyAccount extends StatelessWidget {
 
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUser,
-        destination: "/selectDepartmemnt",
+        destination: "/administerUser",
       ));
     }
     return departmentCardList;
