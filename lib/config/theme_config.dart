@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 Theme configurations:
  ----------------------*/
 ThemeData theme = ThemeData(
-    primaryColor: colorScheme.primary,
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: colorScheme.background,
-    appBarTheme: appBarTheme,
-    buttonTheme: buttonThemeData,
-    elevatedButtonTheme: elevatedButtonTheme,
-    textButtonTheme: textButtonTheme,
-    textTheme: textTheme,
-    inputDecorationTheme: inputDecorationTheme,
-    iconTheme: iconTheme,
-    disabledColor: disabledColor,
-    snackBarTheme: snackBarTheme,
+  primaryColor: colorScheme.primary,
+  colorScheme: colorScheme,
+  scaffoldBackgroundColor: colorScheme.background,
+  appBarTheme: appBarTheme,
+  buttonTheme: buttonThemeData,
+  elevatedButtonTheme: elevatedButtonTheme,
+  textButtonTheme: textButtonTheme,
+  textTheme: textTheme,
+  inputDecorationTheme: inputDecorationTheme,
+  iconTheme: iconTheme,
+  disabledColor: disabledColor,
+  snackBarTheme: snackBarTheme,
+  dialogTheme: dialogTheme,
+  popupMenuTheme: popUpMenuTheme,
 );
 
 /*
@@ -38,6 +40,7 @@ ColorScheme colorScheme = const ColorScheme(
 
 // Some extra colors
 const Color disabledColor = Color(0xff76acb2);
+const Color white = Color(0xffffffff);
 
 AppBarTheme appBarTheme = AppBarTheme(
   color: colorScheme.primary,
@@ -70,6 +73,12 @@ ButtonStyle disabledElevatedButtonStyle = ElevatedButton.styleFrom(
   ),
 );
 
+DialogTheme dialogTheme = DialogTheme(
+  backgroundColor: colorScheme.primary,
+  contentTextStyle: textTheme.headline6,
+  alignment: Alignment.center
+);
+
 TextButtonThemeData textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
     primary: colorScheme.secondary,
@@ -78,7 +87,7 @@ TextButtonThemeData textButtonTheme = TextButtonThemeData(
 
 InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
   filled: true,
-  fillColor: colorScheme.surface,
+  fillColor: const Color(0xffffffff),
   hintStyle: TextStyle(color: colorScheme.onSurface),
   border: const OutlineInputBorder(
     borderSide: BorderSide(
@@ -104,7 +113,7 @@ TextTheme textTheme = TextTheme(
   overline: TextStyle(color: colorScheme.primary),
 );
 
-TextStyle textStyle = TextStyle(
+TextStyle textStyle = const TextStyle(
   inherit: true,
   fontSize: 20.0,
 );
@@ -117,4 +126,10 @@ IconThemeData iconTheme = IconThemeData(
 SnackBarThemeData snackBarTheme = SnackBarThemeData(
   backgroundColor: disabledColor,
   contentTextStyle: textTheme.bodyText2,
+);
+
+PopupMenuThemeData popUpMenuTheme = PopupMenuThemeData(
+  textStyle: TextStyle(color: colorScheme.primary, fontSize: 24.0),
+  color: colorScheme.surface,
+  elevation: 10.0
 );

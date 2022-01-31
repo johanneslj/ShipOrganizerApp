@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
+import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
@@ -152,6 +153,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(builder: (context) => (AdministerUsersView()) //ForgotPasswordPage())),
                         ))
+              },
+            ),
+            TextButton(
+              child: Text("Recommended Inventory"),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (RecommendedInventoryView()) //ForgotPasswordPage())),
+                    ))
               },
             ),
           ],
