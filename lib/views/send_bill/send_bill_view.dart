@@ -6,14 +6,14 @@ import 'package:ship_organizer_app/views/send_bill/send_bill_pending_view.dart';
 
 /// This class represents the possibility to send and receive bills between the
 /// departments
-class Sendbill extends StatefulWidget {
-  const Sendbill({Key? key}) : super(key: key);
+class SendBill extends StatefulWidget {
+  const SendBill({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SendBill();
 }
 
-class _SendBill extends State<Sendbill> {
+class _SendBill extends State<SendBill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
   String selectedValue = "Bridge";
   bool admin = true;
@@ -61,11 +61,11 @@ initState(){
         body: TabBarView(
             children: admin
                 ? [
-                    const newBill(),
-                    pendingBill( parentAction: _updatePendingCount,),
-                     confimedBill(admin: admin)
+                    const NewBill(),
+                    PendingBill( parentAction: _updatePendingCount,),
+                     ConfimedBill(admin: admin)
                   ]
-                : [confimedBill(admin : admin)]),
+                : [ConfimedBill(admin : admin)]),
       ),
     );
   }

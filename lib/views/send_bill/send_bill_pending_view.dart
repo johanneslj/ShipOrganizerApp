@@ -3,16 +3,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// Class for the pending bills tab in the send_bill_view
 /// This class is responsible for the view where the admin can
 /// check the bills that are not confirmed.
-class pendingBill extends StatefulWidget {
+class PendingBill extends StatefulWidget {
   final ValueChanged<String> parentAction;
 
-  const pendingBill({Key? key, required this.parentAction}) : super(key: key);
+  const PendingBill({Key? key, required this.parentAction}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _pendingBill();
 }
 
-class _pendingBill extends State<pendingBill> {
+class _pendingBill extends State<PendingBill> {
 
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 

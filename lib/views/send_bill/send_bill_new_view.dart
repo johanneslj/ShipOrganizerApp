@@ -10,14 +10,14 @@ import 'package:image_picker/image_picker.dart';
 /// Class for the new bill tab in the send_bill_view
 /// This class is responsible for the creation of a new bill for
 /// confirmation. The class uses dropdown menu and image uploader
-class newBill extends StatefulWidget {
-  const newBill({Key? key}) : super(key: key);
+class NewBill extends StatefulWidget {
+  const NewBill({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _newBill();
 }
 
-class _newBill extends State<newBill> {
+class _newBill extends State<NewBill> {
   String selectedValue = "Bridge";
   bool admin = false;
   late File? _image =null;
