@@ -51,7 +51,7 @@
   "newBill" : "New",
   "pending": "Pending",
   "confirmed": "Confirmed",
-  "changeImageSize" : "Click on image to enhance image size"
+  "changeImageSize" : "Click on image to enhance image size",
   "delete": "Delete",
   "name": "Name"
 }
