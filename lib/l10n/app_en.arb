@@ -46,8 +46,12 @@
   "changeDepartment" : "Change department",
   "changePassword":"Change password" ,
   "preferredInventory": "Preferred inventory",
-  "myAccount": "My sccount",
-  "administerUsers": "Administer users",
+  "myAccount": "My account",
+  "billing" : "Bill",
+  "newBill" : "New",
+  "pending": "Pending",
+  "confirmed": "Confirmed",
+  "changeImageSize" : "Click on image to enhance image size"
   "delete": "Delete",
   "name": "Name"
 }
