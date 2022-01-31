@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),
-        '/sendBill': (context) =>  Sendbill(),
+        '/sendBill': (context) =>  const Sendbill(),
 
       },
     );
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => (LoginView()) //ForgotPasswordPage())),
+              builder: (context) => (const LoginView()) //ForgotPasswordPage())),
               ));
     });
   }
@@ -94,18 +94,18 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             TextButton(
-              child: Text("Login view"),
+              child: const Text("Login view"),
               onPressed: () => {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            (LoginView()) //ForgotPasswordPage())),
+                            (const LoginView()) //ForgotPasswordPage())),
                         ))
               },
             ),
             TextButton(
-              child: Text("Select department"),
+              child: const Text("Select department"),
               onPressed: () => {
                 Navigator.push(
                     context,
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             TextButton(
-              child: Text("Set new password"),
+              child: const Text("Set new password"),
               onPressed: () => {
                 Navigator.push(
                     context,
