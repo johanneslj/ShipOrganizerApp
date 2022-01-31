@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,

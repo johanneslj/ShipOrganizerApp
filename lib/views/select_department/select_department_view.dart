@@ -13,6 +13,7 @@ class SelectDepartmentView extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  //TODO get departments from backend
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 
   @override

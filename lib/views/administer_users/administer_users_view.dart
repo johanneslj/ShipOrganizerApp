@@ -11,7 +11,7 @@ class AdministerUsersView extends StatefulWidget {
 
 class _AdministerUsersViewState extends State<AdministerUsersView> {
   //TODO get users from backend
-  List<String> users = ["Hans Hansen, hans@hansen.no", "Jon Jonsen, jon@jonsen.no"];
+  List<String> users = ["Hans Hansen, hanshansen@hansen.no", "Jon Jonsen, jon@jonsen.no"];
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                     horizontalInside:
                         BorderSide(width: 1, style: BorderStyle.solid)),
                 columnWidths: const <int, TableColumnWidth>{
-                  0: FlexColumnWidth(),
+                  0: FlexColumnWidth(0.4),
                   1: FlexColumnWidth(),
                   2: FixedColumnWidth(64),
                 },
@@ -50,7 +50,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
-        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.email), Text("")],
+        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.email), const Text("")],
       ),
     );
 
@@ -60,11 +60,11 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[0]),
+            child: Text(details[0], style: Theme.of(context).textTheme.caption,),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[1]),
+            child: Text(details[1], style: Theme.of(context).textTheme.caption,),
           ),
           TextButton(onPressed: () => {
 

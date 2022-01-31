@@ -18,6 +18,7 @@ class CreateUser extends StatefulWidget {
 class _CreateUserState extends State<CreateUser> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  //TODO Get departments from backend
   List<String> departments = <String>[
     "Dock",
     "Factory",
@@ -140,7 +141,7 @@ class _CreateUserState extends State<CreateUser> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                (const MyApp()) //TODO push to inventory/default/home view
+                                                (const MyApp()) //TODO Push the new user to backend
                                             ));
                                   }
                                 },
