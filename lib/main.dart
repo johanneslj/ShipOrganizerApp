@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       theme: theme,
       routes: {
         '/': (BuildContext context) => const MyHomePage(title: 'Home', index: 0,),
-        '/selectDepartmemnt': (context) => SelectDepartmentView(),
+        '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),

@@ -47,7 +47,7 @@ class MyAccount extends StatelessWidget {
     List<Widget> departmentCardList = <Widget>[];
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
-      destination: "/selectDepartmemnt",
+      destination: "/selectDepartment",
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
@@ -55,7 +55,7 @@ class MyAccount extends StatelessWidget {
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
-      destination: "/selectDepartmemnt",
+      destination: "/selectDepartment",
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
