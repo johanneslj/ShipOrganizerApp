@@ -122,7 +122,7 @@ class _newBill extends State<newBill> {
                 ListTile(
                     leading: const IconTheme(
                         data: IconThemeData(color: Colors.white),
-                        child: Icon(Icons.photo_library)),
+                        child: Icon(Icons.photo_library_sharp)),
                     title: Text('Photo Library',
                         style: Theme.of(context).textTheme.headline6),
                     onTap: () {
@@ -132,7 +132,7 @@ class _newBill extends State<newBill> {
                 ListTile(
                   leading: const IconTheme(
                       data: IconThemeData(color: Colors.white),
-                      child: Icon(Icons.photo_camera_outlined)),
+                      child: Icon(Icons.photo_camera_sharp),),
                   title: Text('Camera',
                       style: Theme.of(context).textTheme.headline6),
                   onTap: () {
