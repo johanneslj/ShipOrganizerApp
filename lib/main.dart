@@ -11,6 +11,7 @@ import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_bar_widget.dart';
+import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
 
 import 'config/theme_config.dart';
 
@@ -65,97 +66,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  Widget _getViewContainer(int index) {
+
+    List<Widget> notLoggedIn = [InventoryView(), MyAccount()];
+
+    return notLoggedIn[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(widget.title),
-            Text(AppLocalizations.of(context)!.helloWorld),
-            const Padding(
-                padding: EdgeInsets.only(top: 5, bottom: 5),
-                child: Text("Views that are under \n under progress or done:")),
-            TextButton(
-              child: const Text("Login view"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (const LoginView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: const Text("Select department"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (SelectDepartmentView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: const Text("Set new password"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (const SetPasswordView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: const Text("Add User"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (const CreateUser()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: const Text("Inventory"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (const InventoryView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: const Text("Map"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => (MapView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: Text("MyAccount"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => (MyAccount()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-            TextButton(
-              child: Text("AdministerUsers"),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => (AdministerUsersView()) //ForgotPasswordPage())),
-                        ))
-              },
-            ),
-          ],
-        ),
+      body: Consumer(
+        builder: (context, watch, child) {
+          final _indexState = watch(bottomNavigationBarIndexProvider);
+          return SafeArea(
+            child: _getViewContainer(_indexState),
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBarWidget(),
     );
