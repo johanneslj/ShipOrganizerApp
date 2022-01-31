@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
+import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 
+import '../../main.dart';
 
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
@@ -14,11 +18,7 @@ class MyAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
           AppLocalizations.of(context)!.myAccount,
           style: Theme.of(context).textTheme.headline6,
@@ -26,8 +26,7 @@ class MyAccount extends StatelessWidget {
       ),
       body: Center(
           child: Padding(
-        padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+        padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 40),
@@ -57,18 +56,16 @@ class MyAccount extends StatelessWidget {
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/selectDepartmemnt",
-
-    ));
-    departmentCardList.add(DepartmentCard(
-      departmentName: AppLocalizations.of(context)!.billing,
-      destination: "/sendBill",
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
       ));
-
+      departmentCardList.add(DepartmentCard(
+        departmentName: AppLocalizations.of(context)!.sendBill,
+        destination: "/selectDepartmemnt",
+      ));
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUser,
         destination: "/selectDepartmemnt",
