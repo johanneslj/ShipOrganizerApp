@@ -33,8 +33,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Table(
                 border: const TableBorder(
-                    horizontalInside:
-                        BorderSide(width: 1, style: BorderStyle.solid)),
+                    horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
                 columnWidths: const <int, TableColumnWidth>{
                   0: FlexColumnWidth(0.4),
                   1: FlexColumnWidth(),
@@ -55,7 +54,11 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
-        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.email), const Text("")],
+        children: [
+          Text(AppLocalizations.of(context)!.name),
+          Text(AppLocalizations.of(context)!.email),
+          const Text("")
+        ],
       ),
     );
 
@@ -65,15 +68,28 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[0], style: Theme.of(context).textTheme.caption,),
+            child: Text(
+              details[0],
+              style: Theme.of(context).textTheme.caption,
+            ),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[1], style: Theme.of(context).textTheme.caption,),
+            child: Text(
+              details[1],
+              style: Theme.of(context).textTheme.caption,
+            ),
           ),
-          TextButton(onPressed: () => {
-
-          }, child: Text(AppLocalizations.of(context)!.delete))
+          TextButton(
+              onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return showConfirmationDialog();
+                      },
+                    )
+                  },
+              child: Text(AppLocalizations.of(context)!.delete))
         ],
       ));
     }
@@ -82,7 +98,26 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
   }
 
   /// Shows a confirmation dialog for deleting a user
-  void showConfirmationDialog() {
+  AlertDialog showConfirmationDialog() {
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {},
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {},
+    );
 
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    return alert;
   }
 }
