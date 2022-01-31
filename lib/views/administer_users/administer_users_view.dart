@@ -21,6 +21,11 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           AppLocalizations.of(context)!.administerUser,
           style: Theme.of(context).textTheme.headline6,
