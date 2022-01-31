@@ -2,8 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
-import 'package:ship_organizer_app/views/SendBill/send_bill_view.dart';
+import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
+import 'package:ship_organizer_app/views/send_bill/send_bill_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
@@ -55,6 +55,8 @@ class MyApp extends StatelessWidget {
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),
         '/sendBill': (context) =>  const Sendbill(),
+        '/administerUser': (context) =>  AdministerUsersView(),
+
 
       },
     );
