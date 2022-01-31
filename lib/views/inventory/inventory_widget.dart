@@ -5,6 +5,7 @@ import 'item.dart';
 
 /// Widget that displays the input items as a ListView.
 ///
+/// Usable for both actual inventory and recommended inventory.
 class Inventory extends StatelessWidget {
   Inventory({
     Key? key,
@@ -15,12 +16,24 @@ class Inventory extends StatelessWidget {
     this.isRecommended = false,
   }) : super(key: key);
 
+  /// Items in the inventory
   final List<Item> items;
+
+  /// Function to be called on add button pressed.
+  /// Default function shows dialog to confirm addition amount.
   final Function()? onAdd;
+
+  /// Function to be called on remove button pressed.
+  /// Default function shows dialog to confirm removal amount.
   final Function()? onRemove;
+
+  /// Function called when completed recommended amount editing.
   final Function()? onConfirm;
+
+  /// If inventory is for seeing/editing the recommended stock.
   final bool isRecommended;
 
+  /// Controllers used for TextFields in recommended tiles.
   final List<TextEditingController> _controllers = [];
 
   @override
@@ -36,16 +49,19 @@ class Inventory extends StatelessWidget {
     );
   }
 
+  /// Returns the correct ListTile depending on whether it is for the recommended inventory or not.
   ListTile getListTile(BuildContext context, int index) {
     if (isRecommended) {
+
+      // Sets cursor in amount TextField to end of text on first tap.
+      _controllers[index].selection =
+          TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
+
       return ListTile(
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].name,
-            style: Theme
-                .of(context)
-                .textTheme
-                .headline5,
+            style: Theme.of(context).textTheme.headline5,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: SizedBox(
@@ -59,25 +75,19 @@ class Inventory extends StatelessWidget {
                       constraints: BoxConstraints.expand(width: 96),
                       child: TextField(
                         controller: _controllers[index],
-                        onEditingComplete: () =>
-                        {
+                        onEditingComplete: () => {
                           // TODO Implement with API.
-                          items[index].amount = int.parse(_controllers[index].text)
+                          items[index].amount = int.parse(_controllers[index].text),
+                          FocusManager.instance.primaryFocus?.unfocus()
                         },
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                             constraints: const BoxConstraints(maxWidth: 200),
                             border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Theme
-                                    .of(context)
-                                    .colorScheme
-                                    .primary,
-                                    width: 4.0))),
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5,
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.primary, width: 4.0))),
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                     ),
                   )
@@ -90,10 +100,7 @@ class Inventory extends StatelessWidget {
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].name,
-            style: Theme
-                .of(context)
-                .textTheme
-                .headline5,
+            style: Theme.of(context).textTheme.headline5,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: SizedBox(
@@ -106,10 +113,7 @@ class Inventory extends StatelessWidget {
                       icon: const Icon(Icons.remove, size: 36.0)),
                   Text(
                     items[index].amount.toString(),
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   IconButton(
                       onPressed: () => _onAdd(context, items[index]),
@@ -118,7 +122,6 @@ class Inventory extends StatelessWidget {
               )));
     }
   }
-
 
   /// Creates a dialog to get amount to add, then handles adding the requested amount.
   void _onAdd(BuildContext context, Item item) {
