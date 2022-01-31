@@ -47,9 +47,9 @@
   "changePassword":"Endre passord" ,
   "preferredInventory": "Anbefalt beholdning",
   "myAccount": "Min side",
-  "billing" : "Faktura",
-  "newBill" : "Ny",
-  "pending": "Venter",
-  "confirmed": "Bekreftet",
-  "changeImageSize" : "Trykk på bilde for å forstørre"
+  "administerUsers": "Administrer brukere",
+  "delete": "Slett",
+  "name": "Navn",
+  "inventory": "Beholdning",
+  "profile": "Profil"
 }

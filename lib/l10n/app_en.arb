@@ -53,5 +53,7 @@
   "confirmed": "Confirmed",
   "changeImageSize" : "Click on image to enhance image size",
   "delete": "Delete",
-  "name": "Name"
+  "name": "Name",
+  "inventory": "Inventory",
+  "profile": "Profile"
 }
