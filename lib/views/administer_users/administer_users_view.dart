@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+/// This is the view for administering users
+///
+/// Here an admin is able to browse through all users,
+/// and delete any given user
 class AdministerUsersView extends StatefulWidget {
   AdministerUsersView({Key? key}) : super(key: key);
 
@@ -46,6 +50,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     );
   }
 
+  /// creates an additional row in the table for each user
   List<TableRow> createUserRow() {
     List<TableRow> userRows = [];
     userRows.add(
@@ -76,10 +81,8 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     return userRows;
   }
 
-
+  /// Shows a confirmation dialog for deleting a user
   void showConfirmationDialog() {
-
-
 
   }
 }

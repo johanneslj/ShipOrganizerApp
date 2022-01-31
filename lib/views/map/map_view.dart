@@ -5,9 +5,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+/// A map view
+/// It implements a Google map
+/// In the map are markers which show how much equipment has been used there
+/// pressing a marker brings up a drawer from the bottom with more details
+/// about what items have been used there
 class MapView extends StatefulWidget {
-  MapView({Key? key, String? itemToShow}) : super(key: key);
-  String itemToShow = "";
+  const MapView({Key? key, this.itemToShow,}) : super(key: key);
+  final String? itemToShow;
 
   @override
   State<StatefulWidget> createState() => _MapViewState();
