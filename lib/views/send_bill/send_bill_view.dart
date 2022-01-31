@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/views/SendBill/send_bill_confirmed_view.dart';
-import 'package:ship_organizer_app/views/SendBill/send_bill_new_view.dart';
-import 'package:ship_organizer_app/views/SendBill/send_bill_pending_view.dart';
+import 'package:ship_organizer_app/views/send_bill/send_bill_confirmed_view.dart';
+import 'package:ship_organizer_app/views/send_bill/send_bill_new_view.dart';
+import 'package:ship_organizer_app/views/send_bill/send_bill_pending_view.dart';
 
 /// This class represents the possibility to send and receive bills between the
 /// departments

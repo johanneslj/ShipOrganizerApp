@@ -145,6 +145,7 @@ class _newBill extends State<newBill> {
           );
         });
   }
+
   /// Method to submit the selected department and image to the backend server
   void submitToServer() {
     Codec stringToBase64 = utf8.fuse(base64);

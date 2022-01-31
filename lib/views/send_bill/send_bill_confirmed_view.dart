@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 /// Class for the confirmed bills tab in the send_bill_view
 /// This class is responsible for the view where the admin can
 /// check the bills that are confirmed.
 /// And for the normal user, can here set the bills as confirmed.
 class confimedBill extends StatefulWidget {
   final bool admin;
-   const confimedBill({Key? key, required this.admin}) :super(key: key);
+
+  const confimedBill({Key? key, required this.admin}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _confimedBill();
@@ -38,18 +40,23 @@ class _confimedBill extends State<confimedBill> {
                   fontSize: 20.0,
                   color: Colors.black,
                 )),
-            widget.admin ? Text("") : TextButton(
-              onPressed: () {sendToServer(index);},
-              child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(
-                fontSize: 20.0,
-              ))
-            )
+            widget.admin
+                ? Text("")
+                : TextButton(
+                    onPressed: () {
+                      sendToServer(index);
+                    },
+                    child: Text(AppLocalizations.of(context)!.confirm,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                        )))
           ],
         ));
       }),
     ));
   }
-///Creates widget for the popup image
+
+  ///Creates widget for the popup image
   Widget imageDialog() {
     return Dialog(
       child: Container(
@@ -63,9 +70,9 @@ class _confimedBill extends State<confimedBill> {
     );
   }
 
+  /// Function to send notice to the server that the bill has been confirmed
   void sendToServer(int index) {
-  //TODO Add server access
+    //TODO Add server access
     // Need image-name and department name
   }
-
 }
