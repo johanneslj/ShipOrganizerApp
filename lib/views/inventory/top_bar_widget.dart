@@ -101,6 +101,7 @@ class _TopBarState extends State<TopBar> {
                     padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: TextField(
                       controller: widget.controller,
+                      onEditingComplete: _onSearch,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                         hintText: AppLocalizations.of(context)!.search + "...",
