@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// Class for the confirmed bills tab in the send_bill_view
@@ -6,7 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// check the bills that are confirmed.
 /// And for the normal user, can here set the bills as confirmed.
 class confimedBill extends StatefulWidget {
-  const confimedBill({Key? key}) : super(key: key);
+  final bool admin;
+   const confimedBill({Key? key, required this.admin}) :super(key: key);
 
   @override
   State<StatefulWidget> createState() => _confimedBill();
@@ -17,8 +17,8 @@ class _confimedBill extends State<confimedBill> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: GridView.count(
-      crossAxisCount: 2,
-      children: List.generate(20, (index) {
+      crossAxisCount: 1,
+      children: List.generate(1, (index) {
         return Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -30,25 +30,26 @@ class _confimedBill extends State<confimedBill> {
                         context: context, builder: (_) => imageDialog());
                   },
                 ),
-                radius: 50.0,
-                //Photo by Tamas Tuzes-Katai on Unsplash
+                radius: 100.0,
                 backgroundImage:
                     const AssetImage('assets/FishingBoatSilhouette.jpg')),
             Text(AppLocalizations.of(context)!.changeImageSize,
                 style: const TextStyle(
-                  fontSize: 10.0,
+                  fontSize: 20.0,
                   color: Colors.black,
                 )),
-            TextButton(
-              onPressed: () {},
-              child: Text(AppLocalizations.of(context)!.confirm),
+            widget.admin ? Text("") : TextButton(
+              onPressed: () {sendToServer(index);},
+              child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(
+                fontSize: 20.0,
+              ))
             )
           ],
         ));
       }),
     ));
   }
-
+///Creates widget for the popup image
   Widget imageDialog() {
     return Dialog(
       child: Container(
@@ -61,4 +62,10 @@ class _confimedBill extends State<confimedBill> {
       ),
     );
   }
+
+  void sendToServer(int index) {
+  //TODO Add server access
+    // Need image-name and department name
+  }
+
 }

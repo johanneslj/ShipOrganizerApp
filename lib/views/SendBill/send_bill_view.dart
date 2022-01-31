@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/SendBill/send_bill_confirmed_view.dart';
 import 'package:ship_organizer_app/views/SendBill/send_bill_new_view.dart';
 import 'package:ship_organizer_app/views/SendBill/send_bill_pending_view.dart';
-import 'package:ship_organizer_app/views/login/login_view.dart';
 
 /// This class represents the possibility to send and receive bills between the
 /// departments
@@ -18,11 +16,21 @@ class Sendbill extends StatefulWidget {
 class _SendBill extends State<Sendbill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
   String selectedValue = "Bridge";
-  bool admin = false;
+  bool admin = true;
+  String pendingCount = "";
+@override
+initState(){
+  pendingCount = (" (" + departments.length.toString() + ")");
+}
+  _updatePendingCount(String text){
+    setState(() {
+      pendingCount = (" (" + text + ")");
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return DefaultTabController(
       length: admin ? 3 : 1,
       child: Scaffold(
@@ -33,10 +41,13 @@ class _SendBill extends State<Sendbill> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
+              indicatorColor: admin ?  Colors.amberAccent : Theme.of(context).colorScheme.onBackground,
+              indicatorWeight: admin ? 5 : 0.1,
+
               tabs: admin
                   ? ([
                       Tab(child: Text(AppLocalizations.of(context)!.newBill)),
-                      Tab(child: Text(AppLocalizations.of(context)!.pending)),
+                      Tab(child: Text(AppLocalizations.of(context)!.pending + (pendingCount))),
                       Tab(child: Text(AppLocalizations.of(context)!.confirmed))
                     ])
                   : [
@@ -51,25 +62,12 @@ class _SendBill extends State<Sendbill> {
             children: admin
                 ? [
                     const newBill(),
-                    const pendingBill(),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      children: getlist(),
-                    ),
+                    pendingBill( parentAction: _updatePendingCount,),
+                     confimedBill(admin: admin)
                   ]
-                : [const confimedBill()]),
+                : [confimedBill(admin : admin)]),
       ),
     );
-  }
-
-  List<Widget> getlist() {
-    List<String> hei = departments;
-    return List.generate(hei.length, (index) {
-      return Center(
-          child: Column(
-        children: [Text('Item $index')],
-      ));
-    });
   }
 
   Widget imageDialog() {
