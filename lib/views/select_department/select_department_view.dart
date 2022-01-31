@@ -3,16 +3,21 @@ import 'package:ship_organizer_app/main.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
+/// The view which is presented when selecting department
+/// The view is made up of several cards, one for each department the user can access
+/// In this view the user can choose which department's inventory and
+/// bills they want to view
 class SelectDepartmentView extends StatelessWidget {
   SelectDepartmentView({
     Key? key,
   }) : super(key: key);
 
+  //TODO get departments from backend
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: Center(
           child: Padding(
@@ -33,6 +38,8 @@ class SelectDepartmentView extends StatelessWidget {
     );
   }
 
+  /// Uses a list of Strings to create a card for each
+  /// Pressing the created card pushes the user to the inventory view
   List<Widget> getDepartments(List<String> departments) {
     List<Widget> departmentCardList = <Widget>[];
 
