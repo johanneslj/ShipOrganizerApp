@@ -1,8 +1,14 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
+import 'package:ship_organizer_app/views/SendBill/send_bill_view.dart';
+import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
+import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
+import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
@@ -76,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => (LoginView()) //ForgotPasswordPage())),
+          MaterialPageRoute(builder: (context) => (const LoginView()) //ForgotPasswordPage())),
               ));
     });
   }
@@ -157,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => (MyAccount()) //ForgotPasswordPage())),
+                    MaterialPageRoute(builder: (context) => (const MyAccount()) //ForgotPasswordPage())),
                         ))
               },
             ),
