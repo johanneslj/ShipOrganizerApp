@@ -33,5 +33,7 @@
   "myAccount": "My sccount",
   "administerUsers": "Administer users",
   "delete": "Delete",
-  "name": "Name"
+  "name": "Name",
+  "inventory": "Inventory",
+  "profile": "Profile"
 }

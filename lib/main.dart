@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ship_organizer_app/views/MyAccount/myaccount_view.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
@@ -10,12 +10,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/widgets/bottom_navigation_bar_widget.dart';
 
 import 'config/theme_config.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -157,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBarWidget(),
     );
   }
 }

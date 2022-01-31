@@ -92,7 +92,7 @@ TextTheme textTheme = TextTheme(
   headline1: TextStyle(color: colorScheme.onPrimary),
   headline2: TextStyle(color: colorScheme.primary, fontSize: 20),
   headline3: TextStyle(color: colorScheme.primary),
-  headline4: TextStyle(color: colorScheme.primary),
+  headline4: TextStyle(color: colorScheme.secondary, fontSize: 20),
   headline5: TextStyle(color: colorScheme.primary),
   headline6: TextStyle(color: colorScheme.onPrimary),
   subtitle1: TextStyle(color: colorScheme.primary),

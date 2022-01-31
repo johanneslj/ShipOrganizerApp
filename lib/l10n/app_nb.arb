@@ -33,5 +33,7 @@
   "myAccount": "Min side",
   "administerUsers": "Administrer brukere",
   "delete": "Slett",
-  "name": "Navn"
+  "name": "Navn",
+  "inventory": "Beholdning",
+  "profile": "Profil"
 }
