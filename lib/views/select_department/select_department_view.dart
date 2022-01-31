@@ -46,7 +46,7 @@ class SelectDepartmentView extends StatelessWidget {
     for (String department in departments) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
-        destination: "/inventoryList",
+        destination: "/",
       );
       departmentCardList.add(departmentCard);
     }
