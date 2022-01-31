@@ -108,7 +108,7 @@ TextTheme textTheme = TextTheme(
   subtitle2: TextStyle(color: colorScheme.onPrimary, fontSize: 15),
   bodyText1: TextStyle(color: colorScheme.primary, fontSize: 25, fontWeight: FontWeight.normal),
   bodyText2: TextStyle(color: colorScheme.primary, fontSize: 20),
-  caption: TextStyle(color: colorScheme.primary),
+  caption: TextStyle(color: colorScheme.primary, fontSize: 15),
   button: TextStyle(color: colorScheme.onPrimary),
   overline: TextStyle(color: colorScheme.primary),
 );

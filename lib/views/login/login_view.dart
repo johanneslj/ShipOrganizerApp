@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import '../../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,6 +39,7 @@ class _LoginViewState extends State<LoginView> {
               padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
               child: Column(
                 children: [
+                  //TODO use real logo
                   Image.asset(
                     "assets/FishingBoatSilhouette.jpg",
                     width: 200,
@@ -99,12 +101,12 @@ class _LoginViewState extends State<LoginView> {
                               height: 100.0,
                               child: ElevatedButton(
                                   onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
+                                    if (_formKey.currentState!.validate()) { //TODO actually validate the login attempt
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  (const MyApp()) //TODO push to inventory/default/home view
+                                                  (const InventoryView())
                                               ));
                                     }
                                   },

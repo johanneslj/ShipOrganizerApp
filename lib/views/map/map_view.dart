@@ -16,6 +16,7 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final Location _location = Location();
 
+  //TODO Get marker locations from backend
   Map<LatLng, List<List<String>>> exampleLocations = {
     const LatLng(63.41745, 4.40407): <List<String>>[],
     const LatLng(62.47210, 4.23550): <List<String>>[
