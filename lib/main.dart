@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       title: 'Ship Organizer',
       theme: theme,
       routes: {
-        '/': (BuildContext context) => const MyHomePage(title: 'Home'),
+        '/': (BuildContext context) => const MyHomePage(title: 'Home', index: 0,),
         '/selectDepartmemnt': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
@@ -57,9 +57,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
+  const MyHomePage({Key? key, required this.title, required this.index}) : super(key: key);
   final String title;
+  final int index;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -69,9 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _getViewContainer(int index) {
 
-    List<Widget> notLoggedIn = [InventoryView(), MyAccount()];
+    List<Widget> mainViewList = [InventoryView(), MyAccount()];
 
-    return notLoggedIn[index];
+    return mainViewList[index];
   }
 
   @override
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Consumer(
         builder: (context, watch, child) {
           final _indexState = watch(bottomNavigationBarIndexProvider);
-          return SafeArea(
+          return Container(
             child: _getViewContainer(_indexState),
           );
         },

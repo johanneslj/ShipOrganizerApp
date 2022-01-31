@@ -21,7 +21,7 @@ class BottomNavigationBarWidget extends ConsumerWidget {
       List<BottomNavigationBarItem> barItemsList = [];
       barItemsList.add(BottomNavigationBarItem(
           label: AppLocalizations.of(context)!.inventory,
-          icon: const Icon(Icons.inventory_rounded)));
+          icon: const Icon(Icons.inventory_sharp)));
       barItemsList.add(BottomNavigationBarItem(
           label: AppLocalizations.of(context)!.profile, icon: const Icon(Icons.person)));
       return barItemsList;
