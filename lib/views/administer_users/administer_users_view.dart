@@ -22,8 +22,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -71,26 +70,20 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       List<String> details = user.split(",");
       userRows.add(TableRow(
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(
-              details[0],
-              style: Theme.of(context).textTheme.caption,
-            ),
+          Text(
+            details[0],
+            style: Theme.of(context).textTheme.caption,
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(
-              details[1],
-              style: Theme.of(context).textTheme.caption,
-            ),
+          Text(
+            details[1],
+            style: Theme.of(context).textTheme.caption,
           ),
           TextButton(
               onPressed: () => {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return showConfirmationDialog();
+                        return showConfirmationDialog(details[0]);
                       },
                     )
                   },
@@ -103,20 +96,24 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
   }
 
   /// Shows a confirmation dialog for deleting a user
-  AlertDialog showConfirmationDialog() {
+  AlertDialog showConfirmationDialog(String personToDelete) {
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {},
+      child: Text(AppLocalizations.of(context)!.cancel),
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
-      onPressed: () {},
+      child: Text(AppLocalizations.of(context)!.delete),
+      onPressed: () {
+        //TODO make this delete user from server
+      },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      title: Text(AppLocalizations.of(context)!.deleteUser),
+      content: Text(AppLocalizations.of(context)!.deleteConfirmationDialog + personToDelete),
       actions: [
         cancelButton,
         continueButton,

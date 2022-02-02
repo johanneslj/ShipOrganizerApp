@@ -48,5 +48,7 @@
   "delete": "Delete",
   "name": "Name",
   "inventory": "Inventory",
-  "profile": "Profile"
+  "profile": "Profile",
+  "deleteUser": "Delete user?",
+  "deleteConfirmationDialog": "Are you sure you want to delete "
 }

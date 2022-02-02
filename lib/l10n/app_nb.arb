@@ -49,5 +49,7 @@
   "delete": "Slett",
   "name": "Navn",
   "inventory": "Beholdning",
-  "profile": "Profil"
+  "profile": "Profil",
+  "deleteUser": "Slett bruker?",
+  "deleteConfirmationDialog": "Er du sikker på at du vil slette "
 }
