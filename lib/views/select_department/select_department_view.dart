@@ -18,6 +18,13 @@ class SelectDepartmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(AppLocalizations.of(context)!.changeDepartment, style: Theme.of(context).textTheme.headline6,),
+      ),
       body: Center(
           child: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),

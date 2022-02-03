@@ -151,7 +151,8 @@ class _MapViewState extends State<MapView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return SingleChildScrollView(
+          return Scrollbar(
+            isAlwaysShown: true,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,

@@ -86,7 +86,7 @@ class Inventory extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
-                      constraints: BoxConstraints.expand(width: 96),
+                      constraints: const BoxConstraints.expand(width: 96),
                       child: TextField(
                         controller: _controllers[index],
                         keyboardType: TextInputType.number,
