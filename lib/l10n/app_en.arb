@@ -50,5 +50,9 @@
   "inventory": "Inventory",
   "profile": "Profile",
   "deleteUser": "Delete user?",
-  "deleteConfirmationDialog": "Are you sure you want to delete "
+  "deleteConfirmationDialog": "Are you sure you want to delete ",
+  "productName": "Product Name",
+  "productNumber": "Product Number",
+  "productStock": "Stock",
+  "barcode": "Barcode"
 }
