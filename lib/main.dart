@@ -25,12 +25,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: const [Locale("en", "US"), Locale("nb", "NO")],
+      supportedLocales: const [Locale("en"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
+          print(locale);
           // if device language is supported by the app,
           // return it to set it as current app language
-          if (supportedLocales.contains(locale)) {
+          if (locale.languageCode.contains("en") || locale.languageCode.contains("nb")) {
             return locale;
           }
         }
