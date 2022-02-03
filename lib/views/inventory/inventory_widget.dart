@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 
@@ -65,8 +66,10 @@ class Inventory extends StatelessWidget {
   ListTile getListTile(BuildContext context, int index) {
     if (isRecommended) {
       // Sets cursor in amount TextField to end of text on first tap.
-      _controllers[index].selection =
-          TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
+      if (_controllers[index].text.length > 0) {
+        _controllers[index].selection =
+            TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
+      }
 
       return ListTile(
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -86,9 +89,13 @@ class Inventory extends StatelessWidget {
                       constraints: BoxConstraints.expand(width: 96),
                       child: TextField(
                         controller: _controllers[index],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         onEditingComplete: () => {
                           // TODO Implement with API.
-                          items[index].amount = int.parse(_controllers[index].text),
+                          if (_controllers[index].text.isNotEmpty) {
+                            items[index].amount = int.parse(_controllers[index].text)
+                          },
                           FocusManager.instance.primaryFocus?.unfocus()
                         },
                         textAlign: TextAlign.center,

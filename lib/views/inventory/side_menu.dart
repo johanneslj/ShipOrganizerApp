@@ -21,16 +21,20 @@ class SideMenu extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top),
+                Center(
+                  heightFactor: 2,
+                  child: Text("Ship Organizer", style: Theme.of(context).textTheme.headline6,)),
+                const Divider(),
                 // TODO Add routes
                 _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.scanNewInventory, LoginView()),
+                    context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), LoginView()),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map, MapView()),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), MapView()),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder, null),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder, Icon(Icons.shopping_cart_sharp), null),
                 const Divider(),
                 _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.sendRecommended, null),
+                    context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), null),
               ],
             )),
             Expanded(
@@ -49,8 +53,8 @@ class SideMenu extends StatelessWidget {
         ));
   }
 
-  Widget _createRouteTextButton(BuildContext context, String text, Widget? route) {
-    return TextButton(
+  Widget _createRouteTextButton(BuildContext context, String text, Icon icon, Widget? route) {
+    return TextButton.icon(
         onPressed: () => {
               if (route != null)
                 {
@@ -60,6 +64,7 @@ class SideMenu extends StatelessWidget {
                           ))
                 }
             },
-        child: Text(text, style: Theme.of(context).textTheme.headline6));
+        icon: icon,
+        label: Text(text, style: Theme.of(context).textTheme.headline6));
   }
 }
