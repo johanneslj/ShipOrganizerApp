@@ -48,5 +48,11 @@
   "delete": "Delete",
   "name": "Name",
   "inventory": "Inventory",
-  "profile": "Profile"
+  "profile": "Profile",
+  "itemName" : "Product name",
+  "stock": "Stock",
+  "itemNumber" : "Product number",
+  "barcode": "Barcode",
+  "submit": "Submit"
+
 }

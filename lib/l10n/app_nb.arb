@@ -49,5 +49,11 @@
   "delete": "Slett",
   "name": "Navn",
   "inventory": "Beholdning",
-  "profile": "Profil"
+  "profile": "Profil",
+  "itemName" : "Produktnavn",
+  "stock": "Antall på lager",
+  "itemNumber" : "Produktnummer",
+  "barcode": "EAN kode",
+  "submit": "Send"
+
 }
