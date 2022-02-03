@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
+import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
