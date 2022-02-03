@@ -1,5 +1,6 @@
 {
   "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se",
+  "addProduct": "Legg til produkt",
   "administerUser" : "Administrer brukere",
   "cancel": "Avbryt",
   "changeDepartment" : "Endre departement",
@@ -9,7 +10,6 @@
   "confirmPassword": "Bekreft passord",
   "createUser": "Lag Bruker",
   "email": "E-post",
-  "enterOrder": "Legg inn ordre",
   "enterValidEmail": "Du må skrive en gyldig e-post",
   "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
   "enterValidPasswordShort": "Ikke gyldig passord.",
