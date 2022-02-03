@@ -11,8 +11,12 @@ import 'package:location/location.dart';
 /// pressing a marker brings up a drawer from the bottom with more details
 /// about what items have been used there
 class MapView extends StatefulWidget {
-  const MapView({Key? key, this.itemToShow,}) : super(key: key);
-  final String? itemToShow;
+  const MapView({
+    Key? key,
+    this.itemToShow,
+  }) : super(key: key);
+  final String? itemToShow; //TODO make map widget use this to only show where this item
+  // has been used and not other items on the map
 
   @override
   State<StatefulWidget> createState() => _MapViewState();
@@ -54,8 +58,9 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.itemToShow != null) {
-      print(widget.itemToShow);
+    if (widget.itemToShow != null) {
+      print(widget
+          .itemToShow); //TODO Do something with item to show so it is the only item displayed if not null
     }
     return Scaffold(
       appBar: AppBar(
@@ -132,8 +137,8 @@ class _MapViewState extends State<MapView> {
     double hue = 0;
 
     hue = ((marker.length - min) / (max - min)) * 270; // hue has to be 0 <= hue < 360
-    // This function normalizes the value to be between 0 and 240 so that each marker can get a
-    // hue relative to the amount of equipment that is present there, it stops at 240 because close
+    // This function normalizes the value to be between 0 and 270 so that each marker can get a
+    // hue relative to the amount of equipment that is present there, it stops at 270 because closer
     // to 360 the colors start to get similar to the ones around 0
 
     return hue;
