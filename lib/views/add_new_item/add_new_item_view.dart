@@ -21,7 +21,7 @@ class NewItem extends StatefulWidget {
 class _newItem extends State<NewItem> {
   final TextEditingController _searchQueryController = TextEditingController();
   String searchQuery = "Search query";
-
+  final _formKey = GlobalKey<FormState>();
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
@@ -57,77 +57,109 @@ class _newItem extends State<NewItem> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.addNewItem,
+          AppLocalizations.of(context)!.addProduct,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
       body: Center(
-          child: Column(
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(
-                  left: 30, right: 30, top: 60, bottom: 10),
-              child: Form(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(AppLocalizations.of(context)!.itemName),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.itemName,
-                            hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor)),
-                      ),
-                      Text(AppLocalizations.of(context)!.itemNumber),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.itemNumber,
-                            hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor)),
-                      ),
-                      Text(AppLocalizations.of(context)!.stock),
-                      TextFormField(
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.stock,
-                            hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor),
-                          ),
-                          keyboardType: TextInputType.number),
-                      Text(AppLocalizations.of(context)!.barcode),
-                      TextFormField(
-                        onChanged: (query) => updateSearchQuery(query),
-                        controller: _searchQueryController,
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.barcode,
-                          hintStyle:
-                              TextStyle(color: Theme.of(context).disabledColor),
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: IconButton(
-                              icon: const Icon(Icons.camera_alt_sharp,
-                                  color: Colors.black),
-                              onPressed: () => {scanBarcodeNormal()},
-                            ), // icon is 48px widget.
-                          ),
-                        ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(top: 30),
-                          child: ButtonTheme(
-                              minWidth: 250.0,
-                              height: 100.0,
-                              child: ElevatedButton(
-                                  onPressed: () async {
-                                    sendToServer(context);
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)!.submit))))
-                    ]),
-              ))
-        ],
-      )),
+        child:SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 60, bottom: 10),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(AppLocalizations.of(context)!.productName),
+                            TextFormField(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppLocalizations.of(context)!.enterValidText;
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.productName,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
+                            ),
+                            Text(AppLocalizations.of(context)!.productNumber),
+                            TextFormField(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppLocalizations.of(context)!.enterValidText;
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.productNumber,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
+                            ),
+                            Text(AppLocalizations.of(context)!.productStock),
+                            TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context)!.enterValidNumber;
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.productStock,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor),
+                                ),
+                                keyboardType: TextInputType.number),
+                            Text(AppLocalizations.of(context)!.barcode),
+                            TextFormField(
+                              onChanged: (query) => updateSearchQuery(query),
+                              controller: _searchQueryController,
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!.barcode,
+                                hintStyle:
+                                TextStyle(color: Theme.of(context).disabledColor),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.camera_alt_sharp,
+                                        color: Colors.black),
+                                    onPressed: () => {
+                                      scanBarcodeNormal()},
+                                  ), // icon is 48px widget.
+                                ),
+                              ),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: ButtonTheme(
+                                    minWidth: 250.0,
+                                    height: 100.0,
+                                    child: ElevatedButton(
+                                        onPressed: () async {
+                                          if (_formKey.currentState!.validate()) {
+                                            // If the form is valid, display a snackbar. In the real world,
+                                            // you'd often call a server or save the information in a database.
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('Processing Data')),
+                                            );
+                                            sendToServer(context);
+                                          }
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)!.submit))))
+                          ]),
+                    ))
+              ],
+            )
+
+        )
+          ),
     );
   }
+
 
   /// Update the searchbar with ean-code
   void updateSearchQuery(String newQuery) {
