@@ -44,18 +44,7 @@ class Inventory extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         _controllers.add(TextEditingController(text: items[index].amount.toString()));
-        return InkWell(
-          child: getListTile(context, index),
-          onDoubleTap: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => (MapView(
-                          itemToShow: items[index].name,
-                        )) 
-                    ))
-          },
-        );
+        return getListTile(context, index);
       },
       separatorBuilder: (BuildContext context, int index) =>
           Divider(color: Theme.of(context).colorScheme.primary),
@@ -86,22 +75,23 @@ class Inventory extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints.expand(width: 96),
+                      constraints: const BoxConstraints.expand(width: 96, height: 48),
                       child: TextField(
                         controller: _controllers[index],
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10)],
                         onEditingComplete: () => {
                           // TODO Implement with API.
-                          if (_controllers[index].text.isNotEmpty) {
-                            items[index].amount = int.parse(_controllers[index].text)
-                          },
+                          if (_controllers[index].text.isNotEmpty)
+                            {items[index].amount = int.parse(_controllers[index].text)},
                           FocusManager.instance.primaryFocus?.unfocus()
                         },
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                             constraints: const BoxConstraints(maxWidth: 200),
+                            contentPadding: const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 0),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).colorScheme.primary, width: 4.0))),
@@ -116,11 +106,20 @@ class Inventory extends StatelessWidget {
     } else {
       return ListTile(
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-          title: Text(
-            items[index].name,
-            style: Theme.of(context).textTheme.headline5,
-            overflow: TextOverflow.ellipsis,
-          ),
+          title: InkWell(
+              child: Text(
+                items[index].name,
+                style: Theme.of(context).textTheme.headline5,
+                overflow: TextOverflow.ellipsis,
+              ),
+              onDoubleTap: () => {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => (MapView(
+                                  itemToShow: items[index].name,
+                                ))))
+                  }),
           trailing: SizedBox(
               width: 160.0,
               child: Row(
