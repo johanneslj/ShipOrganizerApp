@@ -56,25 +56,36 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 24.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              controller: _controller,
-            )),
-        drawer: const SideMenu(),
-        body: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Inventory(
-            items: displayedItems,
-            isRecommended: true,
-          ),
-        ));
+      appBar: PreferredSize(
+          preferredSize:
+              // Creates top padding for the top bar so that it starts below status/notification bar.
+              Size(
+                  MediaQuery.of(context).size.width, MediaQuery.of(context).viewPadding.top + 32.0),
+          child: TopBar(
+            onSearch: onSearch,
+            onClear: onClear,
+            filter: showSelectDepartmentMenu,
+            controller: _controller,
+          )),
+      drawer: const SideMenu(),
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Inventory(
+          items: displayedItems,
+          isRecommended: true,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        foregroundColor: Theme.of(context).colorScheme.primaryVariant,
+        onPressed: onOrderStockUp,
+        child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)
+      ),
+    );
+  }
+
+
+  void onOrderStockUp() {
+
   }
 
   /// Clears search bar and sets state for displayed items to all items.
