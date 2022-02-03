@@ -5,8 +5,6 @@ import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
-import 'package:ship_organizer_app/views/login/login_view.dart';
-import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
@@ -17,7 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'config/theme_config.dart';
 
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -50,11 +48,11 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => const MyHomePage(
               title: 'Home',
             ),
-        '/selectDepartmemnt': (context) => SelectDepartmentView(),
+        '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),
-        '/administerUser': (context) => AdministerUsersView(),
+        '/administerUser': (context) => const AdministerUsersView(),
         '/sendBill': (context) => const SendBill(),
 
 
@@ -76,9 +74,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Widget _getViewContainer(int index) {
-    List<Widget> mainViewList = [InventoryView(), MyAccount()];
+    List<Widget> mainViewsList = [const InventoryView(), const MyAccount()];
 
-    return mainViewList[index];
+    return mainViewsList[index];
   }
 
   @override
