@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
@@ -116,7 +115,7 @@ class _InventoryViewState extends State<InventoryView> {
   void showSelectDepartmentMenu() {
     showMenu(
         context: context,
-        position: RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
+        position: const RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
         items: getPopupMenuItems());
   }
 
