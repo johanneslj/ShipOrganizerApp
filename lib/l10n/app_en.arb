@@ -54,5 +54,9 @@
   "productName": "Product Name",
   "productNumber": "Product Number",
   "productStock": "Stock",
-  "barcode": "Barcode"
+  "barcode": "Barcode",
+  "submit": "Submit",
+  "enterValidText" : "Please enter text",
+  "enterValidNumber" : "Please enter stock"
+
 }

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: const [Locale("en", "US"), Locale("nb", "NO")],
+      supportedLocales: const [Locale('en', ''), Locale('nb', 'NO')],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
           // if device language is supported by the app,
@@ -40,11 +40,13 @@ class MyApp extends StatelessWidget {
         }
         // If no device language is supported by the app,
         // Return Norwegian bokmål as the default language in the app
-        return const Locale("nb", "NO");
+        return const Locale('nb', 'NO');
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,
