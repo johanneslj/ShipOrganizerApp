@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
+import 'package:ship_organizer_app/views/map/map_view.dart';
 
 import 'item.dart';
 
@@ -42,7 +43,18 @@ class Inventory extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         _controllers.add(TextEditingController(text: items[index].amount.toString()));
-        return getListTile(context, index);
+        return InkWell(
+          child: getListTile(context, index),
+          onDoubleTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => (MapView(
+                          itemToShow: items[index].name,
+                        )) 
+                    ))
+          },
+        );
       },
       separatorBuilder: (BuildContext context, int index) =>
           Divider(color: Theme.of(context).colorScheme.primary),
@@ -52,7 +64,6 @@ class Inventory extends StatelessWidget {
   /// Returns the correct ListTile depending on whether it is for the recommended inventory or not.
   ListTile getListTile(BuildContext context, int index) {
     if (isRecommended) {
-
       // Sets cursor in amount TextField to end of text on first tap.
       _controllers[index].selection =
           TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
