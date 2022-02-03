@@ -9,7 +9,7 @@
   "confirmPassword": "Bekreft passord",
   "createUser": "Lag Bruker",
   "email": "E-post",
-  "enterOrder": "Legg inn ordre",
+  "addNewItem": "Nytt produkt",
   "enterValidEmail": "Du må skrive en gyldig e-post",
   "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
   "enterValidPasswordShort": "Ikke gyldig passord.",

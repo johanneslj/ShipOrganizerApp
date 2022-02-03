@@ -9,7 +9,7 @@
   "confirmPassword": "Confirm password",
   "createUser": "Create User",
   "email": "E-mail",
-  "enterOrder": "Enter order",
+  "addNewItem": "Add new item",
   "enterValidEmail": "Enter a valid e-mail",
   "enterValidPassword": "Please enter a valid password. \nIt must contain at least 8 characters, \n1 number, 1 uppercase, and 1 lowercase letter.",
   "enterValidPasswordShort": "Enter a valid password.",
