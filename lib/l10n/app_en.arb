@@ -40,14 +40,13 @@
   "toRemove": " do you want to remove?",
   "verificationCode": "Verification code",
   "verifyCode": "Verify code",
-  "registerNewUser": "Register new user",
-  "sendBill": "Send bill",
-  "administerUser" : "Administer user",
-  "changeDepartment" : "Change department",
-  "changePassword":"Change password" ,
-  "preferredInventory": "Preferred inventory",
-  "myAccount": "My sccount",
-  "administerUsers": "Administer users",
+  "billing" : "Bill",
+  "newBill" : "New",
+  "pending": "Pending",
+  "confirmed": "Confirmed",
+  "changeImageSize" : "Click on image to enhance image size",
   "delete": "Delete",
-  "name": "Name"
+  "name": "Name",
+  "inventory": "Inventory",
+  "profile": "Profile"
 }

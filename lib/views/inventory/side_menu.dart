@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
+import 'package:ship_organizer_app/views/map/map_view.dart';
 
 /// Creates a side menu for use as a [Drawer] in a [Scaffold] for the ship organizer app.
 ///
@@ -28,7 +29,7 @@ class SideMenu extends StatelessWidget {
                 _createRouteTextButton(
                     context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), LoginView()),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp),null),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), MapView()),
                 const Divider(),
                 _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder, Icon(Icons.shopping_cart_sharp), null),
                 const Divider(),

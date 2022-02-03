@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String departmentName;
   final String destination;
 
-  const DepartmentCard({Key? key, required this.departmentName,required this.destination}) : super(key: key);
+  const DepartmentCard(
+      {Key? key, required this.departmentName, required this.destination})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +31,7 @@ class DepartmentCard extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () => {
-                  Navigator.pushNamed(context, destination)
-                }),
+            onTap: () => {Navigator.pushNamed(context, destination)}),
         const Divider(
           color: Color(0xffD3D6D7),
         ),
