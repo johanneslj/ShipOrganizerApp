@@ -22,19 +22,24 @@ class SideMenu extends StatelessWidget {
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top),
                 Center(
-                  heightFactor: 2,
-                  child: Text("Ship Organizer", style: Theme.of(context).textTheme.headline6,)),
+                    heightFactor: 2,
+                    child: Text(
+                      "Ship Organizer",
+                      style: Theme.of(context).textTheme.headline6,
+                    )),
                 const Divider(),
                 // TODO Add routes
-                _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), LoginView()),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.scanNewInventory,
+                    Icon(Icons.archive_sharp), LoginView()),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), MapView()),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map,
+                    Icon(Icons.pin_drop_sharp), MapView()),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder, Icon(Icons.shopping_cart_sharp), null),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder,
+                    Icon(Icons.shopping_cart_sharp), null),
                 const Divider(),
-                _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), null),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.recommendedInventory,
+                    Icon(Icons.inventory_sharp), null),
               ],
             )),
             Expanded(
@@ -46,7 +51,8 @@ class SideMenu extends StatelessWidget {
                     AppLocalizations.of(context)!.logOut,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
-                        decoration: TextDecoration.underline),
+                        decoration: TextDecoration.underline,
+                        fontSize: 20.0),
                   )),
             ))
           ],
