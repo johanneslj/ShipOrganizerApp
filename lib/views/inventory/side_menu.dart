@@ -27,14 +27,14 @@ class SideMenu extends StatelessWidget {
                 const Divider(),
                 // TODO Add routes
                 _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), LoginView()),
+                    context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), '/inventory'),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), MapView()),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), '/map'),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.enterOrder, Icon(Icons.shopping_cart_sharp), null),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct, Icon(Icons.shopping_cart_sharp), '/'),
                 const Divider(),
                 _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), null),
+                    context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), '/recommendedInventory'),
               ],
             )),
             Expanded(
@@ -53,15 +53,12 @@ class SideMenu extends StatelessWidget {
         ));
   }
 
-  Widget _createRouteTextButton(BuildContext context, String text, Icon icon, Widget? route) {
+  Widget _createRouteTextButton(BuildContext context, String text, Icon icon, String route) {
     return TextButton.icon(
         onPressed: () => {
               if (route != null)
                 {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => (route) //ForgotPasswordPage())),
-                          ))
+                  Navigator.pushNamed(context, route)
                 }
             },
         icon: icon,
