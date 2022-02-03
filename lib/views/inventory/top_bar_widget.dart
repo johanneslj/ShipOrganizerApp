@@ -94,13 +94,14 @@ class _TopBarState extends State<TopBar> {
                       color: Theme
                           .of(context)
                           .colorScheme
-                          .onPrimary,
+                          .onPrimary, size: 32.0,
                     )),
             Flexible(
                 child: Container(
-                    padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                     child: TextField(
                       controller: widget.controller,
+                      onEditingComplete: _onSearch,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                         hintText: AppLocalizations.of(context)!.search + "...",
@@ -112,7 +113,7 @@ class _TopBarState extends State<TopBar> {
                                     .colorScheme
                                     .primary)),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
+                          borderRadius: BorderRadius.circular(32.0),
                           borderSide: const BorderSide(
                             width: 0,
                             style: BorderStyle.none,
@@ -121,19 +122,12 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ))),
             IconButton(
-                onPressed: _onSearch,
-                icon: widget.searchIcon ??
-                    Icon(Icons.search, color: Theme
-                        .of(context)
-                        .colorScheme
-                        .onPrimary)),
-            IconButton(
                 onPressed: _onScan,
                 icon: widget.scanIcon ??
                     Icon(Icons.camera_alt_sharp, color: Theme
                         .of(context)
                         .colorScheme
-                        .onPrimary)),
+                        .onPrimary, size: 32.0,)),
             IconButton(
                 onPressed: _filter,
                 icon: widget.filterIcon ??
@@ -142,7 +136,7 @@ class _TopBarState extends State<TopBar> {
                       color: Theme
                           .of(context)
                           .colorScheme
-                          .onPrimary,
+                          .onPrimary, size: 32.0
                     ))
           ],
         ));

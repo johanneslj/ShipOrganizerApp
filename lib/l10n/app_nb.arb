@@ -1,5 +1,6 @@
 {
   "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se",
+  "addProduct": "Legg til produkt",
   "administerUser" : "Administrer brukere",
   "cancel": "Avbryt",
   "changeDepartment" : "Endre departement",
@@ -27,7 +28,7 @@
   "preferredInventory": "Anbefalt beholdning",
   "registerNewUser": "Registrer ny bruker",
   "recommendedInventory": "Anbefalt inventar",
-  "scanNewInventory": "Scan nytt inventar",
+  "scanNewInventory": "Legg inn nytt inventar",
   "search": "Søk",
   "selectDepartment": "Velg departementer",
   "selectedDepartments": "Valgte departmenter",
@@ -49,10 +50,6 @@
   "name": "Navn",
   "inventory": "Beholdning",
   "profile": "Profil",
-  "itemName" : "Produktnavn",
-  "stock": "Antall på lager",
-  "itemNumber" : "Produktnummer",
-  "barcode": "EAN kode",
-  "submit": "Send"
-
+  "deleteUser": "Slett bruker?",
+  "deleteConfirmationDialog": "Er du sikker på at du vil slette "
 }

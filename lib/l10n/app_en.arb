@@ -1,5 +1,6 @@
 {
   "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
+  "addProduct": "Add product",
   "administerUser" : "Administer user",
   "cancel": "Cancel",
   "changeDepartment" : "Change department",
@@ -27,7 +28,7 @@
   "preferredInventory": "Preferred inventory",
   "recommendedInventory": "Recommended inventory",
   "registerNewUser": "Register new user",
-  "scanNewInventory": "Scan new inventory",
+  "scanNewInventory": "Enter new inventory",
   "search": "Search",
   "selectDepartment": "Select departments",
   "selectedDepartments": "Selected departments",
@@ -48,10 +49,6 @@
   "name": "Name",
   "inventory": "Inventory",
   "profile": "Profile",
-  "itemName" : "Product name",
-  "stock": "Stock",
-  "itemNumber" : "Product number",
-  "barcode": "Barcode",
-  "submit": "Submit"
-
+  "deleteUser": "Delete user?",
+  "deleteConfirmationDialog": "Are you sure you want to delete "
 }

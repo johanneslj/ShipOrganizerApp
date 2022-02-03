@@ -18,6 +18,7 @@ class MyAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
           AppLocalizations.of(context)!.myAccount,

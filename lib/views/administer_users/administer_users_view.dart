@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+/// This is the view for administering users
+///
+/// Here an admin is able to browse through all users,
+/// and delete any given user
 class AdministerUsersView extends StatefulWidget {
   AdministerUsersView({Key? key}) : super(key: key);
 
@@ -18,8 +22,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -34,8 +37,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Table(
                 border: const TableBorder(
-                    horizontalInside:
-                        BorderSide(width: 1, style: BorderStyle.solid)),
+                    horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
                 columnWidths: const <int, TableColumnWidth>{
                   0: FlexColumnWidth(0.4),
                   1: FlexColumnWidth(),
@@ -51,11 +53,16 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     );
   }
 
+  /// creates an additional row in the table for each user
   List<TableRow> createUserRow() {
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
-        children: [Text(AppLocalizations.of(context)!.name), Text(AppLocalizations.of(context)!.email), const Text("")],
+        children: [
+          Text(AppLocalizations.of(context)!.name),
+          Text(AppLocalizations.of(context)!.email),
+          const Text("")
+        ],
       ),
     );
 
@@ -63,17 +70,24 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       List<String> details = user.split(",");
       userRows.add(TableRow(
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[0], style: Theme.of(context).textTheme.caption,),
+          Text(
+            details[0],
+            style: Theme.of(context).textTheme.caption,
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-            child: Text(details[1], style: Theme.of(context).textTheme.caption,),
+          Text(
+            details[1],
+            style: Theme.of(context).textTheme.caption,
           ),
-          TextButton(onPressed: () => {
-
-          }, child: Text(AppLocalizations.of(context)!.delete))
+          TextButton(
+              onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return showConfirmationDialog(details[0]);
+                      },
+                    )
+                  },
+              child: Text(AppLocalizations.of(context)!.delete))
         ],
       ));
     }
@@ -81,10 +95,31 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     return userRows;
   }
 
+  /// Shows a confirmation dialog for deleting a user
+  AlertDialog showConfirmationDialog(String personToDelete) {
+    Widget cancelButton = TextButton(
+      child: Text(AppLocalizations.of(context)!.cancel),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text(AppLocalizations.of(context)!.delete),
+      onPressed: () {
+        //TODO make this delete user from server
+      },
+    );
 
-  void showConfirmationDialog() {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(AppLocalizations.of(context)!.deleteUser),
+      content: Text(AppLocalizations.of(context)!.deleteConfirmationDialog + personToDelete),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
 
-
-
+    return alert;
   }
 }

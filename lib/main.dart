@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_view.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_bar_widget.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config/theme_config.dart';
 
@@ -47,33 +48,36 @@ class MyApp extends StatelessWidget {
       title: 'Ship Organizer',
       theme: theme,
       routes: {
-        '/': (BuildContext context) => const MyHomePage(title: 'Home', index: 0,),
-        '/selectDepartment': (context) => SelectDepartmentView(),
+        '/': (BuildContext context) => const MyHomePage(
+              title: 'Home',
+            ),
+        '/selectDepartmemnt': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
         '/inventoryList': (context) => const InventoryView(),
         '/administerUser': (context) => AdministerUsersView(),
         '/sendBill': (context) => const SendBill(),
-
-
+        '/inventory': (context) => const InventoryView(),
+        '/recommendedInventory': (context) => const RecommendedInventoryView(),
+        '/map': (context) => const MapView(),
       },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title, required this.index}) : super(key: key);
+  const MyHomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
   final String title;
-  final int index;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   Widget _getViewContainer(int index) {
-
     List<Widget> mainViewList = [InventoryView(), MyAccount()];
 
     return mainViewList[index];
@@ -90,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBarWidget(),
+      bottomNavigationBar: const BottomNavigationBarWidget(),
     );
   }
 }
