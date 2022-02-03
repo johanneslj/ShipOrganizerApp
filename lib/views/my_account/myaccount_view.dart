@@ -50,7 +50,7 @@ class MyAccount extends StatelessWidget {
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
-      destination: "/selectDepartment",
+      destination: "/recommendedInventory",
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
