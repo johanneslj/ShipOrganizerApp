@@ -31,7 +31,7 @@ class SideMenu extends StatelessWidget {
                 const Divider(),
                 _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), '/map'),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct, Icon(Icons.shopping_cart_sharp), '/'),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct, Icon(Icons.shopping_cart_sharp), '/newProduct'),
                 const Divider(),
                 _createRouteTextButton(
                     context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), '/recommendedInventory'),
