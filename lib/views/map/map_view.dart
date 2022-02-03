@@ -54,6 +54,9 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.itemToShow != null) {
+      print(widget.itemToShow);
+    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
