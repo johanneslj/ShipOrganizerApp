@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
@@ -55,8 +56,9 @@ class MyApp extends StatelessWidget {
         '/inventoryList': (context) => const InventoryView(),
         '/administerUser': (context) => const AdministerUsersView(),
         '/sendBill': (context) => const SendBill(),
-
-
+        '/inventory': (context) => const InventoryView(),
+        '/recommendedInventory': (context) => const RecommendedInventoryView(),
+        '/map': (context) => const MapView(),
       },
     );
   }
