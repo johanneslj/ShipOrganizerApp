@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui' as eos;
 import 'package:path/path.dart' as p;
 
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class NewBill extends StatefulWidget {
 class _newBill extends State<NewBill> {
   String selectedValue = "Bridge";
   bool admin = false;
-  late File? _image =null;
+  late File? _image = null;
 
   _imgFromCamera() async {
     final image = (await ImagePicker()
@@ -51,6 +50,9 @@ class _newBill extends State<NewBill> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButtonFormField(
+                icon: const IconTheme(
+                    data: IconThemeData(color:Colors.black),
+                    child: Icon(Icons.arrow_downward_sharp)),
                 decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 1),
@@ -59,10 +61,12 @@ class _newBill extends State<NewBill> {
                     borderSide: BorderSide(color: Colors.blue, width: 1),
                   ),
                 ),
+
                 validator: (value) =>
                     value == null ? "Select a Department" : null,
-                dropdownColor: Theme.of(context).colorScheme.background,
+                dropdownColor: Theme.of(context).colorScheme.onPrimary,
                 value: selectedValue,
+
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedValue = newValue!;
@@ -95,6 +99,7 @@ class _newBill extends State<NewBill> {
     List<DropdownMenuItem<String>> menuItems = <DropdownMenuItem<String>>[];
     for (String department in getDepartments()) {
       DropdownMenuItem<String> departmentCard = DropdownMenuItem(
+
         child: Text(department),
         value: department,
       );

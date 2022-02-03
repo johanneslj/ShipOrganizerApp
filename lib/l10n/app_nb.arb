@@ -51,5 +51,15 @@
   "inventory": "Beholdning",
   "profile": "Profil",
   "deleteUser": "Slett bruker?",
-  "deleteConfirmationDialog": "Er du sikker på at du vil slette "
+  "deleteConfirmationDialog": "Er du sikker på at du vil slette ",
+  "productName": "Produktnavn",
+  "productNumber": "Produktnummer",
+  "productStock": "Antall på lager",
+  "barcode": "Strekkode",
+  "submit": "Send",
+  "enterValidText" : "Vennligst legg til tekst",
+  "enterValidNumber" : "Vennligst legg til antall"
+
+
+
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
 import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       supportedLocales: const [Locale("en"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
@@ -38,11 +40,13 @@ class MyApp extends StatelessWidget {
         }
         // If no device language is supported by the app,
         // Return Norwegian bokmål as the default language in the app
-        return const Locale("nb", "NO");
+        return const Locale('nb', 'NO');
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       title: 'Ship Organizer',
       theme: theme,
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/inventory': (context) => const InventoryView(),
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
         '/map': (context) => const MapView(),
+        '/newProduct': (context) => const NewItem(),
       },
     );
   }
