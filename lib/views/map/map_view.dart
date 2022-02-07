@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:ship_organizer_app/entities/report.dart';
+import 'package:ship_organizer_app/services/api_service.dart';
 
 /// A map view
 /// It implements a Google map
@@ -23,44 +25,17 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  ApiService apiService = ApiService();
   final Location _location = Location();
 
-  //TODO Get marker locations from backend
-  Map<LatLng, List<List<String>>> exampleLocations = {
-    const LatLng(63.41745, 4.40407): <List<String>>[],
-    const LatLng(62.47210, 4.23550): <List<String>>[
-      ["Booey", "2", "Hans", "17.12.2022"],
-      ["Chain", "1", "Johannes", "11.12.2022"],
-      ["Weapond", "5", "Kurt", "25.12.2022"],
-      ["Fishing net", "3", "Kjellern", "16.12.2022"],
-      ["Lamp", "2", "Simon", "30.12.2022"],
-      ["Booey", "2", "Hans", "17.12.2022"],
-      ["Chain", "1", "Johannes", "11.12.2022"],
-      ["Weapond", "5", "Kurt", "25.12.2022"],
-      ["Fishing net", "3", "Kjellern", "16.12.2022"],
-      ["Lamp", "2", "Simon", "30.12.2022"],
-      ["Booey", "2", "Hans", "17.12.2022"],
-      ["Chain", "1", "Johannes", "11.12.2022"],
-      ["Weapond", "5", "Kurt", "25.12.2022"],
-      ["Fishing net", "3", "Kjellern", "16.12.2022"],
-      ["Lamp", "2", "Simon", "30.12.2022"],
-    ],
-    const LatLng(60.78890, 4.68110): <List<String>>[
-      ["Booey", "Number", "Username", "DateTime"],
-      ["Booey", "Number", "Username", "DateTime"],
-      ["Booey", "Number", "Username", "DateTime"],
-      ["Booey", "Number", "Username", "DateTime"],
-      ["Booey", "Number", "Username", "DateTime"],
-    ]
-  };
-
+  Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   @override
   Widget build(BuildContext context) {
     if (widget.itemToShow != null) {
-      print(widget
-          .itemToShow); //TODO Do something with item to show so it is the only item displayed if not null
+      print(widget.itemToShow);
+      //TODO Do something with item to show so it is the only item displayed if not null
     }
     return Scaffold(
       appBar: AppBar(
@@ -101,13 +76,14 @@ class _MapViewState extends State<MapView> {
   /// First the map of locations is sorted according to how many items are present at each location
   /// a marker is created for each of the location and its hue is set depending on how many items
   /// are present at the location
-  void addMarkers() {
-    List<List<List<String>>> sortedList = exampleLocations.values.toList()
-      ..sort((a, b) => a.length.compareTo(b.length));
-    int max = sortedList.last.length;
-    int min = sortedList.first.length;
+  Future<void> addMarkers() async {
+    markerLocations = await apiService.getAllMarkers();
+    List<List<Report>> sortedList = markerLocations.values.toList()
+      ..sort((a, b) => getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
+    int max = getAmountOfItemsAtMarker(sortedList.last);
+    int min = getAmountOfItemsAtMarker(sortedList.first);
 
-    exampleLocations.forEach((latLng, item) {
+    markerLocations.forEach((latLng, item) {
       String markerIdVal = latLng.toString().replaceAll("LatLng(", "").replaceAll(")", "");
       final MarkerId markerId = MarkerId(markerIdVal);
 
@@ -117,8 +93,9 @@ class _MapViewState extends State<MapView> {
         icon: BitmapDescriptor.defaultMarkerWithHue(calculateHue(item, max, min)),
         infoWindow: InfoWindow(
             title: markerIdVal.toString(),
-            snippet: item.length.toString() + " Items used here",
+            snippet: getAmountOfItemsAtMarker(item).toString() + " Items used here",
             onTap: () => {
+                  apiService.getAllMarkers(),
                   if (item.isNotEmpty) {showMenu(item)}
                 }),
       );
@@ -130,13 +107,24 @@ class _MapViewState extends State<MapView> {
     });
   }
 
+  /// Adds together the quantities of each item on a marker
+  int getAmountOfItemsAtMarker(List<Report> reports) {
+    int amount = 0;
+
+    for (Report report in reports) {
+      amount += report.quantity!;
+    }
+    return amount;
+  }
+
   /// Method for calculating the hue of markers
   /// Using a max and min value of amount of equipment per marker this
   /// method is able to calculate a hue value from 0 up to but not including 360
-  double calculateHue(List<List<String>> marker, int max, int min) {
+  double calculateHue(List<Report> marker, int max, int min) {
     double hue = 0;
 
-    hue = ((marker.length - min) / (max - min)) * 270; // hue has to be 0 <= hue < 360
+    hue = ((getAmountOfItemsAtMarker(marker) - min) / (max - min)) *
+        270; // hue has to be 0 <= hue < 360
     // This function normalizes the value to be between 0 and 270 so that each marker can get a
     // hue relative to the amount of equipment that is present there, it stops at 270 because closer
     // to 360 the colors start to get similar to the ones around 0
@@ -147,7 +135,7 @@ class _MapViewState extends State<MapView> {
   /// Shows a description of the marker which has been pressed
   /// This makes a widget pop up from the bottom of the screen
   /// In it the details of what equipment has been left there is shown
-  showMenu(List<List<String>> item) {
+  showMenu(List<Report> item) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -177,19 +165,23 @@ class _MapViewState extends State<MapView> {
 
   /// Takes in a List of Strings to creates a List of ListTiles
   /// Each tile is styled the same.
-  List<Widget> createListView(List<List<String>> item) {
+  List<Widget> createListView(List<Report> item) {
     final equipments = <Widget>[];
 
-    for (List<String> descriptiveItem in item) {
+    for (Report descriptiveItem in item) {
       equipments.add(ListTile(
-        title: Text(descriptiveItem[0] + " x" + descriptiveItem[1],
+        title: Text(descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
             style: Theme.of(context).textTheme.headline6),
         subtitle: Column(
           children: [
             Row(
               children: [
-                Text(descriptiveItem[2], style: Theme.of(context).textTheme.subtitle2),
-                Text(descriptiveItem[3], style: Theme.of(context).textTheme.subtitle2)
+                Text(descriptiveItem.userName!, style: Theme.of(context).textTheme.subtitle2),
+                Text(
+                    descriptiveItem.registrationDate.toString().split(":")[0] +
+                        ":" +
+                        descriptiveItem.registrationDate.toString().split(":")[1],
+                    style: Theme.of(context).textTheme.subtitle2)
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
