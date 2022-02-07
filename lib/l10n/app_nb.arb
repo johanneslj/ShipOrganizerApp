@@ -58,7 +58,8 @@
   "submit": "Send",
   "enterValidText" : "Vennligst legg til tekst",
   "enterValidNumber" : "Vennligst legg til antall",
-  "itemsUsedHere": " Utstyr brukt her"
-
+  "itemsUsedHere": " Utstyr brukt her",
+  "more": "Flere",
+  "less": "Mindre"
 
 }

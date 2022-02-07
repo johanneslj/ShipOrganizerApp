@@ -51,6 +51,7 @@ class _MapViewState extends State<MapView> {
       body: Stack(children: [
         GoogleMap(
           myLocationEnabled: true,
+          mapToolbarEnabled: false,
           mapType: MapType.normal,
           onMapCreated: _onMapCreated,
           markers: Set<Marker>.of(markers.values),
@@ -60,38 +61,37 @@ class _MapViewState extends State<MapView> {
           ),
         ),
         Positioned(
-            top: 10,
-            right: 10,
+          top: 1,
+            right: 1,
             child: Container(
-              height: 150.0,
-              width: 100.0,
-              color: Theme.of(context).colorScheme.onPrimary,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          height: 150.0,
+          width: 75.0,
+          color: Theme.of(context).colorScheme.onPrimary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Less Items",
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                      Text(
-                        "More Items",
-                        style: Theme.of(context).textTheme.caption,
-                      )
-                    ],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Text(
+                    AppLocalizations.of(context)!.more,
+                    style: Theme.of(context).textTheme.caption,
                   ),
-                  RotatedBox(
-                    quarterTurns: 1,
-                    child: Image.asset(
-                      "assets/hue.jpeg",
-                      width: 150,
-                    ),
-                  ),
+                  Text(
+                    AppLocalizations.of(context)!.less,
+                    style: Theme.of(context).textTheme.caption,
+                  )
                 ],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               ),
-            )),
+              RotatedBox(
+                quarterTurns: 1,
+                child: Image.asset(
+                  "assets/hue.jpeg",
+                ),
+              ),
+            ],
+          ),
+        )),
       ]),
     );
   }

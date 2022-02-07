@@ -58,6 +58,8 @@
   "submit": "Submit",
   "enterValidText" : "Please enter text",
   "enterValidNumber" : "Please enter stock",
-  "itemsUsedHere": " Items used here"
+  "itemsUsedHere": " Items used here",
+  "more": "More",
+  "less": "Less"
 
 }
