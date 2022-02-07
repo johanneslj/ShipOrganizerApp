@@ -48,16 +48,51 @@ class _MapViewState extends State<MapView> {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: GoogleMap(
-        myLocationEnabled: true,
-        mapType: MapType.normal,
-        onMapCreated: _onMapCreated,
-        markers: Set<Marker>.of(markers.values),
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(63.353506, 4.944406),
-          zoom: 7,
+      body: Stack(children: [
+        GoogleMap(
+          myLocationEnabled: true,
+          mapType: MapType.normal,
+          onMapCreated: _onMapCreated,
+          markers: Set<Marker>.of(markers.values),
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(63.353506, 4.944406),
+            zoom: 7,
+          ),
         ),
-      ),
+        Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              height: 150.0,
+              width: 100.0,
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        "Less Items",
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Text(
+                        "More Items",
+                        style: Theme.of(context).textTheme.caption,
+                      )
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  RotatedBox(
+                    quarterTurns: 1,
+                    child: Image.asset(
+                      "assets/hue.jpeg",
+                      width: 150,
+                    ),
+                  ),
+                ],
+              ),
+            )),
+      ]),
     );
   }
 
@@ -93,7 +128,8 @@ class _MapViewState extends State<MapView> {
         icon: BitmapDescriptor.defaultMarkerWithHue(calculateHue(item, max, min)),
         infoWindow: InfoWindow(
             title: markerIdVal.toString(),
-            snippet: getAmountOfItemsAtMarker(item).toString() + " Items used here",
+            snippet: getAmountOfItemsAtMarker(item).toString() +
+                AppLocalizations.of(context)!.itemsUsedHere,
             onTap: () => {
                   apiService.getAllMarkers(),
                   if (item.isNotEmpty) {showMenu(item)}
