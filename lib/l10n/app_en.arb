@@ -57,6 +57,10 @@
   "barcode": "Barcode",
   "submit": "Submit",
   "enterValidText" : "Please enter text",
-  "enterValidNumber" : "Please enter stock"
+  "enterValidNumber" : "Please enter stock",
+  "itemsUsedHere": " Items used here",
+  "more": "More",
+  "less": "Less",
+  "legend": "Legend"
 
 }
