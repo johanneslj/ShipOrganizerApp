@@ -1,7 +1,7 @@
 {
   "accessToMultipleDepartments": "You Have Access to Multiple departments please pick the one you want to view",
   "addProduct": "Add product",
-  "administerUser" : "Administer user",
+  "administerUsers" : "Administer users",
   "cancel": "Cancel",
   "changeDepartment" : "Change department",
   "changePassword":"Change password" ,

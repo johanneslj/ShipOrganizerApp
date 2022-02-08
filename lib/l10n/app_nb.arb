@@ -1,7 +1,7 @@
 {
   "accessToMultipleDepartments": "Du har tilgang til flere departement, vær så snill å velg det av dem du vil se",
   "addProduct": "Legg til produkt",
-  "administerUser" : "Administrer brukere",
+  "administerUsers" : "Administrer brukere",
   "cancel": "Avbryt",
   "changeDepartment" : "Endre departement",
   "changePassword":"Endre passord" ,
@@ -45,7 +45,6 @@
   "pending": "Venter",
   "confirmed": "Bekreftet",
   "changeImageSize" : "Trykk på bilde for å fortsørre",
-  "administerUsers": "Administrer brukere",
   "delete": "Slett",
   "name": "Navn",
   "inventory": "Beholdning",

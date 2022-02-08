@@ -25,7 +25,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.administerUser,
+          AppLocalizations.of(context)!.administerUsers,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
