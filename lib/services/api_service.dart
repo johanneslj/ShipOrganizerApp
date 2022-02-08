@@ -7,14 +7,38 @@ class ApiService {
   final Dio dio = Dio();
   String baseUrl = "http://10.22.185.131:8080/";
 
+  /// Gets all the markers from the api
+  /// returns a Map with LatLng as keys and lists of reports
+  /// grouped on that LatLng as values
   Future<Map<LatLng, List<Report>>> getAllMarkers() async {
     var response = await dio.get(baseUrl + "reports/all-reports");
+    return createReportsFromData(response);
+  }
+
+  /// Gets markers with same product name from the api
+  /// returns a Map with LatLng as keys and lists of reports
+  /// grouped on that LatLng as values
+  Future<Map<LatLng, List<Report>>> getAllMarkersWithName(String name) async {
+    var response = await dio.get(baseUrl + "reports/reports-with-name=$name");
+    return createReportsFromData(response);
+  }
+
+  /// Uses the response from the API to create a Map with
+  /// LatLng as keys with lists of reports as values
+  ///
+  /// The reports are created from the data, added to a list
+  /// and then lastly added to a map, based on if they should
+  /// be grouped together
+  Map<LatLng, List<Report>> createReportsFromData(var response) {
     Map<LatLng, List<Report>> reports = <LatLng, List<Report>>{};
     Map<String, dynamic> markers = Map<String, dynamic>.from(response.data);
     markers.forEach((key, value) {
       List<Report> reportsOnSameLatLng = <Report>[];
       for (var report in List<dynamic>.from(value)) {
         {
+          /// A report is constructed using the factory pattern
+          /// First an empty Report is created then each of its fields
+          /// are set sequentially until all of them have a value
           Report reportFromData = Report();
           Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
             switch (identifier) {
