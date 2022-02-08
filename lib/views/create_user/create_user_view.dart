@@ -52,11 +52,14 @@ class _CreateUserState extends State<CreateUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        title: Text(AppLocalizations.of(context)!.createUser, style: Theme.of(context).textTheme.headline6,),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          AppLocalizations.of(context)!.createUser,
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

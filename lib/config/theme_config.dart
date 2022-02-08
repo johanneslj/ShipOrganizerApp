@@ -74,10 +74,9 @@ ButtonStyle disabledElevatedButtonStyle = ElevatedButton.styleFrom(
 );
 
 DialogTheme dialogTheme = DialogTheme(
-  backgroundColor: colorScheme.primary,
-  contentTextStyle: textTheme.headline6,
-  alignment: Alignment.center
-);
+    backgroundColor: colorScheme.primary,
+    contentTextStyle: textTheme.headline6,
+    alignment: Alignment.center);
 
 TextButtonThemeData textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
@@ -129,7 +128,6 @@ SnackBarThemeData snackBarTheme = SnackBarThemeData(
 );
 
 PopupMenuThemeData popUpMenuTheme = PopupMenuThemeData(
-  textStyle: TextStyle(color: colorScheme.primary, fontSize: 24.0),
-  color: colorScheme.surface,
-  elevation: 10.0
-);
+    textStyle: TextStyle(color: colorScheme.primary, fontSize: 24.0),
+    color: colorScheme.surface,
+    elevation: 10.0);

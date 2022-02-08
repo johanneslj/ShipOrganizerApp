@@ -55,7 +55,7 @@ class Inventory extends StatelessWidget {
   ListTile getListTile(BuildContext context, int index) {
     if (isRecommended) {
       // Sets cursor in amount TextField to end of text on first tap.
-      if (_controllers[index].text.length > 0) {
+      if (_controllers[index].text.isNotEmpty) {
         _controllers[index].selection =
             TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
       }
@@ -79,8 +79,10 @@ class Inventory extends StatelessWidget {
                       child: TextField(
                         controller: _controllers[index],
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10)],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10)
+                        ],
                         onEditingComplete: () => {
                           // TODO Implement with API.
                           if (_controllers[index].text.isNotEmpty)
@@ -91,7 +93,8 @@ class Inventory extends StatelessWidget {
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                             constraints: const BoxConstraints(maxWidth: 200),
-                            contentPadding: const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 0),
+                            contentPadding:
+                                const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 0),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).colorScheme.primary, width: 4.0))),

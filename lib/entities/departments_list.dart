@@ -6,5 +6,4 @@ class DepartmentsList {
   int rights;
 
   DepartmentsList({required this.departmentName, required this.rights});
-
 }

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final bottomNavigationBarIndexProvider = StateNotifierProvider<BottomNavigationBarIndexNotifier, int>((ref) => BottomNavigationBarIndexNotifier());
+final bottomNavigationBarIndexProvider =
+    StateNotifierProvider<BottomNavigationBarIndexNotifier, int>(
+        (ref) => BottomNavigationBarIndexNotifier());
 
 /// This is the bottom navigation bar index notifier
 /// it notifies when the index of the bottom navigation bar changes

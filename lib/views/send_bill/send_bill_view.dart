@@ -18,16 +18,17 @@ class _SendBill extends State<SendBill> {
   String selectedValue = "Bridge";
   bool admin = true;
   String pendingCount = "";
-@override
-initState(){
-  pendingCount = (" (" + departments.length.toString() + ")");
-}
-  _updatePendingCount(String text){
+
+  @override
+  initState() {
+    pendingCount = (" (" + departments.length.toString() + ")");
+  }
+
+  _updatePendingCount(String text) {
     setState(() {
       pendingCount = (" (" + text + ")");
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +37,13 @@ initState(){
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Theme.of(context).colorScheme.onPrimary),
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
-              indicatorColor: admin ?  Colors.amberAccent : Theme.of(context).colorScheme.onBackground,
+              indicatorColor:
+                  admin ? Colors.amberAccent : Theme.of(context).colorScheme.onBackground,
               indicatorWeight: admin ? 5 : 0.1,
-
               tabs: admin
                   ? ([
                       Tab(child: Text(AppLocalizations.of(context)!.newBill)),
@@ -62,10 +62,12 @@ initState(){
             children: admin
                 ? [
                     const NewBill(),
-                    PendingBill( parentAction: _updatePendingCount,),
-                     ConfimedBill(admin: admin)
+                    PendingBill(
+                      parentAction: _updatePendingCount,
+                    ),
+                    ConfimedBill(admin: admin)
                   ]
-                : [ConfimedBill(admin : admin)]),
+                : [ConfimedBill(admin: admin)]),
       ),
     );
   }
@@ -77,8 +79,7 @@ initState(){
         height: 600,
         decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'),
-                fit: BoxFit.cover)),
+                image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
       ),
     );
   }

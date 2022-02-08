@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
@@ -76,17 +74,13 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        foregroundColor: Theme.of(context).colorScheme.primaryVariant,
-        onPressed: onOrderStockUp,
-        child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)
-      ),
+          foregroundColor: Theme.of(context).colorScheme.primaryVariant,
+          onPressed: onOrderStockUp,
+          child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)),
     );
   }
 
-
-  void onOrderStockUp() {
-
-  }
+  void onOrderStockUp() {}
 
   /// Clears search bar and sets state for displayed items to all items.
   void onClear() {

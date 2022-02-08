@@ -4,13 +4,11 @@ class DepartmentCard extends StatelessWidget {
   final String departmentName;
   final String destination;
 
-  const DepartmentCard(
-      {Key? key, required this.departmentName, required this.destination})
+  const DepartmentCard({Key? key, required this.departmentName, required this.destination})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: [
         InkWell(

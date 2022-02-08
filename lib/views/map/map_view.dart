@@ -126,7 +126,6 @@ class _MapViewState extends State<MapView> {
   /// are present at the location
   Future<void> addMarkers() async {
     if (widget.itemToShow != null) {
-      print(widget.itemToShow);
       //TODO Do something with item to show so it is the only item displayed if not null
       markerLocations = await apiService.getAllMarkersWithName(widget.itemToShow!);
     } else {
@@ -238,7 +237,7 @@ class _MapViewState extends State<MapView> {
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(

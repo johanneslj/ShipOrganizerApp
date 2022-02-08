@@ -91,7 +91,7 @@ class _InventoryViewState extends State<InventoryView> {
     // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
-    for (Item item in items ) {
+    for (Item item in items) {
       if (item.name.contains(query)) {
         result.add(item);
       } else if (item.productNumber != null) {
@@ -123,12 +123,30 @@ class _InventoryViewState extends State<InventoryView> {
   List<PopupMenuItem> getPopupMenuItems() {
     // TODO Get departments from API
     return [
-      PopupMenuItem(child: Text("Bridge"), value: 1,),
-      PopupMenuItem(child: Text("Factory"), value: 2,),
-      PopupMenuItem(child: Text("Deck"), value: 3,),
-      PopupMenuItem(child: Text("Storage"), value: 4,),
-      PopupMenuItem(child: Text("Office"), value: 5,),
-      PopupMenuItem(child: Text("Kitchen"), value: 6,),
+      PopupMenuItem(
+        child: Text("Bridge"),
+        value: 1,
+      ),
+      PopupMenuItem(
+        child: Text("Factory"),
+        value: 2,
+      ),
+      PopupMenuItem(
+        child: Text("Deck"),
+        value: 3,
+      ),
+      PopupMenuItem(
+        child: Text("Storage"),
+        value: 4,
+      ),
+      PopupMenuItem(
+        child: Text("Office"),
+        value: 5,
+      ),
+      PopupMenuItem(
+        child: Text("Kitchen"),
+        value: 6,
+      ),
     ];
   }
 }

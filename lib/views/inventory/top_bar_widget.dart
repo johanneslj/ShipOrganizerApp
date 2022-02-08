@@ -6,18 +6,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// For use as app bar in scaffold, it needs to be wrapped in a [PreferredSize] widget.
 /// Allows custom functions as well as icons for buttons.
 class TopBar extends StatefulWidget {
-  const TopBar({Key? key,
-    this.onMenuPressed,
-    this.onSearch,
-    this.filter,
-    this.onScan,
-    this.onClear,
-    this.controller,
-    this.menuIcon,
-    this.searchIcon,
-    this.clearIcon,
-    this.filterIcon,
-    this.scanIcon})
+  const TopBar(
+      {Key? key,
+      this.onMenuPressed,
+      this.onSearch,
+      this.filter,
+      this.onScan,
+      this.onClear,
+      this.controller,
+      this.menuIcon,
+      this.searchIcon,
+      this.clearIcon,
+      this.filterIcon,
+      this.scanIcon})
       : super(key: key);
 
   /// Function called when the menu button is pressed.
@@ -59,11 +60,9 @@ class _TopBarState extends State<TopBar> {
   /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
   void Function()? get _onMenuPressed =>
       widget.onMenuPressed ??
-              () {
-            Scaffold
-                .of(context)
-                .hasDrawer ? Scaffold.of(context).openDrawer() : null;
-          };
+      () {
+        Scaffold.of(context).hasDrawer ? Scaffold.of(context).openDrawer() : null;
+      };
 
   void Function()? get _onSearch => widget.onSearch;
 
@@ -76,14 +75,8 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(0, MediaQuery
-            .of(context)
-            .viewPadding
-            .top, 0, 0),
-        color: Theme
-            .of(context)
-            .colorScheme
-            .primary,
+        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).viewPadding.top, 0, 0),
+        color: Theme.of(context).colorScheme.primary,
         child: Row(
           children: [
             IconButton(
@@ -91,10 +84,8 @@ class _TopBarState extends State<TopBar> {
                 icon: widget.menuIcon ??
                     Icon(
                       Icons.menu,
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onPrimary, size: 32.0,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 32.0,
                     )),
             Flexible(
                 child: Container(
@@ -108,10 +99,7 @@ class _TopBarState extends State<TopBar> {
                         suffixIcon: IconButton(
                             onPressed: _onClear ?? widget.controller?.clear,
                             icon: widget.clearIcon ??
-                                Icon(Icons.clear, color: Theme
-                                    .of(context)
-                                    .colorScheme
-                                    .primary)),
+                                Icon(Icons.clear, color: Theme.of(context).colorScheme.primary)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(32.0),
                           borderSide: const BorderSide(
@@ -124,20 +112,16 @@ class _TopBarState extends State<TopBar> {
             IconButton(
                 onPressed: _onScan,
                 icon: widget.scanIcon ??
-                    Icon(Icons.camera_alt_sharp, color: Theme
-                        .of(context)
-                        .colorScheme
-                        .onPrimary, size: 32.0,)),
+                    Icon(
+                      Icons.camera_alt_sharp,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 32.0,
+                    )),
             IconButton(
                 onPressed: _filter,
                 icon: widget.filterIcon ??
-                    Icon(
-                      Icons.filter_alt_sharp,
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onPrimary, size: 32.0
-                    ))
+                    Icon(Icons.filter_alt_sharp,
+                        color: Theme.of(context).colorScheme.onPrimary, size: 32.0))
           ],
         ));
   }

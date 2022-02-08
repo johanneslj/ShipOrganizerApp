@@ -28,20 +28,18 @@ class _confimedBill extends State<ConfimedBill> {
             CircleAvatar(
                 child: GestureDetector(
                   onTap: () async {
-                    await showDialog(
-                        context: context, builder: (_) => imageDialog());
+                    await showDialog(context: context, builder: (_) => imageDialog());
                   },
                 ),
                 radius: 100.0,
-                backgroundImage:
-                    const AssetImage('assets/FishingBoatSilhouette.jpg')),
+                backgroundImage: const AssetImage('assets/FishingBoatSilhouette.jpg')),
             Text(AppLocalizations.of(context)!.changeImageSize,
                 style: const TextStyle(
                   fontSize: 20.0,
                   color: Colors.black,
                 )),
             widget.admin
-                ? Text("")
+                ? const Text("")
                 : TextButton(
                     onPressed: () {
                       sendToServer(index);
@@ -64,8 +62,7 @@ class _confimedBill extends State<ConfimedBill> {
         height: 600,
         decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'),
-                fit: BoxFit.cover)),
+                image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
       ),
     );
   }
