@@ -60,6 +60,7 @@
   "enterValidNumber" : "Please enter stock",
   "itemsUsedHere": " Items used here",
   "more": "More",
-  "less": "Less"
+  "less": "Less",
+  "legend": "Legend"
 
 }

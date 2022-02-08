@@ -51,6 +51,7 @@ class _MapViewState extends State<MapView> {
       body: Stack(children: [
         GoogleMap(
           myLocationEnabled: true,
+          myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
           mapType: MapType.normal,
           onMapCreated: _onMapCreated,
@@ -61,37 +62,47 @@ class _MapViewState extends State<MapView> {
           ),
         ),
         Positioned(
-          top: 1,
+            top: 1,
             right: 1,
-            child: Container(
-          height: 150.0,
-          width: 75.0,
-          color: Theme.of(context).colorScheme.onPrimary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.more,
-                    style: Theme.of(context).textTheme.caption,
+            child: Column(
+              children: [
+                Container(
+                  width: 75,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  child: Text(
+                    AppLocalizations.of(context)!.legend,
                   ),
-                  Text(
-                    AppLocalizations.of(context)!.less,
-                    style: Theme.of(context).textTheme.caption,
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              RotatedBox(
-                quarterTurns: 1,
-                child: Image.asset(
-                  "assets/hue.jpeg",
                 ),
-              ),
-            ],
-          ),
-        )),
+                Container(
+                    height: 150.0,
+                    width: 75.0,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.more,
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.less,
+                              style: Theme.of(context).textTheme.caption,
+                            )
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                        RotatedBox(
+                          quarterTurns: 1,
+                          child: Image.asset(
+                            "assets/hue.jpeg",
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            )),
       ]),
     );
   }

@@ -60,6 +60,7 @@
   "enterValidNumber" : "Vennligst legg til antall",
   "itemsUsedHere": " Utstyr brukt her",
   "more": "Flere",
-  "less": "Mindre"
+  "less": "Mindre",
+  "legend": "Legend"
 
 }
