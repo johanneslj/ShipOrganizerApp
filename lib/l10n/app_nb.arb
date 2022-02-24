@@ -21,6 +21,7 @@
   "invalidCode": "Ugyldig kode",
   "logOut": "Logg ut",
   "map": "Kart",
+  "mapOf": "Kart av ",
   "myAccount": "Min side",
   "newPassword": "Nytt passord",
   "password": "Passord",
@@ -39,6 +40,7 @@
   "toAdd": " ønsker du å legge til?",
   "toRemove": " ønsker du å fjerne?",
   "verificationCode": "Verifikasjonskode",
+  "sentCode": "En verifikasjonskode har blitt sendt til din epost",
   "verifyCode": "Verifiser kode",
   "billing" : "Faktura",
   "newBill" : "Ny",
@@ -61,6 +63,7 @@
   "itemsUsedHere": " Utstyr brukt her",
   "more": "Flere",
   "less": "Mindre",
-  "legend": "Legend"
+  "legend": "Legend",
+  "somethingWentWrong": "Noe gikk galt"
 
 }
