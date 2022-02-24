@@ -144,7 +144,7 @@ class _CreateUserState extends State<CreateUser> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                (const MyApp()) //TODO Push the new user to backend
+                                                (const MyHomePage(title: "Home",)) //TODO Push the new user to backend
                                             ));
                                   }
                                 },

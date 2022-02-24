@@ -41,8 +41,8 @@ class _MapViewState extends State<MapView> {
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          AppLocalizations.of(context)!.map,
+        title: Text( widget.itemToShow == null ?
+          AppLocalizations.of(context)!.map: AppLocalizations.of(context)!.mapOf + widget.itemToShow!,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
@@ -59,52 +59,54 @@ class _MapViewState extends State<MapView> {
             zoom: 7,
           ),
         ),
-        Positioned(
-            top: 1,
-            right: 1,
-            child: Column(
-              children: [
-                Container(
-                  width: 75,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  child: Text(
-                    AppLocalizations.of(context)!.legend,
-                  ),
-                ),
-                Container(
-                    height: 150.0,
-                    width: 75.0,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                            child: Column(
+        markerLocations.isEmpty
+            ? const Positioned(child: Text(""))
+            : Positioned(
+                top: 1,
+                right: 1,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 75,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      child: Text(
+                        AppLocalizations.of(context)!.legend,
+                      ),
+                    ),
+                    Container(
+                        height: 150.0,
+                        width: 75.0,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(max.toString(),
-                                style: Theme.of(context).textTheme.caption,
-                                overflow: TextOverflow.ellipsis),
-                            Text(((max + min) / 2).toString(),
-                                style: Theme.of(context).textTheme.caption,
-                                overflow: TextOverflow.ellipsis),
-                            Text(
-                              min.toString(),
-                              style: Theme.of(context).textTheme.caption,
-                              overflow: TextOverflow.ellipsis,
+                            Flexible(
+                                child: Column(
+                              children: [
+                                Text(max.toString(),
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis),
+                                Text(((max + min) / 2).toString(),
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis),
+                                Text(
+                                  min.toString(),
+                                  style: Theme.of(context).textTheme.caption,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            )),
+                            RotatedBox(
+                              quarterTurns: 3,
+                              child: Image.asset(
+                                "assets/hue.jpeg",
+                              ),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         )),
-                        RotatedBox(
-                          quarterTurns: 3,
-                          child: Image.asset(
-                            "assets/hue.jpeg",
-                          ),
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+                  ],
+                )),
       ]),
     );
   }
@@ -126,7 +128,6 @@ class _MapViewState extends State<MapView> {
   /// are present at the location
   Future<void> addMarkers() async {
     if (widget.itemToShow != null) {
-      //TODO Do something with item to show so it is the only item displayed if not null
       markerLocations = await apiService.getAllMarkersWithName(widget.itemToShow!);
     } else {
       markerLocations = await apiService.getAllMarkers();

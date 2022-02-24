@@ -2,16 +2,46 @@ import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/report.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
-  final Dio dio = Dio();
-  String baseUrl = "http://10.22.185.131:8080/";
+  /// Ensures there can only be created one of the API service
+  /// This makes it a singleton
+  static final ApiService _apiService = ApiService._internal();
+
+  factory ApiService() {
+    return _apiService;
+  }
+
+  ApiService._internal();
+
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  String token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
+  String baseUrl = "http://10.22.186.180:8080/";
+
+  Dio dio = Dio();
+
+
+  Future<bool> isTokenValid() async{
+    bool valid = false;
+
+    String? tokenName = await storage.read(key: "jwt");
+    if(tokenName != null) {
+        valid = true;
+    }
+
+    return valid;
+  }
 
   /// Gets all the markers from the api
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
   Future<Map<LatLng, List<Report>>> getAllMarkers() async {
-    var response = await dio.get(baseUrl + "reports/all-reports");
+    dio.options.headers["Authorization"] = "Bearer $token";
+    var response = await dio.get(
+      baseUrl + "reports/all-reports",
+    );
     return createReportsFromData(response);
   }
 
@@ -19,6 +49,7 @@ class ApiService {
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
   Future<Map<LatLng, List<Report>>> getAllMarkersWithName(String name) async {
+    dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "reports/reports-with-name=$name");
     return createReportsFromData(response);
   }

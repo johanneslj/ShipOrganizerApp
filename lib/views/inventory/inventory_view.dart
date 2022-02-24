@@ -36,7 +36,7 @@ class _InventoryViewState extends State<InventoryView> {
     super.initState();
     // TODO Get items from API, or from local cache if offline.
     items = [
-      Item(name: "Name", ean13: "1432456789059", amount: 234),
+      Item(name: "TEST", ean13: "1432456789059", amount: 234),
       Item(name: "Product", ean13: "1432456789059", amount: 54),
       Item(name: "Test123", ean13: "1432456789059", amount: 72),
       Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 22),
