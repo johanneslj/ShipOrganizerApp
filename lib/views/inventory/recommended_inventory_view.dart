@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
+import 'package:ship_organizer_app/services/api_service.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'inventory_widget.dart';
@@ -19,6 +22,7 @@ class RecommendedInventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
+  ApiService apiService = ApiService();
 
   List<Item> items = [];
   List<Item> displayedItems = [];
@@ -29,8 +33,9 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   @override
   void initState() {
     super.initState();
+    getItems();
     // TODO Get items from API, or from local cache if offline.
-    items = [
+    /*items = [
       Item(name: "Name", ean13: "1432456789059", amount: 200),
       Item(name: "Product", ean13: "1432456789059", amount: 60),
       Item(name: "Test123", ean13: "1432456789059", amount: 72),
@@ -46,7 +51,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
       Item(name: "Something", ean13: "1432456789059", amount: 150),
       Item(name: "Yes", ean13: "1432456789059", amount: 1000),
       Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 10),
-    ];
+    ];*/
 
     displayedItems = items;
   }
@@ -74,13 +79,17 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          foregroundColor: Theme.of(context).colorScheme.primaryVariant,
-          onPressed: onOrderStockUp,
-          child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)),
+        foregroundColor: Theme.of(context).colorScheme.primaryVariant,
+        onPressed: onOrderStockUp,
+        child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)
+      ),
     );
   }
 
-  void onOrderStockUp() {}
+
+  void onOrderStockUp() {
+
+  }
 
   /// Clears search bar and sets state for displayed items to all items.
   void onClear() {
@@ -152,5 +161,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
         value: 6,
       ),
     ];
+  }
+  Future<void> getItems() async {
+    displayedItems = await apiService.getRecommendedItems();
   }
 }

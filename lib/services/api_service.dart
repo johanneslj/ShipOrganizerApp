@@ -45,7 +45,7 @@ class ApiService {
   ///Gets all products for the recommended inventory report
   ///Returns list of all products that needs to be refilled
   Future<List<Item>> getRecommendedItems() async {
-    dio.options.headers["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
+    dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "product/RecommendedInventory");
     List<Item> items = [];
     List<dynamic> products = List<dynamic>.from(response.data);
@@ -78,9 +78,18 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock() async{
-    dio.options.headers["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
-    var response = await dio.get(baseUrl + "product/inventory");
+  Future<void> updateStock(String productnumber,String username,int amount,double latitude,double longitude) async{
+    dio.options.headers["Authorization"] = "Bearer $token";
+
+    var response = await dio.post(baseUrl + "product/setNewStock",data:{
+      "productnumber": productnumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude
+    });
+
+    var result =  response;
 
 
   }
