@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ship_organizer_app/services/api_service.dart';
+import 'package:ship_organizer_app/api handling/api_controller.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:ship_organizer_app/entities/report.dart';
-import 'package:ship_organizer_app/services/api_service.dart';
+import 'package:ship_organizer_app/api handling//api_controller.dart';
 
 /// A map view
 /// It implements a Google map

@@ -16,28 +16,54 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
   String baseUrl = "http://10.22.186.180:8080/";
 
   Dio dio = Dio();
 
-
-  Future<bool> isTokenValid() async{
+  Future<bool> isTokenValid() async {
     bool valid = false;
-
-    String? tokenName = await storage.read(key: "jwt");
-    if(tokenName != null) {
+    try {
+      String? token = await storage.read(key: "jwt");
+      if (token != null) {
+        dio.options.headers["Authorization"] = "Bearer $token";
+        var response = await dio.get(baseUrl + "api/user/check-role");
         valid = true;
+      }
+    } on Exception catch (_, e) {
+      valid = false;
     }
 
     return valid;
+  }
+
+  Future<String?> _getToken() async {
+    String? token = await storage.read(key: "jwt");
+    if (token == null) {}
+    return token;
+  }
+
+  Future<bool> attemptToLogIn(String email, String password) async {
+    bool success = false;
+
+    var data = {'email': email, 'password': password};
+    try {
+      var response = await dio.post(baseUrl + "auth/login", data: data);
+      if (response.data != null) {
+        print(response.data);
+        storage.write(key: "jwt", value: response.data);
+        success = true;
+      }
+    } on Exception catch (_, e) {
+      success = false;
+    }
+    return success;
   }
 
   /// Gets all the markers from the api
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
   Future<Map<LatLng, List<Report>>> getAllMarkers() async {
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(
       baseUrl + "reports/all-reports",
@@ -49,6 +75,7 @@ class ApiService {
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
   Future<Map<LatLng, List<Report>>> getAllMarkersWithName(String name) async {
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "reports/reports-with-name=$name");
     return createReportsFromData(response);
