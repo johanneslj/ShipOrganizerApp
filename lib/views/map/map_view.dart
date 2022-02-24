@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:ship_organizer_app/entities/report.dart';
-import 'package:ship_organizer_app/services/api_service.dart';
+import 'package:ship_organizer_app/api handling//api_controller.dart';
 
 /// A map view
 /// It implements a Google map
@@ -30,21 +30,19 @@ class _MapViewState extends State<MapView> {
 
   Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  int min = 0;
+  int max = 0;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.itemToShow != null) {
-      print(widget.itemToShow);
-      //TODO Do something with item to show so it is the only item displayed if not null
-    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          AppLocalizations.of(context)!.map,
+        title: Text( widget.itemToShow == null ?
+          AppLocalizations.of(context)!.map: AppLocalizations.of(context)!.mapOf + widget.itemToShow!,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
@@ -61,48 +59,54 @@ class _MapViewState extends State<MapView> {
             zoom: 7,
           ),
         ),
-        Positioned(
-            top: 1,
-            right: 1,
-            child: Column(
-              children: [
-                Container(
-                  width: 75,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  child: Text(
-                    AppLocalizations.of(context)!.legend,
-                  ),
-                ),
-                Container(
-                    height: 150.0,
-                    width: 75.0,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.more,
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.less,
-                              style: Theme.of(context).textTheme.caption,
-                            )
-                          ],
+        markerLocations.isEmpty
+            ? const Positioned(child: Text(""))
+            : Positioned(
+                top: 1,
+                right: 1,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 75,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      child: Text(
+                        AppLocalizations.of(context)!.legend,
+                      ),
+                    ),
+                    Container(
+                        height: 150.0,
+                        width: 75.0,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        ),
-                        RotatedBox(
-                          quarterTurns: 1,
-                          child: Image.asset(
-                            "assets/hue.jpeg",
-                          ),
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+                          children: [
+                            Flexible(
+                                child: Column(
+                              children: [
+                                Text(max.toString(),
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis),
+                                Text(((max + min) / 2).toString(),
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis),
+                                Text(
+                                  min.toString(),
+                                  style: Theme.of(context).textTheme.caption,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            )),
+                            RotatedBox(
+                              quarterTurns: 3,
+                              child: Image.asset(
+                                "assets/hue.jpeg",
+                              ),
+                            ),
+                          ],
+                        )),
+                  ],
+                )),
       ]),
     );
   }
@@ -123,11 +127,16 @@ class _MapViewState extends State<MapView> {
   /// a marker is created for each of the location and its hue is set depending on how many items
   /// are present at the location
   Future<void> addMarkers() async {
-    markerLocations = await apiService.getAllMarkers();
+    if (widget.itemToShow != null) {
+      markerLocations = await apiService.getAllMarkersWithName(widget.itemToShow!);
+    } else {
+      markerLocations = await apiService.getAllMarkers();
+    }
+
     List<List<Report>> sortedList = markerLocations.values.toList()
       ..sort((a, b) => getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
-    int max = getAmountOfItemsAtMarker(sortedList.last);
-    int min = getAmountOfItemsAtMarker(sortedList.first);
+    max = getAmountOfItemsAtMarker(sortedList.last);
+    min = getAmountOfItemsAtMarker(sortedList.first);
 
     markerLocations.forEach((latLng, item) {
       String markerIdVal = latLng.toString().replaceAll("LatLng(", "").replaceAll(")", "");
@@ -171,9 +180,9 @@ class _MapViewState extends State<MapView> {
     double hue = 0;
 
     hue = ((getAmountOfItemsAtMarker(marker) - min) / (max - min)) *
-        270; // hue has to be 0 <= hue < 360
-    // This function normalizes the value to be between 0 and 270 so that each marker can get a
-    // hue relative to the amount of equipment that is present there, it stops at 270 because closer
+        265; // hue has to be 0 <= hue < 360
+    // This function normalizes the value to be between 0 and 265 so that each marker can get a
+    // hue relative to the amount of equipment that is present there, it stops at 265 because closer
     // to 360 the colors start to get similar to the ones around 0
 
     return hue;
@@ -184,6 +193,7 @@ class _MapViewState extends State<MapView> {
   /// In it the details of what equipment has been left there is shown
   showMenu(List<Report> item) {
     showModalBottomSheet(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         context: context,
         builder: (BuildContext context) {
           return Scrollbar(
@@ -217,10 +227,20 @@ class _MapViewState extends State<MapView> {
 
     for (Report descriptiveItem in item) {
       equipments.add(ListTile(
-        title: Text(descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
-            style: Theme.of(context).textTheme.headline6),
-        subtitle: Column(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text(descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
+                style: Theme.of(context).textTheme.headline6),
+            Text(descriptiveItem.getLatLng(), style: Theme.of(context).textTheme.subtitle2)
+          ],
+        ),
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Text(descriptiveItem.userName!, style: Theme.of(context).textTheme.subtitle2),
@@ -228,7 +248,10 @@ class _MapViewState extends State<MapView> {
                     descriptiveItem.registrationDate.toString().split(":")[0] +
                         ":" +
                         descriptiveItem.registrationDate.toString().split(":")[1],
-                    style: Theme.of(context).textTheme.subtitle2)
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15))
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),

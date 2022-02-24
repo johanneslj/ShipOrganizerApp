@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ship_organizer_app/api handling/api_controller.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
+import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
@@ -17,22 +19,29 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config/theme_config.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  ApiService apiService = ApiService();
+  bool isLoggedIn = await apiService.isTokenValid();
+  return runApp(ProviderScope(
+      child: MainApp(
+    isLoggedIn: isLoggedIn,
+  )));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainApp extends StatelessWidget {
+  const MainApp({
+    Key? key,
+    required this.isLoggedIn,
+  }) : super(key: key);
+  final bool isLoggedIn;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       supportedLocales: const [Locale("en"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
         for (Locale locale in locales!) {
-          print(locale);
           // if device language is supported by the app,
           // return it to set it as current app language
           if (locale.languageCode.contains("en") || locale.languageCode.contains("nb")) {
@@ -51,10 +60,9 @@ class MyApp extends StatelessWidget {
       ],
       title: 'Ship Organizer',
       theme: theme,
+      initialRoute: isLoggedIn ? '/home' : '/',
       routes: {
-        '/': (BuildContext context) => const MyHomePage(
-              title: 'Home',
-            ),
+        '/': (context) => const LoginView(),
         '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => const CreateUser(),
@@ -65,6 +73,9 @@ class MyApp extends StatelessWidget {
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
         '/map': (context) => const MapView(),
         '/newProduct': (context) => const NewItem(),
+        '/home': (context) => const MyHomePage(
+              title: 'Home',
+            ),
       },
     );
   }

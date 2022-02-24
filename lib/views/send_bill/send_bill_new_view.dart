@@ -19,7 +19,7 @@ class NewBill extends StatefulWidget {
 class _newBill extends State<NewBill> {
   String selectedValue = "Bridge";
   bool admin = false;
-  late File? _image = null;
+  late File? _image;
 
   _imgFromCamera() async {
     final image = (await ImagePicker()

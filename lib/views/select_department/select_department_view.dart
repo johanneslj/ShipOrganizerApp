@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 /// The view which is presented when selecting department
 /// The view is made up of several cards, one for each department the user can access
 /// In this view the user can choose which department's inventory and
@@ -23,7 +22,10 @@ class SelectDepartmentView extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.changeDepartment, style: Theme.of(context).textTheme.headline6,),
+        title: Text(
+          AppLocalizations.of(context)!.changeDepartment,
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       body: Center(
           child: Padding(

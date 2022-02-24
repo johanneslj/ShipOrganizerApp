@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/views/login/login_view.dart';
-import 'package:ship_organizer_app/views/map/map_view.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 
 /// Creates a side menu for use as a [Drawer] in a [Scaffold] for the ship organizer app.
 ///
@@ -12,6 +11,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ApiService apiService = ApiService();
     return Drawer(
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: Column(
@@ -22,26 +22,36 @@ class SideMenu extends StatelessWidget {
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top),
                 Center(
-                  heightFactor: 2,
-                  child: Text("Ship Organizer", style: Theme.of(context).textTheme.headline6,)),
+                    heightFactor: 2,
+                    child: Text(
+                      "Ship Organizer",
+                      style: Theme.of(context).textTheme.headline6,
+                    )),
                 const Divider(),
                 // TODO Add routes
-                _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.scanNewInventory, Icon(Icons.archive_sharp), '/'),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.scanNewInventory,
+                    const Icon(Icons.archive_sharp), '/'),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map, Icon(Icons.pin_drop_sharp), '/map'),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map,
+                    const Icon(Icons.pin_drop_sharp), '/map'),
                 const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct, Icon(Icons.shopping_cart_sharp), '/newProduct'),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct,
+                    const Icon(Icons.shopping_cart_sharp), '/newProduct'),
                 const Divider(),
-                _createRouteTextButton(
-                    context, AppLocalizations.of(context)!.recommendedInventory, Icon(Icons.inventory_sharp), '/recommendedInventory'),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.recommendedInventory,
+                    const Icon(Icons.inventory_sharp), '/recommendedInventory'),
               ],
             )),
             Expanded(
                 child: Align(
               alignment: Alignment.bottomLeft,
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    bool success = await apiService.signOut();
+                    if(success) {
+                      Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+                    }
+                  },
                   child: Text(
                     AppLocalizations.of(context)!.logOut,
                     style: TextStyle(
@@ -56,10 +66,7 @@ class SideMenu extends StatelessWidget {
   Widget _createRouteTextButton(BuildContext context, String text, Icon icon, String route) {
     return TextButton.icon(
         onPressed: () => {
-              if (route != null)
-                {
-                  Navigator.pushNamed(context, route)
-                }
+              if (route != null) {Navigator.pushNamed(context, route)}
             },
         icon: icon,
         label: Text(text, style: Theme.of(context).textTheme.headline6));

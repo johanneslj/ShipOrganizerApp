@@ -38,22 +38,22 @@ class AddRemoveItemDialog extends Dialog {
             textAlign: TextAlign.center,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: TextField(
-              keyboardType: TextInputType.number,
-              showCursor: false,
-              controller: _controller,
-              textAlign: TextAlign.end,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            )
-          ),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                showCursor: false,
+                controller: _controller,
+                textAlign: TextAlign.end,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text(AppLocalizations.of(context)!.cancel,
-                      style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 24.0))),
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 24.0))),
               TextButton(
                   onPressed: () => Navigator.pop(context, int.parse(_controller.text)),
                   child: Text(

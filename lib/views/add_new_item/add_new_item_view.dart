@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,15 +18,15 @@ class _newItem extends State<NewItem> {
   final TextEditingController _searchQueryController = TextEditingController();
   String searchQuery = "Search query";
   final _formKey = GlobalKey<FormState>();
+
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      print(barcodeScanRes);
+      barcodeScanRes =
+          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -44,13 +43,11 @@ class _newItem extends State<NewItem> {
 
   @override
   Widget build(BuildContext context) {
-    SnackBar snackBar;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -59,104 +56,90 @@ class _newItem extends State<NewItem> {
         ),
       ),
       body: Center(
-        child:SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(
-                        left: 30, right: 30, top: 60, bottom: 10),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(AppLocalizations.of(context)!.productName),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)!.enterValidText;
+          child: SingleChildScrollView(
+              child: Column(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+              child: Form(
+                key: _formKey,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(AppLocalizations.of(context)!.productName),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)!.enterValidText;
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.productName,
+                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                  ),
+                  Text(AppLocalizations.of(context)!.productNumber),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)!.enterValidText;
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.productNumber,
+                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                  ),
+                  Text(AppLocalizations.of(context)!.productStock),
+                  TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.enterValidNumber;
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.productStock,
+                        hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                      ),
+                      keyboardType: TextInputType.number),
+                  Text(AppLocalizations.of(context)!.barcode),
+                  TextFormField(
+                    onChanged: (query) => updateSearchQuery(query),
+                    controller: _searchQueryController,
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.barcode,
+                      hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: IconButton(
+                          icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
+                          onPressed: () => {scanBarcodeNormal()},
+                        ), // icon is 48px widget.
+                      ),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: ButtonTheme(
+                          minWidth: 250.0,
+                          height: 100.0,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  // If the form is valid, display a snackbar. In the real world,
+                                  // you'd often call a server or save the information in a database.
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Processing Data')),
+                                  );
+                                  sendToServer(context);
                                 }
-                                return null;
                               },
-                              decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!.productName,
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context).disabledColor)),
-                            ),
-                            Text(AppLocalizations.of(context)!.productNumber),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)!.enterValidText;
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!.productNumber,
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context).disabledColor)),
-                            ),
-                            Text(AppLocalizations.of(context)!.productStock),
-                            TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return AppLocalizations.of(context)!.enterValidNumber;
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!.productStock,
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context).disabledColor),
-                                ),
-                                keyboardType: TextInputType.number),
-                            Text(AppLocalizations.of(context)!.barcode),
-                            TextFormField(
-                              onChanged: (query) => updateSearchQuery(query),
-                              controller: _searchQueryController,
-                              decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)!.barcode,
-                                hintStyle:
-                                TextStyle(color: Theme.of(context).disabledColor),
-                                suffixIcon: Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.camera_alt_sharp,
-                                        color: Colors.black),
-                                    onPressed: () => {
-                                      scanBarcodeNormal()},
-                                  ), // icon is 48px widget.
-                                ),
-                              ),
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: ButtonTheme(
-                                    minWidth: 250.0,
-                                    height: 100.0,
-                                    child: ElevatedButton(
-                                        onPressed: () async {
-                                          if (_formKey.currentState!.validate()) {
-                                            // If the form is valid, display a snackbar. In the real world,
-                                            // you'd often call a server or save the information in a database.
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(content: Text('Processing Data')),
-                                            );
-                                            sendToServer(context);
-                                          }
-                                        },
-                                        child: Text(
-                                            AppLocalizations.of(context)!.submit))))
-                          ]),
-                    ))
-              ],
-            )
-
-        )
-          ),
+                              child: Text(AppLocalizations.of(context)!.submit))))
+                ]),
+              ))
+        ],
+      ))),
     );
   }
-
 
   /// Update the searchbar with ean-code
   void updateSearchQuery(String newQuery) {
@@ -164,11 +147,8 @@ class _newItem extends State<NewItem> {
       searchQuery = newQuery;
     });
   }
+
   void sendToServer(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-            (const InventoryView())));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => (const InventoryView())));
   }
 }
