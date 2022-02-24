@@ -40,6 +40,7 @@
   "toAdd": " do you want to add?",
   "toRemove": " do you want to remove?",
   "verificationCode": "Verification code",
+  "sentCode": "A verification code has been sent to your email",
   "verifyCode": "Verify code",
   "billing" : "Bill",
   "newBill" : "New",
@@ -62,6 +63,7 @@
   "itemsUsedHere": " Items used here",
   "more": "More",
   "less": "Less",
-  "legend": "Legend"
+  "legend": "Legend",
+  "somethingWentWrong": "Something went wrong"
 
 }

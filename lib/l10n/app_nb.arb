@@ -40,6 +40,7 @@
   "toAdd": " ønsker du å legge til?",
   "toRemove": " ønsker du å fjerne?",
   "verificationCode": "Verifikasjonskode",
+  "sentCode": "En verifikasjonskode har blitt sendt til din epost",
   "verifyCode": "Verifiser kode",
   "billing" : "Faktura",
   "newBill" : "Ny",
@@ -62,6 +63,7 @@
   "itemsUsedHere": " Utstyr brukt her",
   "more": "Flere",
   "less": "Mindre",
-  "legend": "Legend"
+  "legend": "Legend",
+  "somethingWentWrong": "Noe gikk galt"
 
 }

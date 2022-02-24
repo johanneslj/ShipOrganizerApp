@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -38,7 +39,7 @@ class ApiService {
 
   Future<String?> _getToken() async {
     String? token = await storage.read(key: "jwt");
-    if (token == null) {}
+    token ??= "No Token";
     return token;
   }
 
@@ -90,8 +91,61 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.post(baseUrl + "auth/register", data: data);
-    print(response);
 
+    return success;
+  }
+
+  Future<bool> sendVerificationCode(String email) async {
+    bool success = false;
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      await dio.get(baseUrl + "api/user/send-verification-code?email=" + email);
+      success = true;
+    } on Exception catch (e) {
+      success = false;
+    }
+    return success;
+  }
+
+  Future<bool> verifyVerificationCode(String email, String verificationCode) async {
+    bool success = false;
+
+    try {
+      String? token = await _getToken();
+      if (token != null) {
+        dio.options.headers["Authorization"] = "Bearer $token";
+        await dio.get(baseUrl +
+            "api/user/check-valid-verification-code?email=" +
+            email +
+            "&code=" +
+            verificationCode);
+
+        success = true;
+      }
+    } on DioError catch (e) {
+      success = false;
+    }
+
+    return success;
+  }
+
+  Future<bool> setNewPassword(String email, String verificationCode, String password) async {
+    bool success = false;
+
+    var data = {'email': email, 'code': verificationCode, 'password': password};
+
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      await dio.post(baseUrl + "api/user/set-password", data: data);
+      success = true;
+      if (success) {
+        storage.delete(key: "jwt");
+      }
+    } on DioError catch (e) {
+      success = false;
+    }
 
     return success;
   }

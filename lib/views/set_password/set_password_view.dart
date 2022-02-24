@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/main.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -16,6 +18,7 @@ class SetPasswordView extends StatefulWidget {
 class _SetPasswordViewState extends State<SetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ApiService apiService = ApiService();
   final RegExp emailRegex =
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
@@ -73,7 +76,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               minWidth: 250.0,
               height: 100.0,
               child: ElevatedButton(
-                  onPressed: () => {
+                  onPressed: () async => {
                         // Prompts user to enter valid email before trying to send code.
                         if (emailController.text.isEmpty ||
                             !emailRegex.hasMatch(emailController.text))
@@ -83,10 +86,14 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                           }
                         else
                           {
-                            setState(() {
-                              page = 2;
-                              // TODO Send verification code to email
-                            })
+                            if (await apiService.sendVerificationCode(emailController.value.text))
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(AppLocalizations.of(context)!.sentCode))),
+                                setState(() {
+                                  page = 2;
+                                })
+                              }
                           }
                       },
                   child: Text(AppLocalizations.of(context)!.sendCode))),
@@ -122,12 +129,23 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   child: ElevatedButton(
                       onPressed: () => {
                             // TODO Verify code with API
-                            if (verificationCodeController.text == "12345")
-                              {
-                                setState(() {
-                                  page = 3;
-                                })
-                              }
+                            apiService
+                                .verifyVerificationCode(emailController.value.text,
+                                    verificationCodeController.value.text)
+                                .then((isValid) => {
+                                      if (isValid)
+                                        {
+                                          setState(() {
+                                            page = 3;
+                                          })
+                                        }
+                                      else
+                                        {
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content:
+                                                  Text(AppLocalizations.of(context)!.sentCode))),
+                                        }
+                                    })
                           },
                       child: Text(AppLocalizations.of(context)!.verifyCode))),
             ]))
@@ -190,7 +208,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               minWidth: 250.0,
               height: 100.0,
               child: ElevatedButton(
-                  onPressed: () => {
+                  onPressed: () async => {
                         // Gives feedback to user with a snack bar if trying to confirm invalid password.
                         if (_isButtonDisabled)
                           {
@@ -201,8 +219,13 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                         else
                           {
                             // TODO Change password with API
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => (const LoginView())))
+                            if (await apiService.setNewPassword(
+                                emailController.value.text,
+                                verificationCodeController.value.text,
+                                passwordController.value.text))
+                              {
+                              Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
+                              }
                           }
                       },
                   child: Text(AppLocalizations.of(context)!.confirm))),
