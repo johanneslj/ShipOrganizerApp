@@ -25,6 +25,7 @@ class InventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _InventoryViewState extends State<InventoryView> {
   final TextEditingController _controller = TextEditingController();
+  ApiService apiService = ApiService();
 
   List<Item> items = [];
   List<Item> displayedItems = [];
@@ -35,9 +36,10 @@ class _InventoryViewState extends State<InventoryView> {
   @override
   void initState() {
     super.initState();
+    getItems();
     // TODO Get items from API, or from local cache if offline.
-    items = [
-      Item(name: "TEST", ean13: "1432456789059", amount: 234),
+    /*items = [
+      Item(name: "Name", ean13: "1432456789059", amount: 234),
       Item(name: "Product", ean13: "1432456789059", amount: 54),
       Item(name: "Test123", ean13: "1432456789059", amount: 72),
       Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 22),
@@ -52,13 +54,14 @@ class _InventoryViewState extends State<InventoryView> {
       Item(name: "Something", ean13: "1432456789059", amount: 88),
       Item(name: "Yes", ean13: "1432456789059", amount: 765),
       Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-    ];
+    ];*/
 
     displayedItems = items;
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
@@ -75,7 +78,9 @@ class _InventoryViewState extends State<InventoryView> {
         body: GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Inventory(items: displayedItems),
+          child: RefreshIndicator(onRefresh: () => getItems(),
+          child: Inventory(items: displayedItems,onConfirm:getItems),color: colorScheme.onPrimary,
+              backgroundColor: colorScheme.primary),
         ));
   }
 
@@ -93,7 +98,7 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.name.contains(query)) {
+      if (item.name.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
       } else if (item.productNumber != null) {
         if (item.productNumber!.contains(query)) {
@@ -108,8 +113,7 @@ class _InventoryViewState extends State<InventoryView> {
 
     setState(() {
       displayedItems = result;
-    });
-  }
+    });}
 
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
@@ -137,5 +141,13 @@ class _InventoryViewState extends State<InventoryView> {
     }
 
     return popMenuItems;
+  }
+
+  Future<void> getItems() async {
+    List<Item> displayed = [];
+    displayed = await apiService.getItems();
+    setState((){
+      displayedItems = displayed;
+    });
   }
 }

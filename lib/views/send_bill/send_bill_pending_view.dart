@@ -16,6 +16,13 @@ class PendingBill extends StatefulWidget {
 class _pendingBill extends State<PendingBill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
