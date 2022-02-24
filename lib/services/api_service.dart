@@ -7,12 +7,12 @@ import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
   final Dio dio = Dio();
-  String baseUrl = "http://127.0.0.1:8080/";
-
+  String baseUrl = "http://172.20.10.2:8080/";
+  var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems() async {
-    dio.options.headers["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
+    dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "product/inventory");
     List<Item> items = [];
     List<dynamic> products = List<dynamic>.from(response.data);
@@ -40,14 +40,13 @@ class ApiService {
       items.add(Item(name:name,productNumber: number,ean13: ean13, amount: stock));
 
     }
-
     return items;
   }
   ///Gets all products for the recommended inventory report
   ///Returns list of all products that needs to be refilled
   Future<List<Item>> getRecommendedItems() async {
     dio.options.headers["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSGFucyBMaW5kZ2FhcmQiLCJpZCI6MjgsImV4cCI6MTY0NzQyMzQ4NCwiZW1haWwiOiJoYW5zYWxAc3R1ZC5udG51Lm5vIn0.TWheVKzg80VL8uH_CxvuFReZOiepRoIyzcfRhmq8BgFuaX6C7d8B21BecGTqVA9Q8Osy1pHZDD0lZoc5kK2TGA";
-    var response = await dio.get(baseUrl + "product/PreferredInventory");
+    var response = await dio.get(baseUrl + "product/RecommendedInventory");
     List<Item> items = [];
     List<dynamic> products = List<dynamic>.from(response.data);
     for (var product in products) {
