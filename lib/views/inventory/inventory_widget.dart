@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ship_organizer_app/services/api_service.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
-
+import 'package:location/location.dart';
 import 'item.dart';
 
 /// Widget that displays the input items as a ListView.
@@ -38,6 +39,11 @@ class Inventory extends StatelessWidget {
   /// Controllers used for TextFields in recommended tiles.
   final List<TextEditingController> _controllers = [];
 
+  /// ApiService
+  final ApiService apiService = ApiService();
+
+  final Location _location = Location();
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -65,7 +71,7 @@ class Inventory extends StatelessWidget {
           title: Text(
             items[index].name,
             style: Theme.of(context).textTheme.headline5,
-            overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.clip,
           ),
           trailing: SizedBox(
               width: 160.0,
@@ -111,10 +117,10 @@ class Inventory extends StatelessWidget {
           contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: InkWell(
               child: Text(
-                items[index].name,
-                style: Theme.of(context).textTheme.headline5,
-                overflow: TextOverflow.ellipsis,
-              ),
+                    items[index].name,
+                    style: Theme.of(context).textTheme.headline5,
+                    overflow: TextOverflow.clip,
+                  ),
               onDoubleTap: () => {
                     Navigator.push(
                         context,
@@ -149,21 +155,37 @@ class Inventory extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: true);
-        }).then((amount) => {
+        }).then((amount) async => {
+
           // TODO Implement with API. Add to call queue.
-          if (amount is int) {item.amount += amount}
+          if (amount is int) {  await updateStock(item.productNumber,amount),}
         });
   }
 
   /// Creates a dialog to get amount to remove, then handles removing the requested amount.
-  void _onRemove(BuildContext context, Item item) {
+  void _onRemove(BuildContext context, Item item) async{
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: false);
-        }).then((amount) => {
+        }).then((amount) async =>  {
           // TODO Implement with API. Add to call queue.
-          if (amount is int) {item.amount -= amount}
+          if (amount is int) {
+            await updateStock(item.productNumber,-amount)
+          }
         });
+  }
+  /// Update the stock on the specified product.
+  /// Uses product number, username, location of the device and the decrease or increase amount
+  /// Makes call to apiService to update the api
+  Future<void> updateStock(String? itemNumber, int amount) async {
+    var currentLocation = await _location.getLocation();
+    var latitude = currentLocation.latitude!;
+    var longitude = currentLocation.longitude!;
+    //TODO get username from local database
+    var username = "simondu@ntnu.no";
+    await apiService.updateStock(itemNumber!,username,amount,latitude,longitude);
+    onConfirm!();
+
   }
 }

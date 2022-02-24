@@ -77,7 +77,7 @@ class _InventoryViewState extends State<InventoryView> {
         body: GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Inventory(items: displayedItems),
+          child: Inventory(items: displayedItems,onConfirm:getItems),
         ));
   }
 
@@ -153,6 +153,7 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   Future<void> getItems() async {
-    displayedItems = await apiService.getItems();
+      displayedItems = await apiService.getItems();
+
   }
 }

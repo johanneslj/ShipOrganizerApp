@@ -21,6 +21,12 @@ class _newBill extends State<NewBill> {
   bool admin = false;
   late File? _image;
 
+  @override
+  void initState() {
+    _image = null;
+    super.initState();
+  }
+
   _imgFromCamera() async {
     final image = (await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 50));
@@ -154,7 +160,8 @@ class _newBill extends State<NewBill> {
   /// Method to submit the selected department and image to the backend server
   void submitToServer() {
     Codec stringToBase64 = utf8.fuse(base64);
-    String encoded = stringToBase64.encode(_image!.absolute.toString());
+    final bytes = _image!.readAsBytesSync();
+    String encoded = base64Encode(bytes);
     String fileName = p.basename(_image!.path);
     //Send this to backend server
     log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
