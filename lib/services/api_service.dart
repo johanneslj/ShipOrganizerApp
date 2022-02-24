@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/report.dart';
@@ -7,7 +6,9 @@ import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
   final Dio dio = Dio();
-  String baseUrl = "http://127.0.0.1:8080/";
+  //String baseUrl = "http://127.0.0.1:8080/";
+  String baseUrl = "http://172.20.10.2:8080/";
+
   var token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
 
@@ -184,4 +185,31 @@ class ApiService {
     });
     return reports;
   }
+
+  ///Gets user rights. Checks if user has admin rights
+  Future<String> getUserRights() async {
+    dio.options.headers["Authorization"] = "Bearer $token";
+    int? connectionCode = await testConnection();
+    var response;
+    if (connectionCode == 200){
+       response = await dio.get(baseUrl + "api/user/check-role");
+    }
+    return response.data;
+  }
+
+  ///Gets user name
+  Future<String> getUserName() async {
+    dio.options.headers["Authorization"] = "Bearer $token";
+    int? connectionCode = await testConnection();
+    var response;
+    if (connectionCode == 200){
+      response = await dio.get(baseUrl + "api/user/check-role");
+    }
+    return response.data;
+  }
+
+
+  //Gets pending orders from the api based on department name
+
+
 }
