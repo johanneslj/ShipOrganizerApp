@@ -21,28 +21,32 @@ class ApiService {
 
   Dio dio = Dio();
 
+  /// Validates the token which is currently in secure storage
+  /// Returns false if token is invalid else it returns true
   Future<bool> isTokenValid() async {
     bool valid = false;
     try {
-      String? token = await storage.read(key: "jwt");
-      if (token != null) {
-        dio.options.headers["Authorization"] = "Bearer $token";
-        var response = await dio.get(baseUrl + "api/user/check-role");
-        valid = true;
-      }
-    } on Exception catch (_, e) {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      await dio.get(baseUrl + "api/user/check-role");
+      valid = true;
+    } on Exception catch (e) {
       valid = false;
     }
-
     return valid;
   }
 
+  /// Gets token from secure storage on the device
   Future<String?> _getToken() async {
     String? token = await storage.read(key: "jwt");
     token ??= "No Token";
     return token;
   }
 
+  /// Makes a call to the server to try to log in
+  /// Returns true if was able to log in else it returns false
+  /// If able to log in then the token returned from the server
+  /// is stored on the device in secure storage
   Future<bool> attemptToLogIn(String email, String password) async {
     bool success = false;
 
@@ -59,6 +63,10 @@ class ApiService {
     return success;
   }
 
+  /// Signs a user out
+  /// This removes the token from storage
+  /// returns true if was able to delete token
+  /// false otherwise
   Future<bool> signOut() async {
     bool success = false;
 
@@ -70,6 +78,8 @@ class ApiService {
     return success;
   }
 
+  /// Gets the list of departments a user has access to from the API
+  /// Returns a list of available departments
   Future<List<String>> getDepartments() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
@@ -83,18 +93,24 @@ class ApiService {
     return departments;
   }
 
+  /// Uses an email, password and list of departments to register a new user
+  /// The data is sent to the API where it is handled to create a new user
   Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     bool success = false;
 
     var data = {'email': email, 'fullname': fullName, 'departments': departments};
-
-    String? token = await _getToken();
-    dio.options.headers["Authorization"] = "Bearer $token";
-    var response = await dio.post(baseUrl + "auth/register", data: data);
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      await dio.post(baseUrl + "auth/register", data: data);
+      success = true;
+    } on Exception catch (e) {}
 
     return success;
   }
 
+  /// Uses a users email to send them a verification code
+  /// which can be used to set a password
   Future<bool> sendVerificationCode(String email) async {
     bool success = false;
     try {
@@ -108,6 +124,8 @@ class ApiService {
     return success;
   }
 
+  /// Verifies if the code that has been entered is correct
+  /// Returns true if the code is valid otherwise it returns false
   Future<bool> verifyVerificationCode(String email, String verificationCode) async {
     bool success = false;
 
@@ -130,6 +148,8 @@ class ApiService {
     return success;
   }
 
+  /// Uses email verification code and password to set a new password for a user
+  /// Returns true if successful false otherwise
   Future<bool> setNewPassword(String email, String verificationCode, String password) async {
     bool success = false;
 

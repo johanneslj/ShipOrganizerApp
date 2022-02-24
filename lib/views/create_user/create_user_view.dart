@@ -138,7 +138,7 @@ class _CreateUserState extends State<CreateUser> {
                             child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    apiService.registerUser(emailController.value.text,
+                                    await apiService.registerUser(emailController.value.text,
                                         fullNameController.value.text, _selectedDepartments);
 
                                     Navigator.pushNamed(context, "/home");
