@@ -61,6 +61,7 @@ class _InventoryViewState extends State<InventoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
@@ -77,7 +78,9 @@ class _InventoryViewState extends State<InventoryView> {
         body: GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Inventory(items: displayedItems,onConfirm:getItems),
+          child: RefreshIndicator(onRefresh: () => getItems(),
+          child: Inventory(items: displayedItems,onConfirm:getItems),color: colorScheme.onPrimary,
+              backgroundColor: colorScheme.primary),
         ));
   }
 
@@ -153,7 +156,10 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   Future<void> getItems() async {
-      displayedItems = await apiService.getItems();
-
+    List<Item> displayed = [];
+    displayed = await apiService.getItems();
+    setState((){
+      displayedItems = displayed;
+    });
   }
 }

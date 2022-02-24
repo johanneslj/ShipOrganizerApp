@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/config/theme_config.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/services/api_service.dart';
@@ -58,6 +59,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: PreferredSize(
           preferredSize:
@@ -73,10 +76,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
       drawer: const SideMenu(),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Inventory(
-          items: displayedItems,
-          isRecommended: true,
-        ),
+        child: RefreshIndicator(onRefresh: () => getItems(),
+          child: Inventory(items: displayedItems,isRecommended: true),
+        color: colorScheme.onPrimary,
+        backgroundColor: colorScheme.primary),
       ),
       floatingActionButton: FloatingActionButton(
         foregroundColor: Theme.of(context).colorScheme.primaryVariant,
@@ -163,6 +166,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     ];
   }
   Future<void> getItems() async {
-    displayedItems = await apiService.getRecommendedItems();
+    List<Item> displayed = [];
+    displayed = await apiService.getRecommendedItems();
+    setState((){
+      displayedItems = displayed;
+    });
   }
 }
