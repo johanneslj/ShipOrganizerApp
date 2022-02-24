@@ -49,13 +49,50 @@ class ApiService {
     try {
       var response = await dio.post(baseUrl + "auth/login", data: data);
       if (response.data != null) {
-        print(response.data);
         storage.write(key: "jwt", value: response.data);
         success = true;
       }
     } on Exception catch (_, e) {
       success = false;
     }
+    return success;
+  }
+
+  Future<bool> signOut() async {
+    bool success = false;
+
+    try {
+      await storage.delete(key: "jwt");
+      success = true;
+    } on Exception catch (_, e) {}
+
+    return success;
+  }
+
+  Future<List<String>> getDepartments() async {
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    var response = await dio.get(baseUrl + "api/user/departments");
+    List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
+    List<String> departments = [];
+    for (var department in departmentsList) {
+      departments.add(department["name"]);
+    }
+    storage.write(key: "departments", value: departments.toString());
+    return departments;
+  }
+
+  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
+    bool success = false;
+
+    var data = {'email': email, 'fullname': fullName, 'departments': departments};
+
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    var response = await dio.post(baseUrl + "auth/register", data: data);
+    print(response);
+
+
     return success;
   }
 

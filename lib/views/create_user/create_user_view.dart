@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import '../../main.dart';
 
 /// A class which enables an admin to create a new user
@@ -20,13 +21,8 @@ class _CreateUserState extends State<CreateUser> {
 
   //TODO Get departments from backend
   List<String> departments = <String>[
-    "Dock",
-    "Factory",
     "Bridge",
-    "Quarters",
-    "Ababa",
-    "Cook",
-    "Line"
+    "Deck"
   ];
 
   String email = "";
@@ -50,6 +46,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    ApiService apiService = ApiService();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,6 +76,7 @@ class _CreateUserState extends State<CreateUser> {
                         validator: (val) => val!.isEmpty || !val.contains("@")
                             ? AppLocalizations.of(context)!.enterValidEmail
                             : null,
+                        controller: emailController,
                         decoration: InputDecoration(
                             hintText: AppLocalizations.of(context)!.email,
                             hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
@@ -140,12 +138,10 @@ class _CreateUserState extends State<CreateUser> {
                             child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                (const MyHomePage(title: "Home",)) //TODO Push the new user to backend
-                                            ));
+                                    apiService.registerUser(emailController.value.text,
+                                        fullNameController.value.text, _selectedDepartments);
+
+                                    Navigator.pushNamed(context, "/home");
                                   }
                                 },
                                 child: Text(AppLocalizations.of(context)!.createUser))),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 
 /// Creates a side menu for use as a [Drawer] in a [Scaffold] for the ship organizer app.
 ///
@@ -10,6 +11,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ApiService apiService = ApiService();
     return Drawer(
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: Column(
@@ -44,7 +46,12 @@ class SideMenu extends StatelessWidget {
                 child: Align(
               alignment: Alignment.bottomLeft,
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    bool success = await apiService.signOut();
+                    if(success) {
+                      Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+                    }
+                  },
                   child: Text(
                     AppLocalizations.of(context)!.logOut,
                     style: TextStyle(
