@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/department.dart';
-import 'package:ship_organizer_app/services/api_service.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
@@ -98,7 +98,7 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.name.toUpperCase().contains(query.toUpperCase())) {
+      if (item.name.contains(query)) {
         result.add(item);
       } else if (item.productNumber != null) {
         if (item.productNumber!.contains(query)) {
@@ -117,42 +117,30 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
-  void showSelectDepartmentMenu() {
+  void showSelectDepartmentMenu() async {
     showMenu(
         context: context,
         position: const RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
-        items: getPopupMenuItems());
+        items: await getPopupMenuItems());
   }
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
-  List<PopupMenuItem> getPopupMenuItems() {
-    // TODO Get departments from API
-    return [
-      PopupMenuItem(
-        child: Text("Bridge"),
-        value: 1,
-      ),
-      PopupMenuItem(
-        child: Text("Factory"),
-        value: 2,
-      ),
-      PopupMenuItem(
-        child: Text("Deck"),
-        value: 3,
-      ),
-      PopupMenuItem(
-        child: Text("Storage"),
-        value: 4,
-      ),
-      PopupMenuItem(
-        child: Text("Office"),
-        value: 5,
-      ),
-      PopupMenuItem(
-        child: Text("Kitchen"),
-        value: 6,
-      ),
-    ];
+  Future<List<PopupMenuItem>> getPopupMenuItems() async {
+    ApiService apiService = ApiService();
+
+    List<String> departments = await apiService.getDepartments();
+    List<PopupMenuItem> popMenuItems = [];
+
+    for (String department in departments) {
+      popMenuItems.add(
+        PopupMenuItem(
+          child: Text(department),
+          value: 1,
+        ),
+      );
+    }
+
+    return popMenuItems;
   }
 
   Future<void> getItems() async {
