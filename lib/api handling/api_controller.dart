@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
@@ -171,6 +172,27 @@ class ApiService {
     return success;
   }
 
+  Future<List<User>> getAllUsers() async {
+    List<User> users = [];
+
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(baseUrl + "api/user/all-users");
+
+      List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
+      for (Map<String, dynamic> user in usersListMap) {
+        User createdUser = User(name:user["name"], email: user["email"]);
+        users.add(createdUser);
+
+      }
+    } on Exception catch (e) {
+      users = [User(name:"Something", email:"Happened..")];
+    }
+
+    return users;
+  }
+
   /// Gets all the markers from the api
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
@@ -241,8 +263,6 @@ class ApiService {
     });
     return reports;
   }
-  var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
 
   ///Test connection to api server
   Future<int?> testConnection() async {
@@ -254,6 +274,7 @@ class ApiService {
   ///Returns a list of all the products
   Future<List<Item>> getItems() async {
     int? connectionCode = await testConnection();
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
     if (connectionCode == 200) {
@@ -281,8 +302,7 @@ class ApiService {
                 break;
             }
           });
-          items.add(Item(
-              name: name, productNumber: number, ean13: ean13, amount: stock));
+          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
         }
       }
     }
@@ -294,6 +314,7 @@ class ApiService {
   ///Returns list of all products that needs to be refilled
   Future<List<Item>> getRecommendedItems() async {
     int? connectionCode = await testConnection();
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
 
@@ -323,8 +344,7 @@ class ApiService {
                 break;
             }
           });
-          items.add(Item(
-              name: name, productNumber: number, ean13: ean13, amount: stock));
+          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
         }
       }
     }
@@ -333,10 +353,11 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(String productnumber, String username, int amount,
-      double latitude, double longitude) async {
+  Future<void> updateStock(
+      String productnumber, String username, int amount, double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
 
     if (connectionCode == 200) {
@@ -349,5 +370,4 @@ class ApiService {
       });
     }
   }
-
 }

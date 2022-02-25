@@ -70,7 +70,7 @@ class _MapViewState extends State<MapView> {
                       width: 75,
                       color: Theme.of(context).colorScheme.onPrimary,
                       child: Text(
-                        AppLocalizations.of(context)!.legend,
+                        AppLocalizations.of(context)!.amount,
                       ),
                     ),
                     Container(
