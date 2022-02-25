@@ -17,14 +17,14 @@ class SendBill extends StatefulWidget {
 class _SendBill extends State<SendBill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
   String selectedValue = "Bridge";
-  late bool admin;
+  late bool admin = false;
+  late bool _isLoading = false;
   String pendingCount = "";
   ApiService apiService = ApiService();
 
   @override
   initState() {
-    admin = false;
-    getUserRights();
+    dataLoadFunction();
     pendingCount = (" (" + departments.length.toString() + ")");
   }
 
@@ -33,6 +33,18 @@ class _SendBill extends State<SendBill> {
       pendingCount = (" (" + text + ")");
     });
   }
+
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    await getUserRights();
+    // fetch you data over here
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +99,7 @@ class _SendBill extends State<SendBill> {
       ),
     );
   }
+
   Future<void> getUserRights() async{
     String result = await apiService.getUserRights();
     if(result.contains("ADMIN")){
