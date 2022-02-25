@@ -18,11 +18,23 @@ class _MyAccount extends State<MyAccount> {
   ApiService apiService = ApiService();
   late bool admin = false;
   late String fullName = "";
+  bool _isLoading = false;
   @override
   void initState() {
-    getUserRights();
-    getUserFullName();
+    dataLoadFunction();
     super.initState();
+  }
+
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    await getUserRights();
+    await getUserFullName();
+    // fetch you data over here
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
   }
 
   @override
@@ -35,7 +47,8 @@ class _MyAccount extends State<MyAccount> {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: Center(
+      body: _isLoading ? circularProgress()  :
+      Center(
           child: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
         child: Column(children: [
@@ -85,7 +98,7 @@ class _MyAccount extends State<MyAccount> {
     }
     return departmentCardList;
   }
-
+  /// Gets Users rights from api service
   Future<void> getUserRights() async{
     String result = await apiService.getUserRights();
     if(result.contains("ADMIN")){
@@ -93,11 +106,23 @@ class _MyAccount extends State<MyAccount> {
       admin = true;
     });}
   }
+  /// Gets Users full name from api service
   Future<void> getUserFullName() async{
     String result = await apiService.getUserName();
       setState(() {
         fullName = result;
       });
+  }
+  /// Creates a container with a CircularProgressIndicator
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+
+      ),
+    );
   }
 
 }
