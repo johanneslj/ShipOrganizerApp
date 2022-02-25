@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_confirmed_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_new_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_pending_view.dart';
@@ -16,11 +17,14 @@ class SendBill extends StatefulWidget {
 class _SendBill extends State<SendBill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
   String selectedValue = "Bridge";
-  bool admin = true;
+  late bool admin;
   String pendingCount = "";
+  ApiService apiService = ApiService();
 
   @override
   initState() {
+    admin = false;
+    getUserRights();
     pendingCount = (" (" + departments.length.toString() + ")");
   }
 
@@ -82,5 +86,12 @@ class _SendBill extends State<SendBill> {
                 image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
       ),
     );
+  }
+  Future<void> getUserRights() async{
+    String result = await apiService.getUserRights();
+    if(result.contains("ADMIN")){
+      setState(() {
+        admin = true;
+      });}
   }
 }
