@@ -18,7 +18,7 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://127.0.0.1:8080/";
 
   Dio dio = Dio();
 
@@ -244,7 +244,7 @@ class ApiService {
 
 
   var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1Mjc5NTcsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JA0PAPN9QKAtgmnRrLu6AMj5FDP7w3uZy7LOALsP3vo2loDXSjgrZ_3MXztdxsekUavZ-UQ7JhjzCyHznPS5_A";
 
   ///Test connection to api server
   Future<int?> testConnection() async {
@@ -370,7 +370,7 @@ class ApiService {
     int? connectionCode = await testConnection();
     var response;
     if (connectionCode == 200){
-      response = await dio.get(baseUrl + "api/user/check-role");
+      response = await dio.get(baseUrl + "api/user/name");
     }
     return response.data;
   }
