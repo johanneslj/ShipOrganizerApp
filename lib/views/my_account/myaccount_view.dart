@@ -17,9 +17,11 @@ class MyAccount extends StatefulWidget {
 class _MyAccount extends State<MyAccount> {
   ApiService apiService = ApiService();
   late bool admin = false;
+  late String fullName = "";
   @override
   void initState() {
     getUserRights();
+    getUserFullName();
     super.initState();
   }
 
@@ -39,7 +41,7 @@ class _MyAccount extends State<MyAccount> {
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 40),
-            child: Text("Full Name", // TODO: Get from user
+            child: Text(fullName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyText1),
           ),
@@ -66,15 +68,16 @@ class _MyAccount extends State<MyAccount> {
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/recommendedInventory",
     ));
+    departmentCardList.add(DepartmentCard(
+      departmentName: AppLocalizations.of(context)!.billing,
+      destination: "/sendBill",
+    ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
       ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.sendBill,
-        destination: "/sendBill",
-      ));
+
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUsers,
         destination: "/administerUsers",
@@ -85,10 +88,16 @@ class _MyAccount extends State<MyAccount> {
 
   Future<void> getUserRights() async{
     String result = await apiService.getUserRights();
-    if(result.contains("USER")){
+    if(result.contains("ADMIN")){
       setState(() {
       admin = true;
     });}
+  }
+  Future<void> getUserFullName() async{
+    String result = await apiService.getUserName();
+      setState(() {
+        fullName = result;
+      });
   }
 
 }
