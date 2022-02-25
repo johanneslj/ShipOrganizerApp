@@ -182,15 +182,36 @@ class ApiService {
 
       List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
       for (Map<String, dynamic> user in usersListMap) {
-        User createdUser = User(name:user["name"], email: user["email"]);
+        User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
         users.add(createdUser);
-
       }
     } on Exception catch (e) {
-      users = [User(name:"Something", email:"Happened..")];
+      users = [User(name: "Something", email: "Happened..", departments: [])];
     }
 
     return users;
+  }
+
+  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+    bool success = false;
+
+//TODO Make this interact with backend :)
+
+    return success;
+  }
+
+  Future<bool> deleteUser(String email) async {
+    bool success;
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {"username": email};
+      await dio.delete(baseUrl + "api/user/delete-user", data: data);
+      success = true;
+    } on Exception catch (e) {
+      success = false;
+    }
+    return success;
   }
 
   /// Gets all the markers from the api

@@ -51,7 +51,7 @@
   "name": "Navn",
   "inventory": "Beholdning",
   "profile": "Profil",
-  "deleteUser": "Slett bruker?",
+  "deleteUser": "Slett bruker",
   "deleteConfirmationDialog": "Er du sikker på at du vil slette ",
   "productName": "Produktnavn",
   "productNumber": "Produktnummer",
@@ -64,6 +64,13 @@
   "more": "Flere",
   "less": "Mindre",
   "amount": "Antall",
-  "somethingWentWrong": "Noe gikk galt"
+  "somethingWentWrong": "Noe gikk galt",
+  "editUser": "Rediger bruker",
+  "edit": "Rediger",
+  "confirmEdit": "Bekreft redigering",
+  "loginFailed": "Login feilet",
+  "registerFailed": "Registrer bruker feilet",
+  "editFailed": "Rediger bruker feilet",
+  "deleteFailed": "Slett bruker feilet"
 
 }

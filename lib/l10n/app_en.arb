@@ -51,7 +51,7 @@
   "name": "Name",
   "inventory": "Inventory",
   "profile": "Profile",
-  "deleteUser": "Delete user?",
+  "deleteUser": "Delete user",
   "deleteConfirmationDialog": "Are you sure you want to delete ",
   "productName": "Product Name",
   "productNumber": "Product Number",
@@ -64,6 +64,13 @@
   "more": "More",
   "less": "Less",
   "amount": "Amount",
-  "somethingWentWrong": "Something went wrong"
+  "somethingWentWrong": "Something went wrong",
+  "editUser": "Edit User",
+  "edit": "Edit",
+  "confirmEdit": "Confirm edit",
+  "loginFailed": "Login failed",
+  "registerFailed": "Failed to register user",
+  "editFailed": "Edit user failed",
+  "deleteFailed": "Delete user failed"
 
 }

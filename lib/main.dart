@@ -65,7 +65,7 @@ class MainApp extends StatelessWidget {
         '/': (context) => const LoginView(),
         '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
-        '/createUser': (context) => const CreateUser(),
+        '/createUser': (context) => CreateUser(isCreateUser: true,),
         '/inventoryList': (context) => const InventoryView(),
         '/administerUsers': (context) => const AdministerUsersView(),
         '/sendBill': (context) => const SendBill(),

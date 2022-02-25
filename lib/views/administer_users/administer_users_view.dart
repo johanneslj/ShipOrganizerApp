@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/user.dart';
+import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 
 /// This is the view for administering users
 ///
@@ -20,7 +21,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
-    if(userRows.isEmpty) {
+    if (userRows.isEmpty) {
       createUserRow();
     }
     return Scaffold(
@@ -82,14 +83,13 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
           ),
           TextButton(
               onPressed: () => {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return showConfirmationDialog(user.getName());
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateUser(isCreateUser: false, userToEdit: user)),
                     )
                   },
-              child: Text(AppLocalizations.of(context)!.delete))
+              child: Text(AppLocalizations.of(context)!.edit))
         ],
       ));
     }
