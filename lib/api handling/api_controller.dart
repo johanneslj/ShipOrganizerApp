@@ -19,7 +19,7 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://127.0.0.1:8080/";
+  String baseUrl = "http://192.168.1.115:8080/";
 
   Dio dio = Dio();
 
@@ -95,6 +95,8 @@ class ApiService {
     storage.write(key: "departments", value: departments.toString());
     return departments;
   }
+
+
 
   /// Uses an email, password and list of departments to register a new user
   /// The data is sent to the API where it is handled to create a new user
@@ -395,7 +397,7 @@ class ApiService {
     List<Order> pendingOrders = [];
     var response;
     if (connectionCode == 200) {
-      response = await dio.get(baseUrl + "orders/pending");
+      response = await dio.get(baseUrl + "orders/admin/pending");
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
@@ -417,5 +419,96 @@ class ApiService {
       }
     }
     return pendingOrders;
+  }
+  /// Gets users orders to confirm from api.
+  /// Returns a list of orders
+  Future<List<Order>> getUserConfirmedOrders() async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    List<Order> confirmedOrders = [];
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "orders/user/pending");
+      if (response.statusCode == 200) {
+        List<dynamic> orders = List<dynamic>.from(response.data);
+        for (var order in orders) {
+          String imageName = "";
+          String department = "";
+          order.forEach((key, value) {
+            switch (key) {
+              case "imagename":
+                imageName = value;
+                break;
+              case "departmentName":
+                department = value;
+                break;
+            }
+          });
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
+        }
+      }
+    }
+    return confirmedOrders;
+  }
+
+  /// Gets admin confirmed order from api.
+  /// Returns a list of orders
+  Future<List<Order>> getAdminConfirmedOrders() async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    List<Order> confirmedOrders = [];
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "orders/confirmed");
+      if (response.statusCode == 200) {
+        List<dynamic> orders = List<dynamic>.from(response.data);
+        for (var order in orders) {
+          String imageName = "";
+          String department = "";
+          order.forEach((key, value) {
+            switch (key) {
+              case "imagename":
+                imageName = value;
+                break;
+              case "departmentName":
+                department = value;
+                break;
+            }
+          });
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
+        }
+      }
+    }
+    return confirmedOrders;
+  }
+
+  /// Update order from pending to confirmed for a specific order
+  Future<void> updateOrder(String imageName, String department) async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "orders/update", data: {
+        "imageName": imageName,
+        "department": department
+      });
+    }
+  }
+
+  ///Send order to api.
+  Future<void> sendOrder(String imageName, String department) async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "orders/new", data: {
+        "imageName": imageName,
+        "department": department
+      });
+    }
   }
 }
