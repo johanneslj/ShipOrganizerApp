@@ -2,10 +2,8 @@ import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
   /// Ensures there can only be created one of the API service
@@ -86,8 +84,7 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "api/user/departments");
-    List<Map<String, dynamic>> departmentsList =
-        List<Map<String, dynamic>>.from(response.data);
+    List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
     List<String> departments = [];
     for (var department in departmentsList) {
       departments.add(department["name"]);
@@ -96,19 +93,12 @@ class ApiService {
     return departments;
   }
 
-
-
   /// Uses an email, password and list of departments to register a new user
   /// The data is sent to the API where it is handled to create a new user
-  Future<bool> registerUser(
-      String email, String fullName, List<String> departments) async {
+  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     bool success = false;
 
-    var data = {
-      'email': email,
-      'fullname': fullName,
-      'departments': departments
-    };
+    var data = {'email': email, 'fullname': fullName, 'departments': departments};
     try {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
@@ -136,8 +126,7 @@ class ApiService {
 
   /// Verifies if the code that has been entered is correct
   /// Returns true if the code is valid otherwise it returns false
-  Future<bool> verifyVerificationCode(
-      String email, String verificationCode) async {
+  Future<bool> verifyVerificationCode(String email, String verificationCode) async {
     bool success = false;
 
     try {
@@ -161,8 +150,7 @@ class ApiService {
 
   /// Uses email verification code and password to set a new password for a user
   /// Returns true if successful false otherwise
-  Future<bool> setNewPassword(
-      String email, String verificationCode, String password) async {
+  Future<bool> setNewPassword(String email, String verificationCode, String password) async {
     bool success = false;
 
     var data = {'email': email, 'code': verificationCode, 'password': password};
