@@ -72,28 +72,39 @@ class _MyAccount extends State<MyAccount> {
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
       destination: "/selectDepartment",
+      arguments: false,
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",
+      arguments: false,
+
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/recommendedInventory",
+      arguments: false,
+
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.billing,
       destination: "/sendBill",
+      arguments: admin,
+
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
+        arguments: false,
+
       ));
 
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUsers,
         destination: "/administerUsers",
+        arguments: false,
+
       ));
     }
     return departmentCardList;

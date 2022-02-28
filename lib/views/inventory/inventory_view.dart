@@ -127,7 +127,6 @@ class _InventoryViewState extends State<InventoryView> {
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     ApiService apiService = ApiService();
-
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
 
@@ -139,7 +138,6 @@ class _InventoryViewState extends State<InventoryView> {
         ),
       );
     }
-
     return popMenuItems;
   }
 
