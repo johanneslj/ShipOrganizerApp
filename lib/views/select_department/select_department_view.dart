@@ -55,6 +55,7 @@ class SelectDepartmentView extends StatelessWidget {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
         destination: "/",
+        arguments : false,
       );
       departmentCardList.add(departmentCard);
     }

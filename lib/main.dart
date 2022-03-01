@@ -23,7 +23,7 @@ import 'config/theme_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ApiService apiService = ApiService();
+  ApiService apiService = ApiService(null);
   bool isLoggedIn = await apiService.isTokenValid();
   return runApp(ProviderScope(
       child: MainApp(
@@ -47,6 +47,8 @@ class MainApp extends StatelessWidget {
     var subscription = Connectivity().onConnectivityChanged.listen((event) {
       OfflineEnqueueService().startService();
     });
+
+    ApiService apiService = ApiService(context);
 
     return MaterialApp(
       supportedLocales: const [Locale("en"), Locale("nb", "NO")],
@@ -75,7 +77,7 @@ class MainApp extends StatelessWidget {
         '/': (context) => const LoginView(),
         '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
-        '/createUser': (context) => const CreateUser(),
+        '/createUser': (context) => CreateUser(isCreateUser: true,),
         '/inventoryList': (context) => const InventoryView(),
         '/administerUsers': (context) => const AdministerUsersView(),
         '/sendBill': (context) => const SendBill(),

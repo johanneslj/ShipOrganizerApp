@@ -1,8 +1,11 @@
 import 'dart:core';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/offline_queue/offline_enqueue_item.dart';
 import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
@@ -11,8 +14,17 @@ class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
+  late BuildContext buildContext;
 
-  factory ApiService() {
+  factory ApiService(BuildContext? context) {
+    if (context != null) {
+      _apiService.buildContext = context;
+    }
+
+    return _apiService;
+  }
+
+  static ApiService getInstance() {
     return _apiService;
   }
 
@@ -32,14 +44,14 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       await dio.get(baseUrl + "api/user/check-role");
       valid = true;
-    } on Exception catch (e) {
+    } catch (e) {
       valid = false;
     }
     return valid;
   }
 
   /// Gets token from secure storage on the device
-  Future<String> _getToken() async {
+  Future<String?> _getToken() async {
     String? token = await storage.read(key: "jwt");
     token ??= "No Token";
     return token;
@@ -92,6 +104,9 @@ class ApiService {
       departments.add(department["name"]);
     }
     storage.write(key: "departments", value: departments.toString());
+    if(departments.length == 1) {
+      storage.write(key: "activeDepartment", value: departments[0]);
+    }
     return departments;
   }
 
@@ -172,6 +187,51 @@ class ApiService {
     return success;
   }
 
+  Future<List<User>> getAllUsers() async {
+    List<User> users = [];
+
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(baseUrl + "api/user/all-users");
+
+      List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
+      for (Map<String, dynamic> user in usersListMap) {
+        User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
+        users.add(createdUser);
+      }
+    } catch (e) {
+      if(e is DioError) {
+        print(e.response!.statusCode);
+      }
+      users = [User(name: "Something", email: "Happened..", departments: [])];
+    }
+
+    return users;
+  }
+
+  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+    bool success = false;
+
+//TODO Make this interact with backend :)
+
+    return success;
+  }
+
+  Future<bool> deleteUser(String email) async {
+    bool success;
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {"username": email};
+      await dio.delete(baseUrl + "api/user/delete-user", data: data);
+      success = true;
+    } on Exception catch (e) {
+      success = false;
+    }
+    return success;
+  }
+
   /// Gets all the markers from the api
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
@@ -211,7 +271,8 @@ class ApiService {
           /// First an empty Report is created then each of its fields
           /// are set sequentially until all of them have a value
           Report reportFromData = Report();
-          Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
+          Map<String, dynamic>.from(report)
+              .forEach((identifier, reportFieldValue) {
             switch (identifier) {
               case "productName":
                 reportFromData.setName(reportFieldValue);
@@ -226,7 +287,8 @@ class ApiService {
                 reportFromData.setLongitude(reportFieldValue);
                 break;
               case "registrationDate":
-                reportFromData.setDate(DateTime.parse(reportFieldValue.split(".")[0]));
+                reportFromData
+                    .setDate(DateTime.parse(reportFieldValue.split(".")[0]));
                 break;
               case "fullName":
                 reportFromData.setUserName(reportFieldValue);
@@ -237,13 +299,14 @@ class ApiService {
         }
         double latitude = double.parse(key.split(", ")[0]);
         double longitude = double.parse(key.split(", ")[1]);
-        reports.putIfAbsent(LatLng(latitude, longitude), () => reportsOnSameLatLng);
+        reports.putIfAbsent(
+            LatLng(latitude, longitude), () => reportsOnSameLatLng);
       }
     });
     return reports;
   }
   var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSm9oYW5uZXMgSm9zZWZzZW4iLCJpZCI6MzAsImV4cCI6MTY0NzkzODI1MSwiZW1haWwiOiJqb29oYWE5OUBnbWFpbC5jb20ifQ.0CmMwvQrmf2Lx-I8HPqtJfsJ-F87uNoideqMOdDNrDX5DII1C-1J14YUabdy-Tqmkrp9h0OAx0Cuua9BO0z1TA";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
 
   ///Test connection to api server
   Future<int> testConnection() async {
@@ -256,13 +319,15 @@ class ApiService {
 
   ///Gets all products from the backend server
   ///Returns a list of all the products
-  Future<List<Item>> getItems() async {
+  Future<List<Item>> getItems(String department) async {
+    String? token = await _getToken();
     int? connectionCode = await testConnection();
-    await _getToken().then((jwt) => token = jwt);
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "api/product/inventory");
+      var response =  await dio.get(baseUrl + "api/product/inventory", queryParameters: {
+        "department": department
+      });
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         String name = "";
@@ -299,6 +364,7 @@ class ApiService {
   ///Returns list of all products that needs to be refilled
   Future<List<Item>> getRecommendedItems() async {
     int? connectionCode = await testConnection();
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
 
@@ -342,6 +408,7 @@ class ApiService {
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
 
     dynamic data = {
@@ -364,5 +431,175 @@ class ApiService {
       OfflineEnqueueService().addToQueue(queueItem);
     }
   }
+
+  /// Forces a user to be logged out
+  /// Is only called when the token is no longer valid
+  void forceLogOut() {
+    Navigator.pushNamedAndRemoveUntil(buildContext, "/", (route) => false);
+  }
+  ///Gets user rights. Checks if user has admin rights
+  Future<String> getUserRights() async {
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    int? connectionCode = await testConnection();
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "api/user/check-role");
+    }
+    return response.data;
+  }
+
+  ///Gets user name
+  Future<String> getUserName() async {
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    int? connectionCode = await testConnection();
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "api/user/name");
+    }
+    return response.data;
+  }
+  /// Gets pending order from api.
+  /// Returns a list of orders
+  Future<List<Order>> getPendingOrder() async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    List<Order> pendingOrders = [];
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "orders/admin/pending");
+      if (response.statusCode == 200) {
+        List<dynamic> orders = List<dynamic>.from(response.data);
+        for (var order in orders) {
+          String imageName = "";
+          String department = "";
+          order.forEach((key, value) {
+            switch (key) {
+              case "imagename":
+                imageName = value;
+                break;
+              case "departmentName":
+                department = value;
+                break;
+            }
+          });
+          pendingOrders
+              .add(Order(imagename: imageName, department: department));
+        }
+      }
+    }
+    return pendingOrders;
+  }
+  /// Gets users orders to confirm from api.
+  /// Returns a list of orders
+  Future<List<Order>> getUserConfirmedOrders() async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    List<Order> confirmedOrders = [];
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.post(baseUrl + "orders/user/pending", data: {
+        "department": await getActiveDepartment()
+      });
+      if (response.statusCode == 200) {
+        List<dynamic> orders = List<dynamic>.from(response.data);
+        for (var order in orders) {
+          String imageName = "";
+          String department = "";
+          order.forEach((key, value) {
+            switch (key) {
+              case "imagename":
+                imageName = value;
+                break;
+              case "departmentName":
+                department = value;
+                break;
+            }
+          });
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
+        }
+      }
+    }
+    return confirmedOrders;
+  }
+
+  /// Gets admin confirmed order from api.
+  /// Returns a list of orders
+  Future<List<Order>> getAdminConfirmedOrders() async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    List<Order> confirmedOrders = [];
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "orders/confirmed");
+
+      if (response.statusCode == 200) {
+        List<dynamic> orders = List<dynamic>.from(response.data);
+        for (var order in orders) {
+          String imageName = "";
+          String department = "";
+          order.forEach((key, value) {
+            switch (key) {
+              case "imagename":
+                imageName = value;
+                break;
+              case "departmentName":
+                department = value;
+                break;
+            }
+          });
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
+        }
+      }
+    }
+    return confirmedOrders;
+  }
+
+  /// Update order from pending to confirmed for a specific order
+  Future<void> updateOrder(String imageName, String department) async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "orders/update", data: {
+        "imageName": imageName,
+        "department": department
+      });
+    }
+  }
+
+  ///Send order to api.
+  Future<void> sendOrder(String imageName, String department) async {
+    int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "orders/new", data: {
+        "imageName": imageName,
+        "department": department
+      });
+    }
+  }
+
+  Future<void> setActiveDepartment(String department) async {
+    await storage.write(key: "activeDepartment", value: department);
+  }
+
+  Future<String> getActiveDepartment() async {
+    String? activeDepartment = await storage.read(key: "activeDepartment");
+    if(activeDepartment == null){
+      return "";
+    }
+    else {
+      return activeDepartment;
+    }
+  }
+
 
 }

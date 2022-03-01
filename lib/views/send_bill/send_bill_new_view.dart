@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 
 /// Class for the new bill tab in the send_bill_view
 /// This class is responsible for the creation of a new bill for
@@ -21,8 +22,13 @@ class _newBill extends State<NewBill> {
   bool admin = false;
   late File? _image;
 
+  ApiService apiService = ApiService.getInstance();
+
+  late List<DropdownMenuItem<String>> dropdownItems = [];
+
   @override
   void initState() {
+    getdropdownItems();
     _image = null;
     super.initState();
   }
@@ -67,7 +73,6 @@ class _newBill extends State<NewBill> {
                     borderSide: BorderSide(color: Colors.blue, width: 1),
                   ),
                 ),
-
                 validator: (value) =>
                     value == null ? "Select a Department" : null,
                 dropdownColor: Theme.of(context).colorScheme.onPrimary,
@@ -95,29 +100,36 @@ class _newBill extends State<NewBill> {
               "Submit",
               style: Theme.of(context).textTheme.headline6,
             ),
-            onPressed: () => {submitToServer()}),
+            onPressed: () => {
+              submitToServer(),
+              Navigator.of(context).pop()}),
       ],
     ));
   }
 
   ///Creates the menu items based on the department list
-  List<DropdownMenuItem<String>> get dropdownItems {
+  Future<void> getdropdownItems() async {
     List<DropdownMenuItem<String>> menuItems = <DropdownMenuItem<String>>[];
-    for (String department in getDepartments()) {
+    List<String> departments  = await getDepartments();
+    for (String department in departments) {
       DropdownMenuItem<String> departmentCard = DropdownMenuItem(
-
         child: Text(department),
         value: department,
       );
       menuItems.add(departmentCard);
     }
-    return menuItems;
+    setState(() {
+      dropdownItems = menuItems;
+    });
   }
 
   //Gets the departments from the backend server
-  List<String> getDepartments(){
-    List<String> departments = <String>["Bridge", "Factory", "Deck"];
-
+  Future<List<String>> getDepartments() async{
+    String? allValues = await apiService.storage.read(key:"departments");
+    List<String> departments  = [];
+    if(allValues != null) {
+      departments.add(allValues.replaceAll("[", "").replaceAll("]", "").toString());
+    }
     return departments;
 
   }
@@ -158,11 +170,13 @@ class _newBill extends State<NewBill> {
   }
 
   /// Method to submit the selected department and image to the backend server
-  void submitToServer() {
-    Codec stringToBase64 = utf8.fuse(base64);
+  Future<void> submitToServer() async {
     final bytes = _image!.readAsBytesSync();
     String encoded = base64Encode(bytes);
     String fileName = p.basename(_image!.path);
+
+    await apiService.sendOrder(fileName, selectedValue);
+
     //Send this to backend server
     log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
   }

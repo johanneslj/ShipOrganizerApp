@@ -33,7 +33,6 @@
   "search": "Søk",
   "selectDepartment": "Velg departementer",
   "selectedDepartments": "Valgte departmenter",
-  "sendBill": "Send faktura",
   "sendCode": "Send kode",
   "sendRecommended": "Send anbefalt inventar",
   "signIn": "Logg inn",
@@ -51,7 +50,7 @@
   "name": "Navn",
   "inventory": "Beholdning",
   "profile": "Profil",
-  "deleteUser": "Slett bruker?",
+  "deleteUser": "Slett bruker",
   "deleteConfirmationDialog": "Er du sikker på at du vil slette ",
   "productName": "Produktnavn",
   "productNumber": "Produktnummer",
@@ -63,7 +62,14 @@
   "itemsUsedHere": " Utstyr brukt her",
   "more": "Flere",
   "less": "Mindre",
-  "legend": "Legend",
-  "somethingWentWrong": "Noe gikk galt"
+  "amount": "Antall",
+  "somethingWentWrong": "Noe gikk galt",
+  "editUser": "Rediger bruker",
+  "edit": "Rediger",
+  "confirmEdit": "Bekreft redigering",
+  "loginFailed": "Login feilet",
+  "registerFailed": "Registrer bruker feilet",
+  "editFailed": "Rediger bruker feilet",
+  "deleteFailed": "Slett bruker feilet"
 
 }

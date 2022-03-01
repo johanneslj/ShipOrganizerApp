@@ -23,7 +23,8 @@ class RecommendedInventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
 
   List<Item> items = [];
   List<Item> displayedItems = [];

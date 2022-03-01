@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/entities/user.dart';
+import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 
 /// This is the view for administering users
 ///
@@ -13,11 +16,15 @@ class AdministerUsersView extends StatefulWidget {
 }
 
 class _AdministerUsersViewState extends State<AdministerUsersView> {
-  //TODO get users from backend
-  List<String> users = ["Hans Hansen, hanshansen@hansen.no", "Jon Jonsen, jon@jonsen.no"];
+  final ApiService _apiService = ApiService.getInstance();
+
+  List<TableRow> userRows = [];
 
   @override
   Widget build(BuildContext context) {
+    if (userRows.isEmpty) {
+      createUserRow();
+    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,16 +42,15 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Table(
-                border: const TableBorder(
-                    horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FlexColumnWidth(0.4),
-                  1: FlexColumnWidth(),
-                  2: FixedColumnWidth(64),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: createUserRow(),
-              ),
+                  border: const TableBorder(
+                      horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: FlexColumnWidth(0.4),
+                    1: FlexColumnWidth(),
+                    2: FixedColumnWidth(64),
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: userRows),
             )
           ],
         ),
@@ -53,7 +59,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
   }
 
   /// creates an additional row in the table for each user
-  List<TableRow> createUserRow() {
+  Future<void> createUserRow() async {
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
@@ -64,34 +70,34 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         ],
       ),
     );
-
-    for (String user in users) {
-      List<String> details = user.split(",");
+    List<User> users = await _apiService.getAllUsers();
+    for (User user in users) {
       userRows.add(TableRow(
         children: [
           Text(
-            details[0],
+            user.getName(),
             style: Theme.of(context).textTheme.caption,
           ),
           Text(
-            details[1],
+            user.getEmail(),
             style: Theme.of(context).textTheme.caption,
           ),
           TextButton(
               onPressed: () => {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return showConfirmationDialog(details[0]);
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateUser(isCreateUser: false, userToEdit: user)),
                     )
                   },
-              child: Text(AppLocalizations.of(context)!.delete))
+              child: Text(AppLocalizations.of(context)!.edit))
         ],
       ));
     }
 
-    return userRows;
+    setState(() {
+      this.userRows = userRows;
+    });
   }
 
   /// Shows a confirmation dialog for deleting a user
