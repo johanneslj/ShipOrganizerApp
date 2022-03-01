@@ -27,8 +27,6 @@ class _confimedBill extends State<ConfimedBill> {
     super.initState();
   }
 
-
-
   dataLoadFunction() async {
     setState(() {
       _isLoading = true; // your loader has started to load
@@ -39,7 +37,6 @@ class _confimedBill extends State<ConfimedBill> {
       _isLoading = false; // your loder will stop to finish after the data fetch
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

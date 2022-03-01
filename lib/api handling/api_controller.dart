@@ -2,8 +2,10 @@ import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
   /// Ensures there can only be created one of the API service
