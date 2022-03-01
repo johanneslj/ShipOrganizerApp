@@ -70,6 +70,7 @@
   "loginFailed": "Login failed",
   "registerFailed": "Failed to register user",
   "editFailed": "Edit user failed",
-  "deleteFailed": "Delete user failed"
+  "deleteFailed": "Delete user failed",
+  "administerProducts": "Administer products"
 
 }

@@ -108,6 +108,13 @@ class _MyAccount extends State<MyAccount> {
         arguments: false,
 
       ));
+
+      departmentCardList.add(DepartmentCard(
+        departmentName: AppLocalizations.of(context)!.administerProducts,
+        destination: "/administerProducts",
+        arguments: false,
+
+      ));
     }
     return departmentCardList;
   }

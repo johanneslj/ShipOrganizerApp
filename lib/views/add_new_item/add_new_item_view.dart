@@ -3,12 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
+import 'package:ship_organizer_app/views/inventory/item.dart';
 
 ///This class represents the possibility to add a new item to the inventory list
 ///
 
 class NewItem extends StatefulWidget {
-  const NewItem({Key? key}) : super(key: key);
+  bool isCreateNew;
+  Item? itemToEdit;
+
+  NewItem({Key? key, required this.isCreateNew, this.itemToEdit}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _newItem();
@@ -18,6 +22,10 @@ class _newItem extends State<NewItem> {
   final TextEditingController _searchQueryController = TextEditingController();
   String searchQuery = "Search query";
   final _formKey = GlobalKey<FormState>();
+
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController productNumberController = TextEditingController();
+  TextEditingController stockController = TextEditingController();
 
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -43,6 +51,11 @@ class _newItem extends State<NewItem> {
 
   @override
   Widget build(BuildContext context) {
+    if(!widget.isCreateNew) {
+      productNameController.text = widget.itemToEdit!.name;
+      productNumberController.text = widget.itemToEdit!.productNumber!;
+      stockController.text = widget.itemToEdit!.amount.toString();
+    }
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -66,6 +79,7 @@ class _newItem extends State<NewItem> {
                 child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text(AppLocalizations.of(context)!.productName),
                   TextFormField(
+                    controller: productNameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)!.enterValidText;
@@ -78,6 +92,7 @@ class _newItem extends State<NewItem> {
                   ),
                   Text(AppLocalizations.of(context)!.productNumber),
                   TextFormField(
+                    controller: productNumberController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)!.enterValidText;
@@ -90,6 +105,8 @@ class _newItem extends State<NewItem> {
                   ),
                   Text(AppLocalizations.of(context)!.productStock),
                   TextFormField(
+                    readOnly: !widget.isCreateNew,
+                    controller: stockController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return AppLocalizations.of(context)!.enterValidNumber;
@@ -149,6 +166,6 @@ class _newItem extends State<NewItem> {
   }
 
   void sendToServer(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => (const InventoryView())));
+    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
   }
 }

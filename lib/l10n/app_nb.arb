@@ -70,6 +70,7 @@
   "loginFailed": "Login feilet",
   "registerFailed": "Registrer bruker feilet",
   "editFailed": "Rediger bruker feilet",
-  "deleteFailed": "Slett bruker feilet"
+  "deleteFailed": "Slett bruker feilet",
+  "administerProducts": "Rediger produkter"
 
 }

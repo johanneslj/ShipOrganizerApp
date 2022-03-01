@@ -7,7 +7,7 @@ import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:ship_organizer_app/views/inventory/recommended_inventory_view.dart';
 import 'package:ship_organizer_app/views/my_account/myaccount_view.dart';
-import 'package:ship_organizer_app/views/administer_users/administer_users_view.dart';
+import 'package:ship_organizer_app/views/administer_users/administer_items_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/select_department/select_department_view.dart';
@@ -69,12 +69,13 @@ class MainApp extends StatelessWidget {
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => CreateUser(isCreateUser: true,),
         '/inventoryList': (context) => const InventoryView(),
-        '/administerUsers': (context) => const AdministerUsersView(),
+        '/administerUsers': (context) => const AdministerUsersView(isAdministeringUsers: true,),
+        '/administerProducts': (context) => const AdministerUsersView(isAdministeringUsers: false,),
         '/sendBill': (context) => const SendBill(),
         '/inventory': (context) => const InventoryView(),
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
         '/map': (context) => const MapView(),
-        '/newProduct': (context) => const NewItem(),
+        '/newProduct': (context) => NewItem(isCreateNew: true,),
         '/home': (context) => const MyHomePage(
               title: 'Home',
             ),
