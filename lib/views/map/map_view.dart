@@ -42,8 +42,10 @@ class _MapViewState extends State<MapView> {
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text( widget.itemToShow == null ?
-          AppLocalizations.of(context)!.map: AppLocalizations.of(context)!.mapOf + widget.itemToShow!,
+        title: Text(
+          widget.itemToShow == null
+              ? AppLocalizations.of(context)!.map
+              : AppLocalizations.of(context)!.mapOf + widget.itemToShow!,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
@@ -60,7 +62,7 @@ class _MapViewState extends State<MapView> {
             zoom: 7,
           ),
         ),
-        markerLocations.isEmpty
+        markerLocations.isEmpty || (max == min)
             ? const Positioned(child: Text(""))
             : Positioned(
                 top: 1,
@@ -180,8 +182,10 @@ class _MapViewState extends State<MapView> {
   double calculateHue(List<Report> marker, int max, int min) {
     double hue = 0;
 
-    hue = ((getAmountOfItemsAtMarker(marker) - min) / (max - min)) *
-        265; // hue has to be 0 <= hue < 360
+    if (max != min) {
+      hue = ((getAmountOfItemsAtMarker(marker) - min) / (max - min)) * 265;
+    }
+    // hue has to be 0 <= hue < 360
     // This function normalizes the value to be between 0 and 265 so that each marker can get a
     // hue relative to the amount of equipment that is present there, it stops at 265 because closer
     // to 360 the colors start to get similar to the ones around 0
@@ -229,11 +233,21 @@ class _MapViewState extends State<MapView> {
     for (Report descriptiveItem in item) {
       equipments.add(ListTile(
         title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
-                style: Theme.of(context).textTheme.headline6),
-            Text(descriptiveItem.getLatLng(), style: Theme.of(context).textTheme.subtitle2)
+            SizedBox(
+              child: Text(
+                descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
+                style: Theme.of(context).textTheme.headline6,
+                overflow: TextOverflow.fade,
+              ),
+              width: 175,
+            ),
+            Text(
+              descriptiveItem.getLatLng(),
+              style: Theme.of(context).textTheme.subtitle2,
+            )
           ],
         ),
         subtitle: Column(
