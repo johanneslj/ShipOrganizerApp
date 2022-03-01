@@ -146,7 +146,7 @@ class _InventoryViewState extends State<InventoryView> {
   Future<void> getItems() async {
     ApiService apiService = ApiService(context);
     List<Item> displayed = [];
-    displayed = await apiService.getItems();
+    displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
       displayedItems = displayed;
     });

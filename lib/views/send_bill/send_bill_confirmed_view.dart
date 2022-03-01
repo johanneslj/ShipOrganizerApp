@@ -19,7 +19,7 @@ class ConfimedBill extends StatefulWidget {
 class _confimedBill extends State<ConfimedBill> {
   late List<Order> confirmedOrders = <Order>[];
   late bool _isLoading = false;
-  ApiService apiService = ApiService();
+
 
   @override
   void initState() {
@@ -104,6 +104,7 @@ class _confimedBill extends State<ConfimedBill> {
 
   /// Function to send notice to the server that the bill has been confirmed
   Future<void> sendToServer(int index) async{
+    ApiService apiService = ApiService(context);
     String imageName = confirmedOrders[index].imagename;
     String departmentName = confirmedOrders[index].department;
     await apiService.updateOrder(imageName, departmentName);
@@ -111,6 +112,7 @@ class _confimedBill extends State<ConfimedBill> {
   }
 
   Future<void> getConfirmedOrder() async {
+    ApiService apiService = ApiService(context);
     List<Order> userOrders = await apiService.getUserConfirmedOrders();
     List<Order> adminOrders = await apiService.getAdminConfirmedOrders();
 
