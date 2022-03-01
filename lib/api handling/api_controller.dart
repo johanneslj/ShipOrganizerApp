@@ -423,11 +423,11 @@ class ApiService {
       await dio.post(baseUrl + "api/product/setNewStock", data: data);
     } else {
       print("Adding item to offline queue:");
-      OfflineEnqueueItem queueItem = OfflineEnqueueItem(
-          type: "UPDATE_STOCK",
-          status: "PENDING",
-        data: data
-      );
+      Map<String, dynamic> queueItem = {
+        "type": "UPDATE_STOCK",
+        "status": "PENDING",
+        "data": data
+      };
       OfflineEnqueueService().addToQueue(queueItem);
     }
   }

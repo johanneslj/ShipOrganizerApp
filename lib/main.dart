@@ -40,9 +40,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Start offline queue service on build to try to execute queue.
-    OfflineEnqueueService().startService();
-
     // Try to execute queue when connectivity status changes.
     var subscription = Connectivity().onConnectivityChanged.listen((event) {
       OfflineEnqueueService().startService();

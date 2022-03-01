@@ -18,7 +18,10 @@ class OfflineEnqueueItem {
   );
   
   factory OfflineEnqueueItem.fromString(String string) => OfflineEnqueueItem(
-    type: string.split(",").firstWhere((string) => string.startsWith("type")).split(":").last.trim().replaceAll("}", ""),
+    type: string.split(",")
+        .firstWhere((string) => string.replaceAll("{", "").startsWith("type"))
+        .split(":").last
+        .trim().replaceAll("}", ""),
     status: string.split(",").firstWhere((string) => string.startsWith("status")).split(":").last.trim().replaceAll("}", ""),
     data: json.decode(string.split(",").firstWhere((string) => string.startsWith("data")).split(":").last.trim().replaceAll("}", "")),
   );
@@ -32,6 +35,6 @@ class OfflineEnqueueItem {
   @override
   String toString() {
     String dataJson = json.encode(data);
-    return 'OfflineEnqueueItem{type: $type, status: $status, data: $dataJson}';
+    return '{type: $type, status: $status, data: $dataJson}';
   }
 }
