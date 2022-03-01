@@ -18,7 +18,8 @@ class SetPasswordView extends StatefulWidget {
 class _SetPasswordViewState extends State<SetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  ApiService apiService = ApiService();
+  ApiService apiService = ApiService.getInstance();
+
   final RegExp emailRegex =
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
@@ -127,25 +128,20 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   minWidth: 250.0,
                   height: 100.0,
                   child: ElevatedButton(
-                      onPressed: () => {
+                      onPressed: () async => {
                             // TODO Verify code with API
-                            apiService
-                                .verifyVerificationCode(emailController.value.text,
-                                    verificationCodeController.value.text)
-                                .then((isValid) => {
-                                      if (isValid)
-                                        {
-                                          setState(() {
-                                            page = 3;
-                                          })
-                                        }
-                                      else
-                                        {
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content:
-                                                  Text(AppLocalizations.of(context)!.sentCode))),
-                                        }
-                                    })
+                            if (await apiService.verifyVerificationCode(
+                                emailController.value.text, verificationCodeController.value.text))
+                              {
+                                setState(() {
+                                  page = 3;
+                                })
+                              }
+                            else
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(AppLocalizations.of(context)!.somethingWentWrong))),
+                              }
                           },
                       child: Text(AppLocalizations.of(context)!.verifyCode))),
             ]))
@@ -224,7 +220,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                                 verificationCodeController.value.text,
                                 passwordController.value.text))
                               {
-                              Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
+                                Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
                               }
                           }
                       },

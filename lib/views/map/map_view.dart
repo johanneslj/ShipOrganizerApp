@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:ship_organizer_app/api handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/report.dart';
-import 'package:ship_organizer_app/api handling//api_controller.dart';
 
 /// A map view
 /// It implements a Google map
@@ -25,8 +25,9 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  ApiService apiService = ApiService();
   final Location _location = Location();
+
+  ApiService apiService = ApiService.getInstance();
 
   Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -70,7 +71,7 @@ class _MapViewState extends State<MapView> {
                       width: 75,
                       color: Theme.of(context).colorScheme.onPrimary,
                       child: Text(
-                        AppLocalizations.of(context)!.legend,
+                        AppLocalizations.of(context)!.amount,
                       ),
                     ),
                     Container(

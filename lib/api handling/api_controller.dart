@@ -5,21 +5,31 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
+  late BuildContext buildContext;
 
-  factory ApiService() {
+  factory ApiService(BuildContext? context) {
+    if (context != null) {
+      _apiService.buildContext = context;
+    }
+
+    return _apiService;
+  }
+
+  static ApiService getInstance() {
     return _apiService;
   }
 
   ApiService._internal();
 
-  FlutterSecureStorage storage = const FlutterSecureStorage();
-  String baseUrl = "http://10.22.193.237:8080/";
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  String baseUrl = "http://10.22.186.180:8080/";
 
   Dio dio = Dio();
 
@@ -32,7 +42,7 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       await dio.get(baseUrl + "api/user/check-role");
       valid = true;
-    } on Exception catch (e) {
+    } catch (e) {
       valid = false;
     }
     return valid;
@@ -175,6 +185,51 @@ class ApiService {
     return success;
   }
 
+  Future<List<User>> getAllUsers() async {
+    List<User> users = [];
+
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(baseUrl + "api/user/all-users");
+
+      List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
+      for (Map<String, dynamic> user in usersListMap) {
+        User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
+        users.add(createdUser);
+      }
+    } catch (e) {
+      if(e is DioError) {
+        print(e.response!.statusCode);
+      }
+      users = [User(name: "Something", email: "Happened..", departments: [])];
+    }
+
+    return users;
+  }
+
+  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+    bool success = false;
+
+//TODO Make this interact with backend :)
+
+    return success;
+  }
+
+  Future<bool> deleteUser(String email) async {
+    bool success;
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {"username": email};
+      await dio.delete(baseUrl + "api/user/delete-user", data: data);
+      success = true;
+    } on Exception catch (e) {
+      success = false;
+    }
+    return success;
+  }
+
   /// Gets all the markers from the api
   /// returns a Map with LatLng as keys and lists of reports
   /// grouped on that LatLng as values
@@ -248,6 +303,8 @@ class ApiService {
     });
     return reports;
   }
+  var token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
 
   ///Test connection to api server
   Future<int?> testConnection() async {
@@ -294,6 +351,7 @@ class ApiService {
         }
       }
     }
+
     return items;
   }
 
@@ -344,8 +402,8 @@ class ApiService {
   Future<void> updateStock(String productnumber, String username, int amount,
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
-    String? token = await _getToken();
 
+    String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
 
     if (connectionCode == 200) {
@@ -359,6 +417,11 @@ class ApiService {
     }
   }
 
+  /// Forces a user to be logged out
+  /// Is only called when the token is no longer valid
+  void forceLogOut() {
+    Navigator.pushNamedAndRemoveUntil(buildContext, "/", (route) => false);
+  }
   ///Gets user rights. Checks if user has admin rights
   Future<String> getUserRights() async {
     String? token = await _getToken();

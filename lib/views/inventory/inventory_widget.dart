@@ -39,10 +39,9 @@ class Inventory extends StatelessWidget {
   /// Controllers used for TextFields in recommended tiles.
   final List<TextEditingController> _controllers = [];
 
-  /// ApiService
-  final ApiService apiService = ApiService();
-
   final Location _location = Location();
+
+  ApiService apiService = ApiService.getInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +156,7 @@ class Inventory extends StatelessWidget {
           return AddRemoveItemDialog(item: item, isAdd: true);
         }).then((amount) async => {
           // TODO Implement with API. Add to call queue.
-          if (amount is int) {  await updateStock(item.productNumber,amount),}
+          if (amount is int) {  await updateStock(item.productNumber,amount, context),}
         });
   }
 
@@ -170,14 +169,14 @@ class Inventory extends StatelessWidget {
         }).then((amount) async =>  {
           // TODO Implement with API. Add to call queue.
           if (amount is int) {
-            await updateStock(item.productNumber,-amount)
+            await updateStock(item.productNumber,-amount, context)
           }
         });
   }
   /// Update the stock on the specified product.
   /// Uses product number, username, location of the device and the decrease or increase amount
   /// Makes call to apiService to update the api
-  Future<void> updateStock(String? itemNumber, int amount) async {
+  Future<void> updateStock(String? itemNumber, int amount, BuildContext context) async {
     var currentLocation = await _location.getLocation();
     var latitude = currentLocation.latitude!;
     var longitude = currentLocation.longitude!;

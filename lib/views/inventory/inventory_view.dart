@@ -25,7 +25,9 @@ class InventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _InventoryViewState extends State<InventoryView> {
   final TextEditingController _controller = TextEditingController();
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
+
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
@@ -66,7 +68,7 @@ class _InventoryViewState extends State<InventoryView> {
               controller: _controller,
             )),
         drawer: const SideMenu(),
-        body: _isLoading ? circularProgress() :GestureDetector(
+        body: GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: RefreshIndicator(onRefresh: () => getItems(),
@@ -101,6 +103,7 @@ class _InventoryViewState extends State<InventoryView> {
         }
       }
     }
+
     setState(() {
       displayedItems = result;
     });}
@@ -116,9 +119,10 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
-    ApiService apiService = ApiService();
+
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
+
     for (String department in departments) {
       popMenuItems.add(
         PopupMenuItem(
