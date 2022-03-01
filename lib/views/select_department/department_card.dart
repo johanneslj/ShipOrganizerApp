@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class DepartmentCard extends StatelessWidget {
   final String departmentName;
   final String destination;
+  final bool arguments;
 
-  const DepartmentCard({Key? key, required this.departmentName, required this.destination})
+  const DepartmentCard({Key? key, required this.departmentName, required this.destination, required this.arguments})
       : super(key: key);
 
   @override
@@ -27,7 +28,7 @@ class DepartmentCard extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () => {Navigator.pushNamed(context, destination)}),
+            onTap: () => {Navigator.pushNamed(context, destination, arguments: arguments)}),
         const Divider(
           color: Color(0xffD3D6D7),
         ),

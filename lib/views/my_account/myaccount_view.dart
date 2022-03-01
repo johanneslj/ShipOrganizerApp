@@ -1,13 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
-class MyAccount extends StatelessWidget {
-  final bool admin = true;
+class MyAccount extends StatefulWidget {
 
   const MyAccount({Key? key}) : super(key: key);
+
+
+  @override
+  State<StatefulWidget> createState() => _MyAccount();
+  }
+
+class _MyAccount extends State<MyAccount> {
+  ApiService apiService = ApiService();
+  late bool admin = false;
+  late String fullName = "";
+  bool _isLoading = false;
+  @override
+  void initState() {
+    dataLoadFunction();
+    super.initState();
+  }
+
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    await getUserRights();
+    await getUserFullName();
+    // fetch you data over here
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +47,14 @@ class MyAccount extends StatelessWidget {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: Center(
+      body: _isLoading ? circularProgress()  :
+      Center(
           child: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 40),
-            child: Text("Full Name", // TODO: Get from user
+            child: Text(fullName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyText1),
           ),
@@ -43,29 +72,68 @@ class MyAccount extends StatelessWidget {
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changeDepartment,
       destination: "/selectDepartment",
+      arguments: false,
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",
+      arguments: false,
+
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/recommendedInventory",
+      arguments: false,
+
+    ));
+    departmentCardList.add(DepartmentCard(
+      departmentName: AppLocalizations.of(context)!.billing,
+      destination: "/sendBill",
+      arguments: admin,
+
     ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
         destination: "/createUser",
+        arguments: false,
+
       ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.sendBill,
-        destination: "/sendBill",
-      ));
+
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUsers,
         destination: "/administerUsers",
+        arguments: false,
+
       ));
     }
     return departmentCardList;
   }
+  /// Gets Users rights from api service
+  Future<void> getUserRights() async{
+    String result = await apiService.getUserRights();
+    if(result.contains("ADMIN")){
+      setState(() {
+      admin = true;
+    });}
+  }
+  /// Gets Users full name from api service
+  Future<void> getUserFullName() async{
+    String result = await apiService.getUserName();
+      setState(() {
+        fullName = result;
+      });
+  }
+  /// Creates a container with a CircularProgressIndicator
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+
+      ),
+    );
+  }
+
 }
