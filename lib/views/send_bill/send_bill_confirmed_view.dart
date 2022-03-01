@@ -19,7 +19,8 @@ class ConfimedBill extends StatefulWidget {
 class _confimedBill extends State<ConfimedBill> {
   late List<Order> confirmedOrders = <Order>[];
   late bool _isLoading = false;
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
 
   @override
   void initState() {

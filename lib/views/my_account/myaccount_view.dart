@@ -15,7 +15,9 @@ class MyAccount extends StatefulWidget {
   }
 
 class _MyAccount extends State<MyAccount> {
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
+
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;

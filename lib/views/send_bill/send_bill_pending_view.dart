@@ -16,7 +16,8 @@ class PendingBill extends StatefulWidget {
 class _pendingBill extends State<PendingBill> {
   late List<Order> pendingOrders = <Order>[];
   late bool _isLoading = false;
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
 
   @override
   void initState() {

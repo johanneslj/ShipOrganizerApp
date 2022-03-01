@@ -21,7 +21,9 @@ class _newBill extends State<NewBill> {
   String selectedValue = "Bridge";
   bool admin = false;
   late File? _image;
-  ApiService apiService = ApiService();
+
+  ApiService apiService = ApiService.getInstance();
+
   late List<DropdownMenuItem<String>> dropdownItems = [];
 
   @override

@@ -18,7 +18,6 @@ class _SendBill extends State<SendBill> {
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
   String selectedValue = "Bridge";
   late bool admin = false;
-  ApiService apiService = ApiService();
 
   @override
   initState() {

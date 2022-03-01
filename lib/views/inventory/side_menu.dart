@@ -11,7 +11,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ApiService apiService = ApiService();
+    ApiService apiService = ApiService(context);
     return Drawer(
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: Column(
