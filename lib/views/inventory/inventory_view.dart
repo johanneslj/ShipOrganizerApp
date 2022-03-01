@@ -27,37 +27,27 @@ class _InventoryViewState extends State<InventoryView> {
   final TextEditingController _controller = TextEditingController();
 
   ApiService apiService = ApiService.getInstance();
-
   List<Item> items = [];
   List<Item> displayedItems = [];
+  late bool _isLoading = true;
 
-  // TODO Implement with API
-  Department selectedDepartment = Department(departmentName: "Bridge");
+  Department selectedDepartment = Department(departmentName: "");
 
   @override
   void initState() {
+    dataLoadFunction();
     super.initState();
-    getItems();
-    // TODO Get items from API, or from local cache if offline.
-    /*items = [
-      Item(name: "Name", ean13: "1432456789059", amount: 234),
-      Item(name: "Product", ean13: "1432456789059", amount: 54),
-      Item(name: "Test123", ean13: "1432456789059", amount: 72),
-      Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 22),
-      Item(name: "__234rfgg245", ean13: "1432456789059", amount: 234),
-      Item(name: "Product Name", ean13: "1432456789059", amount: 4),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-      Item(name: "Something", ean13: "1432456789059", amount: 88),
-      Item(name: "Yes", ean13: "1432456789059", amount: 765),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 2),
-    ];*/
-
-    displayedItems = items;
+  }
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    selectedDepartment.departmentName = await apiService.getActiveDepartment();
+    await getItems();
+    // fetch you data over here
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
   }
 
   @override
@@ -74,9 +64,10 @@ class _InventoryViewState extends State<InventoryView> {
               onClear: onClear,
               filter: showSelectDepartmentMenu,
               controller: _controller,
+              recommended: false,
             )),
         drawer: const SideMenu(),
-        body: GestureDetector(
+        body: _isLoading ? circularProgress() : GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: RefreshIndicator(onRefresh: () => getItems(),
@@ -111,7 +102,6 @@ class _InventoryViewState extends State<InventoryView> {
         }
       }
     }
-
     setState(() {
       displayedItems = result;
     });}
@@ -136,10 +126,19 @@ class _InventoryViewState extends State<InventoryView> {
         PopupMenuItem(
           child: Text(department),
           value: 1,
+          onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });
+            selectedDepartment.departmentName = department;
+            await getItems();
+            setState(() {
+              _isLoading = false;
+            });
+          },
         ),
       );
     }
-
     return popMenuItems;
   }
 
@@ -149,5 +148,16 @@ class _InventoryViewState extends State<InventoryView> {
     setState((){
       displayedItems = displayed;
     });
+  }
+
+  /// Creates a container with a CircularProgressIndicator
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    );
   }
 }

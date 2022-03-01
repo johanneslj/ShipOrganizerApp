@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -6,13 +7,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// The view is made up of several cards, one for each department the user can access
 /// In this view the user can choose which department's inventory and
 /// bills they want to view
-class SelectDepartmentView extends StatelessWidget {
+class SelectDepartmentView extends StatefulWidget {
   SelectDepartmentView({
     Key? key,
   }) : super(key: key);
 
-  //TODO get departments from backend
-  final List<String> departments = <String>["Bridge", "Factory", "Deck"];
+  @override
+  State<StatefulWidget> createState() => _SelectDepartmentView();
+}
+  class _SelectDepartmentView extends State<SelectDepartmentView> {
+
+  late ApiService apiService = ApiService.getInstance();
+  late List<Widget> departments = [];
+
+  @override
+  initState(){
+  getDepartments();
+  super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +51,7 @@ class SelectDepartmentView extends StatelessWidget {
           ),
           Expanded(
             child: Column(
-              children: getDepartments(departments),
+              children: departments,
             ),
           ),
         ]),
@@ -48,18 +61,19 @@ class SelectDepartmentView extends StatelessWidget {
 
   /// Uses a list of Strings to create a card for each
   /// Pressing the created card pushes the user to the inventory view
-  List<Widget> getDepartments(List<String> departments) {
+  Future<void> getDepartments() async {
     List<Widget> departmentCardList = <Widget>[];
-
-    for (String department in departments) {
+    List<String> departmentList = await apiService.getDepartments();
+    for (String department in departmentList) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
-        destination: "/",
-        arguments : false,
+        destination: "/home",
+        arguments : "department",
       );
       departmentCardList.add(departmentCard);
     }
-
-    return departmentCardList;
+    setState(() {
+      departments = departmentCardList;
+    });
   }
 }

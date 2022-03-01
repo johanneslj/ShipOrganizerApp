@@ -29,7 +29,7 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://10.22.193.237:8080/";
 
   Dio dio = Dio();
 
@@ -303,9 +303,6 @@ class ApiService {
     });
     return reports;
   }
-  var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
-
   ///Test connection to api server
   Future<int?> testConnection() async {
     var testConnection = await dio.get(baseUrl + "actuator/health");
@@ -357,15 +354,16 @@ class ApiService {
 
   ///Gets all products for the recommended inventory report
   ///Returns list of all products that needs to be refilled
-  Future<List<Item>> getRecommendedItems() async {
+  Future<List<Item>> getRecommendedItems(String department) async {
     int? connectionCode = await testConnection();
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
 
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "product/RecommendedInventory");
-
+      var response =  await dio.post(baseUrl + "product/RecommendedInventory", data: {
+        "department": department
+      });
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         for (var product in products) {
@@ -571,11 +569,11 @@ class ApiService {
       });
     }
   }
-
+  /// Sets a new active departemnet in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
-
+  /// Gets the active department from the local storage
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if(activeDepartment == null){

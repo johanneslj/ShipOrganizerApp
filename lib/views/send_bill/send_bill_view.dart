@@ -26,8 +26,10 @@ class _SendBill extends State<SendBill> {
 
   @override
   Widget build(BuildContext context) {
-    final bool args = ModalRoute.of(context)!.settings.arguments as bool;
-    admin = args;
+    final String args = ModalRoute.of(context)!.settings.arguments as String;
+    if(args.startsWith("true")){
+        admin = true;
+    }
     return DefaultTabController(
       length: admin ? 3 : 1,
       child: Scaffold(
