@@ -25,7 +25,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  ApiService apiService = ApiService();
   final Location _location = Location();
 
   Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
@@ -127,6 +126,7 @@ class _MapViewState extends State<MapView> {
   /// a marker is created for each of the location and its hue is set depending on how many items
   /// are present at the location
   Future<void> addMarkers() async {
+    ApiService apiService = ApiService(context);
     if (widget.itemToShow != null) {
       markerLocations = await apiService.getAllMarkersWithName(widget.itemToShow!);
     } else {

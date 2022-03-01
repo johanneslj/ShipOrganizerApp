@@ -11,8 +11,13 @@ class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
+  late BuildContext buildContext;
 
-  factory ApiService() {
+  factory ApiService(BuildContext? context) {
+    if (context != null) {
+      _apiService.buildContext = context;
+    }
+
     return _apiService;
   }
 
@@ -133,16 +138,14 @@ class ApiService {
 
     try {
       String? token = await _getToken();
-      if (token != null) {
-        dio.options.headers["Authorization"] = "Bearer $token";
-        await dio.get(baseUrl +
-            "api/user/check-valid-verification-code?email=" +
-            email +
-            "&code=" +
-            verificationCode);
+      dio.options.headers["Authorization"] = "Bearer $token";
+      await dio.get(baseUrl +
+          "api/user/check-valid-verification-code?email=" +
+          email +
+          "&code=" +
+          verificationCode);
 
-        success = true;
-      }
+      success = true;
     } on DioError catch (e) {
       success = false;
     }
@@ -185,7 +188,10 @@ class ApiService {
         User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
         users.add(createdUser);
       }
-    } on Exception catch (e) {
+    } catch (e) {
+      if(e is DioError) {
+        print(e.response!.statusCode);
+      }
       users = [User(name: "Something", email: "Happened..", departments: [])];
     }
 
@@ -390,5 +396,11 @@ class ApiService {
         "longitude": longitude
       });
     }
+  }
+
+  /// Forces a user to be logged out
+  /// Is only called when the token is no longer valid
+  void forceLogOut() {
+    Navigator.pushNamedAndRemoveUntil(buildContext, "/", (route) => false);
   }
 }

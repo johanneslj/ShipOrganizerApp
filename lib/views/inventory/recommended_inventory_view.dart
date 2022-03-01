@@ -23,7 +23,7 @@ class RecommendedInventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
-  ApiService apiService = ApiService();
+
 
   List<Item> items = [];
   List<Item> displayedItems = [];
@@ -166,6 +166,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     ];
   }
   Future<void> getItems() async {
+    ApiService apiService = ApiService(context);
     List<Item> displayed = [];
     displayed = await apiService.getRecommendedItems();
     setState((){

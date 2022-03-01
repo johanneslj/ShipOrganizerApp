@@ -25,7 +25,7 @@ class InventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _InventoryViewState extends State<InventoryView> {
   final TextEditingController _controller = TextEditingController();
-  ApiService apiService = ApiService();
+
 
   List<Item> items = [];
   List<Item> displayedItems = [];
@@ -126,7 +126,7 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
-    ApiService apiService = ApiService();
+    ApiService apiService = ApiService(context);
 
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
@@ -144,6 +144,7 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   Future<void> getItems() async {
+    ApiService apiService = ApiService(context);
     List<Item> displayed = [];
     displayed = await apiService.getItems();
     setState((){

@@ -21,7 +21,7 @@ import 'config/theme_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ApiService apiService = ApiService();
+  ApiService apiService = ApiService(null);
   bool isLoggedIn = await apiService.isTokenValid();
   return runApp(ProviderScope(
       child: MainApp(

@@ -34,7 +34,6 @@ class _CreateUserState extends State<CreateUser> {
   TextEditingController fullNameController = TextEditingController();
 
   List<String> _selectedDepartments = <String>[];
-  ApiService apiService = ApiService();
 
 // This function is triggered when a checkbox is checked or unchecked
   void _itemChange(String itemValue, bool isSelected) {
@@ -49,6 +48,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    ApiService apiService = ApiService(context);
     if (widget.isCreateUser) {
       return Scaffold(
         appBar: AppBar(
@@ -146,7 +146,8 @@ class _CreateUserState extends State<CreateUser> {
                                             bool success = await registerUser(
                                                 emailController.value.text,
                                                 fullNameController.value.text,
-                                                _selectedDepartments);
+                                                _selectedDepartments,
+                                                apiService);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             } else {
@@ -288,8 +289,7 @@ class _CreateUserState extends State<CreateUser> {
                                         ? null
                                         : () async {
                                             bool success = await deleteUser(
-                                              emailController.value.text,
-                                            );
+                                                emailController.value.text, apiService);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             } else {
@@ -314,21 +314,23 @@ class _CreateUserState extends State<CreateUser> {
 
   setLoading(bool state) => setState(() => isLoading = state);
 
-  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
+  Future<bool> registerUser(
+      String email, String fullName, List<String> departments, ApiService apiService) async {
     setLoading(true);
     bool success = await apiService.registerUser(email, fullName, departments);
     setLoading(false);
     return success;
   }
 
-  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(
+      String email, String fullName, List<String> departments, ApiService apiService) async {
     setLoading(true);
     bool success = await apiService.editUser(email, fullName, departments);
     setLoading(false);
     return success;
   }
 
-  Future<bool> deleteUser(String email) async {
+  Future<bool> deleteUser(String email, ApiService apiService) async {
     setLoading(true);
     bool success = await apiService.deleteUser(email);
     setLoading(false);

@@ -16,7 +16,7 @@ class AdministerUsersView extends StatefulWidget {
 }
 
 class _AdministerUsersViewState extends State<AdministerUsersView> {
-  final ApiService _apiService = ApiService();
+
   List<TableRow> userRows = [];
 
   @override
@@ -59,6 +59,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   /// creates an additional row in the table for each user
   Future<void> createUserRow() async {
+    final ApiService _apiService = ApiService(context);
     List<TableRow> userRows = [];
     userRows.add(
       TableRow(
