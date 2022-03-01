@@ -16,6 +16,8 @@ class MyAccount extends StatefulWidget {
 
 class _MyAccount extends State<MyAccount> {
 
+  ApiService apiService = ApiService.getInstance();
+
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;
@@ -111,7 +113,6 @@ class _MyAccount extends State<MyAccount> {
   }
   /// Gets Users rights from api service
   Future<void> getUserRights() async{
-    ApiService apiService = ApiService(context);
     String result = await apiService.getUserRights();
     if(result.contains("ADMIN")){
       setState(() {
@@ -120,7 +121,6 @@ class _MyAccount extends State<MyAccount> {
   }
   /// Gets Users full name from api service
   Future<void> getUserFullName() async{
-    ApiService apiService = ApiService(context);
     String result = await apiService.getUserName();
       setState(() {
         fullName = result;

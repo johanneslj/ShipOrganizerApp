@@ -38,6 +38,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ApiService apiService = ApiService(context);
+
     return MaterialApp(
       supportedLocales: const [Locale("en"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {

@@ -23,7 +23,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
+  ApiService apiService = ApiService.getInstance();
 
   String email = "";
   String password = "";
@@ -146,7 +146,6 @@ class _LoginViewState extends State<LoginView> {
   setLoading(bool state) => setState(() => isLoading = state);
 
   Future<bool> login() async {
-    ApiService apiService = ApiService(context);
     setLoading(true);
     bool success =
         await apiService.attemptToLogIn(emailController.value.text, passwordController.value.text);

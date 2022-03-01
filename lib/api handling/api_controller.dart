@@ -22,6 +22,10 @@ class ApiService {
     return _apiService;
   }
 
+  static ApiService getInstance() {
+    return _apiService;
+  }
+
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
@@ -38,7 +42,7 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       await dio.get(baseUrl + "api/user/check-role");
       valid = true;
-    } on Exception catch (e) {
+    } catch (e) {
       valid = false;
     }
     return valid;

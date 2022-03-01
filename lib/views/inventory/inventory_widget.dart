@@ -41,6 +41,8 @@ class Inventory extends StatelessWidget {
 
   final Location _location = Location();
 
+  ApiService apiService = ApiService.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -176,7 +178,6 @@ class Inventory extends StatelessWidget {
   /// Uses product number, username, location of the device and the decrease or increase amount
   /// Makes call to apiService to update the api
   Future<void> updateStock(String? itemNumber, int amount, BuildContext context) async {
-    ApiService apiService = ApiService(context);
     var currentLocation = await _location.getLocation();
     var latitude = currentLocation.latitude!;
     var longitude = currentLocation.longitude!;

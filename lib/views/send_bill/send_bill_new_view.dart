@@ -22,6 +22,8 @@ class _newBill extends State<NewBill> {
   bool admin = false;
   late File? _image;
 
+  ApiService apiService = ApiService.getInstance();
+
   late List<DropdownMenuItem<String>> dropdownItems = [];
 
   @override
@@ -123,7 +125,6 @@ class _newBill extends State<NewBill> {
 
   //Gets the departments from the backend server
   Future<List<String>> getDepartments() async{
-    ApiService apiService = ApiService(context);
     String? allValues = await apiService.storage.read(key:"departments");
     List<String> departments  = [];
     if(allValues != null) {
@@ -170,7 +171,6 @@ class _newBill extends State<NewBill> {
 
   /// Method to submit the selected department and image to the backend server
   Future<void> submitToServer() async {
-    ApiService apiService = ApiService(context);
     final bytes = _image!.readAsBytesSync();
     String encoded = base64Encode(bytes);
     String fileName = p.basename(_image!.path);

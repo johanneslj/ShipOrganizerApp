@@ -24,6 +24,8 @@ class CreateUser extends StatefulWidget {
 class _CreateUserState extends State<CreateUser> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ApiService apiService = ApiService.getInstance();
+
   //TODO Get departments from backend
   List<String> departments = <String>["Bridge", "Deck"];
 
@@ -48,7 +50,6 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
-    ApiService apiService = ApiService(context);
     if (widget.isCreateUser) {
       return Scaffold(
         appBar: AppBar(
@@ -146,8 +147,7 @@ class _CreateUserState extends State<CreateUser> {
                                             bool success = await registerUser(
                                                 emailController.value.text,
                                                 fullNameController.value.text,
-                                                _selectedDepartments,
-                                                apiService);
+                                                _selectedDepartments);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             } else {
@@ -289,7 +289,7 @@ class _CreateUserState extends State<CreateUser> {
                                         ? null
                                         : () async {
                                             bool success = await deleteUser(
-                                                emailController.value.text, apiService);
+                                                emailController.value.text);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             } else {
@@ -315,7 +315,7 @@ class _CreateUserState extends State<CreateUser> {
   setLoading(bool state) => setState(() => isLoading = state);
 
   Future<bool> registerUser(
-      String email, String fullName, List<String> departments, ApiService apiService) async {
+      String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.registerUser(email, fullName, departments);
     setLoading(false);
@@ -323,14 +323,14 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<bool> editUser(
-      String email, String fullName, List<String> departments, ApiService apiService) async {
+      String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.editUser(email, fullName, departments);
     setLoading(false);
     return success;
   }
 
-  Future<bool> deleteUser(String email, ApiService apiService) async {
+  Future<bool> deleteUser(String email) async {
     setLoading(true);
     bool success = await apiService.deleteUser(email);
     setLoading(false);

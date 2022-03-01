@@ -18,6 +18,8 @@ class SetPasswordView extends StatefulWidget {
 class _SetPasswordViewState extends State<SetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ApiService apiService = ApiService.getInstance();
+
   final RegExp emailRegex =
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
@@ -53,7 +55,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   /// Sends verification code to e-mail address if user exists, and then updates states page number
   /// so that the verification code entry page is displayed.
   Widget enterEmailPage() {
-    ApiService apiService = ApiService(context);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -106,7 +107,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   ///
   /// Verifies of the code is correct and then updates state to display page to set new password.
   Widget enterCodePage() {
-    ApiService apiService = ApiService(context);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -153,7 +153,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   /// Widget that lets user enter new password and updates it.
   ///
   Widget enterNewPasswordPage() {
-    ApiService apiService = ApiService(context);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,

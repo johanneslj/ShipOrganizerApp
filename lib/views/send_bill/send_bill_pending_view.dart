@@ -17,6 +17,8 @@ class _pendingBill extends State<PendingBill> {
   late List<Order> pendingOrders = <Order>[];
   late bool _isLoading = false;
 
+  ApiService apiService = ApiService.getInstance();
+
   @override
   void initState() {
     dataLoadFunction();
@@ -102,7 +104,6 @@ class _pendingBill extends State<PendingBill> {
   }
 
   Future<void> getPendingOrder() async {
-    ApiService apiService = ApiService(context);
     List<Order> order = [];
     order = await apiService.getPendingOrder();
     setState(() {
