@@ -58,8 +58,7 @@ class _confimedBill extends State<ConfimedBill> {
                                   builder: (_) => imageDialog());
                             },
                           ),
-                          radius: 75.0,
-                          //Photo by Tamas Tuzes-Katai on Unsplash
+                          radius: 60.0,
                           backgroundImage: const AssetImage(
                               'assets/FishingBoatSilhouette.jpg')),
                       Text(

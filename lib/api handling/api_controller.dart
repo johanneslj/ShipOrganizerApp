@@ -358,15 +358,16 @@ class ApiService {
 
   ///Gets all products for the recommended inventory report
   ///Returns list of all products that needs to be refilled
-  Future<List<Item>> getRecommendedItems() async {
+  Future<List<Item>> getRecommendedItems(String department) async {
     int? connectionCode = await testConnection();
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
 
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "product/RecommendedInventory");
-
+      var response =  await dio.post(baseUrl + "product/RecommendedInventory", data: {
+        "department": department
+      });
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         for (var product in products) {
@@ -390,7 +391,8 @@ class ApiService {
                 break;
             }
           });
-          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
+          items.add(Item(
+              name: name, productNumber: number, ean13: ean13, amount: stock));
         }
       }
     }
@@ -399,8 +401,8 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(
-      String productnumber, String username, int amount, double latitude, double longitude) async {
+  Future<void> updateStock(String productnumber, String username, int amount,
+      double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
     String? token = await _getToken();
@@ -472,7 +474,8 @@ class ApiService {
                 break;
             }
           });
-          pendingOrders.add(Order(imagename: imageName, department: department));
+          pendingOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -505,7 +508,8 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders.add(Order(imagename: imageName, department: department));
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -538,7 +542,8 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders.add(Order(imagename: imageName, department: department));
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -551,8 +556,10 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/update",
-          data: {"imageName": imageName, "department": department});
+      await dio.post(baseUrl + "orders/update", data: {
+        "imageName": imageName,
+        "department": department
+      });
     }
   }
 
@@ -562,21 +569,26 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio
-          .post(baseUrl + "orders/new", data: {"imageName": imageName, "department": department});
+      await dio.post(baseUrl + "orders/new", data: {
+        "imageName": imageName,
+        "department": department
+      });
     }
   }
-
+  /// Sets a new active departemnet in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
-
+  /// Gets the active department from the local storage
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if (activeDepartment == null) {
       return "";
-    } else {
+    }
+    else {
       return activeDepartment;
     }
   }
+
+
 }

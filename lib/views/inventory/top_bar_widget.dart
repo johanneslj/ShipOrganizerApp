@@ -18,6 +18,7 @@ class TopBar extends StatefulWidget {
       this.searchIcon,
       this.clearIcon,
       this.filterIcon,
+      required this.recommended,
       this.scanIcon})
       : super(key: key);
 
@@ -52,16 +53,21 @@ class TopBar extends StatefulWidget {
 
   final Icon? scanIcon;
 
+  final bool recommended;
+
   @override
   State<StatefulWidget> createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
+  late bool recommend = widget.recommended;
   /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
   void Function()? get _onMenuPressed =>
       widget.onMenuPressed ??
       () {
-        Scaffold.of(context).hasDrawer ? Scaffold.of(context).openDrawer() : null;
+        Scaffold.of(context).hasDrawer
+            ? Scaffold.of(context).openDrawer()
+            : null;
       };
 
   void Function()? get _onSearch => widget.onSearch;
@@ -75,11 +81,19 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).viewPadding.top, 0, 0),
+        padding: EdgeInsets.fromLTRB(
+            0, MediaQuery.of(context).viewPadding.top, 0, 0),
         color: Theme.of(context).colorScheme.primary,
         child: Row(
           children: [
-            IconButton(
+           recommend ? IconButton(
+               onPressed: () => Navigator.of(context).pop(),
+               icon: widget.menuIcon ??
+                   Icon(
+                     Icons.arrow_back,
+                     color: Theme.of(context).colorScheme.onPrimary,
+                     size: 32.0,
+                   )) : IconButton(
                 onPressed: _onMenuPressed,
                 icon: widget.menuIcon ??
                     Icon(
@@ -99,7 +113,9 @@ class _TopBarState extends State<TopBar> {
                         suffixIcon: IconButton(
                             onPressed: _onClear ?? widget.controller?.clear,
                             icon: widget.clearIcon ??
-                                Icon(Icons.clear, color: Theme.of(context).colorScheme.primary)),
+                                Icon(Icons.clear,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(32.0),
                           borderSide: const BorderSide(
@@ -121,7 +137,8 @@ class _TopBarState extends State<TopBar> {
                 onPressed: _filter,
                 icon: widget.filterIcon ??
                     Icon(Icons.filter_alt_sharp,
-                        color: Theme.of(context).colorScheme.onPrimary, size: 32.0))
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 32.0))
           ],
         ));
   }
