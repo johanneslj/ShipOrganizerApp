@@ -18,8 +18,8 @@ class ApiService {
 
   ApiService._internal();
 
-  FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://192.168.1.115:8080/";
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+  String baseUrl = "http://10.22.193.237:8080/";
 
   Dio dio = Dio();
 
@@ -92,6 +92,9 @@ class ApiService {
       departments.add(department["name"]);
     }
     storage.write(key: "departments", value: departments.toString());
+    if(departments.length == 1) {
+      storage.write(key: "activeDepartment", value: departments[0]);
+    }
     return departments;
   }
 
@@ -254,13 +257,15 @@ class ApiService {
 
   ///Gets all products from the backend server
   ///Returns a list of all the products
-  Future<List<Item>> getItems() async {
+  Future<List<Item>> getItems(String department) async {
     String? token = await _getToken();
     int? connectionCode = await testConnection();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "product/inventory");
+      var response =  await dio.post(baseUrl + "product/inventory", data: {
+        "department": department
+      });
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         String name = "";
@@ -289,7 +294,6 @@ class ApiService {
         }
       }
     }
-
     return items;
   }
 
@@ -419,7 +423,9 @@ class ApiService {
     List<Order> confirmedOrders = [];
     var response;
     if (connectionCode == 200) {
-      response = await dio.get(baseUrl + "orders/user/pending");
+      response = await dio.post(baseUrl + "orders/user/pending", data: {
+        "department": await getActiveDepartment()
+      });
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
@@ -453,6 +459,7 @@ class ApiService {
     var response;
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "orders/confirmed");
+
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
@@ -501,4 +508,20 @@ class ApiService {
       });
     }
   }
+
+  Future<void> setActiveDepartment(String department) async {
+    await storage.write(key: "activeDepartment", value: department);
+  }
+
+  Future<String> getActiveDepartment() async {
+    String? activeDepartment = await storage.read(key: "activeDepartment");
+    if(activeDepartment == null){
+      return "";
+    }
+    else {
+      return activeDepartment;
+    }
+  }
+
+
 }
