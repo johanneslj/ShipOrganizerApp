@@ -27,13 +27,11 @@ class _InventoryViewState extends State<InventoryView> {
   final TextEditingController _controller = TextEditingController();
 
   ApiService apiService = ApiService.getInstance();
-
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
 
-  // TODO Implement with API
-  Department selectedDepartment = Department(departmentName: "Bridge");
+  Department selectedDepartment = Department(departmentName: "");
 
   @override
   void initState() {
@@ -66,9 +64,10 @@ class _InventoryViewState extends State<InventoryView> {
               onClear: onClear,
               filter: showSelectDepartmentMenu,
               controller: _controller,
+              recommended: false,
             )),
         drawer: const SideMenu(),
-        body: GestureDetector(
+        body: _isLoading ? circularProgress() : GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: RefreshIndicator(onRefresh: () => getItems(),
@@ -103,7 +102,6 @@ class _InventoryViewState extends State<InventoryView> {
         }
       }
     }
-
     setState(() {
       displayedItems = result;
     });}
@@ -129,8 +127,14 @@ class _InventoryViewState extends State<InventoryView> {
           child: Text(department),
           value: 1,
           onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });
             selectedDepartment.departmentName = department;
             await getItems();
+            setState(() {
+              _isLoading = false;
+            });
           },
         ),
       );
@@ -140,7 +144,6 @@ class _InventoryViewState extends State<InventoryView> {
 
   Future<void> getItems() async {
     List<Item> displayed = [];
-    print(selectedDepartment.departmentName);
     displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
       displayedItems = displayed;
