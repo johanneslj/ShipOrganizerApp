@@ -1,9 +1,10 @@
 import 'dart:core';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_item.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
@@ -18,7 +19,7 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://10.22.195.237:8080/";
 
   Dio dio = Dio();
 
@@ -38,7 +39,7 @@ class ApiService {
   }
 
   /// Gets token from secure storage on the device
-  Future<String?> _getToken() async {
+  Future<String> _getToken() async {
     String? token = await storage.read(key: "jwt");
     token ??= "No Token";
     return token;
@@ -242,22 +243,26 @@ class ApiService {
     return reports;
   }
   var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiU2ltb24gRHVnZ2FsIiwiaWQiOjMxLCJleHAiOjE2NDc1MDk4MzMsImVtYWlsIjoic2ltb25kdUBudG51Lm5vIn0.JO3XVtbhW7lNOWSKcWlnK8_o1zBvPxOmgfeDUHLbVdvs8w40mWqrUT6fkNM2D7iS9LXYbJUm8bC5ImARerkqPg";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYW1lIjoiSm9oYW5uZXMgSm9zZWZzZW4iLCJpZCI6MzAsImV4cCI6MTY0NzkzODI1MSwiZW1haWwiOiJqb29oYWE5OUBnbWFpbC5jb20ifQ.0CmMwvQrmf2Lx-I8HPqtJfsJ-F87uNoideqMOdDNrDX5DII1C-1J14YUabdy-Tqmkrp9h0OAx0Cuua9BO0z1TA";
 
   ///Test connection to api server
-  Future<int?> testConnection() async {
-    var testConnection = await dio.get(baseUrl + "actuator/health");
-    return testConnection.statusCode;
+  Future<int> testConnection() async {
+    int code = 101;
+    await dio.get(baseUrl + "actuator/health")
+        .then((value) =>  value.statusCode != null ? code = value.statusCode! : code = 101)
+        .onError((error, stackTrace) => code = 101);
+    return code;
   }
 
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems() async {
     int? connectionCode = await testConnection();
+    await _getToken().then((jwt) => token = jwt);
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "product/inventory");
+      var response = await dio.get(baseUrl + "api/product/inventory");
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         String name = "";
@@ -298,7 +303,7 @@ class ApiService {
     List<Item> items = [];
 
     if (connectionCode == 200) {
-      var response = await dio.get(baseUrl + "product/RecommendedInventory");
+      var response = await dio.get(baseUrl + "api/product/RecommendedInventory");
 
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
@@ -333,20 +338,30 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(String productnumber, String username, int amount,
+  Future<void> updateStock(String productNumber, String username, int amount,
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
     dio.options.headers["Authorization"] = "Bearer $token";
 
+    dynamic data = {
+      "productNumber": productNumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude
+    };
+
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "product/setNewStock", data: {
-        "productnumber": productnumber,
-        "username": username,
-        "quantity": amount,
-        "latitude": latitude,
-        "longitude": longitude
-      });
+      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+    } else {
+      print("Adding item to offline queue:");
+      OfflineEnqueueItem queueItem = OfflineEnqueueItem(
+          type: "UPDATE_STOCK",
+          status: "PENDING",
+        data: data
+      );
+      OfflineEnqueueService().addToQueue(queueItem);
     }
   }
 

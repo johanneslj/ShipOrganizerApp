@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ship_organizer_app/api handling/api_controller.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
@@ -16,6 +17,7 @@ import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_bar_widget.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:connectivity/connectivity.dart';
 
 import 'config/theme_config.dart';
 
@@ -38,6 +40,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Start offline queue service on build to try to execute queue.
+    OfflineEnqueueService().startService();
+
+    // Try to execute queue when connectivity status changes.
+    var subscription = Connectivity().onConnectivityChanged.listen((event) {
+      OfflineEnqueueService().startService();
+    });
+
     return MaterialApp(
       supportedLocales: const [Locale("en"), Locale("nb", "NO")],
       localeListResolutionCallback: (locales, supportedLocales) {
