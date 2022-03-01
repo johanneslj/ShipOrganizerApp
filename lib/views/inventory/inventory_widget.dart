@@ -156,7 +156,6 @@ class Inventory extends StatelessWidget {
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: true);
         }).then((amount) async => {
-
           // TODO Implement with API. Add to call queue.
           if (amount is int) {  await updateStock(item.productNumber,amount),}
         });
@@ -186,6 +185,5 @@ class Inventory extends StatelessWidget {
     var username = "simondu@ntnu.no";
     await apiService.updateStock(itemNumber!,username,amount,latitude,longitude);
     onConfirm!();
-
   }
 }
