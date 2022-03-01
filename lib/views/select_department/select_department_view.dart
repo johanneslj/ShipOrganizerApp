@@ -18,10 +18,14 @@ class SelectDepartmentView extends StatefulWidget {
   class _SelectDepartmentView extends State<SelectDepartmentView> {
 
   late ApiService apiService = ApiService.getInstance();
+  late List<Widget> departments = [];
 
+  @override
+  initState(){
+  getDepartments();
+  super.initState();
+  }
 
-  //TODO get departments from backend
-  final List<String> departments = <String>["Bridge", "Factory", "Deck"];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class SelectDepartmentView extends StatefulWidget {
           ),
           Expanded(
             child: Column(
-              children: getDepartments(departments),
+              children: departments,
             ),
           ),
         ]),
@@ -57,20 +61,19 @@ class SelectDepartmentView extends StatefulWidget {
 
   /// Uses a list of Strings to create a card for each
   /// Pressing the created card pushes the user to the inventory view
-  Future<List<Widget>> getDepartments(List<String> departments) async {
+  Future<void> getDepartments() async {
     List<Widget> departmentCardList = <Widget>[];
-
-    for (String department in departments) {
+    List<String> departmentList = await apiService.getDepartments();
+    for (String department in departmentList) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
-        destination: "/inventory",
-        arguments : false,
+        destination: "/home",
+        arguments : "department",
       );
       departmentCardList.add(departmentCard);
     }
-
-    await apiService.
-
-    return departmentCardList;
+    setState(() {
+      departments = departmentCardList;
+    });
   }
 }
