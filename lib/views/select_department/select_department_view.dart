@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -6,10 +7,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// The view is made up of several cards, one for each department the user can access
 /// In this view the user can choose which department's inventory and
 /// bills they want to view
-class SelectDepartmentView extends StatelessWidget {
+class SelectDepartmentView extends StatefulWidget {
   SelectDepartmentView({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SelectDepartmentView();
+}
+  class _SelectDepartmentView extends State<SelectDepartmentView> {
+
+  late ApiService apiService = ApiService.getInstance();
+
 
   //TODO get departments from backend
   final List<String> departments = <String>["Bridge", "Factory", "Deck"];
@@ -48,17 +57,19 @@ class SelectDepartmentView extends StatelessWidget {
 
   /// Uses a list of Strings to create a card for each
   /// Pressing the created card pushes the user to the inventory view
-  List<Widget> getDepartments(List<String> departments) {
+  Future<List<Widget>> getDepartments(List<String> departments) async {
     List<Widget> departmentCardList = <Widget>[];
 
     for (String department in departments) {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
-        destination: "/",
+        destination: "/inventory",
         arguments : false,
       );
       departmentCardList.add(departmentCard);
     }
+
+    await apiService.
 
     return departmentCardList;
   }
