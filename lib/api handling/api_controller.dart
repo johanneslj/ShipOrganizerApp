@@ -6,6 +6,7 @@ import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/entities/user.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
@@ -29,7 +30,7 @@ class ApiService {
   ApiService._internal();
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.193.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
 
   Dio dio = Dio();
 
@@ -208,7 +209,7 @@ class ApiService {
     return users;
   }
 
-  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(int? id, String email, String fullName, List<String> departments) async {
     bool success = false;
 
 //TODO Make this interact with backend :)
@@ -304,9 +305,12 @@ class ApiService {
     return reports;
   }
   ///Test connection to api server
-  Future<int?> testConnection() async {
-    var testConnection = await dio.get(baseUrl + "actuator/health");
-    return testConnection.statusCode;
+  Future<int> testConnection() async {
+    int code = 101;
+    await dio.get(baseUrl + "actuator/health")
+        .then((value) =>  value.statusCode != null ? code = value.statusCode! : code = 101)
+        .onError((error, stackTrace) => code = 101);
+    return code;
   }
 
   ///Gets all products from the backend server
@@ -317,7 +321,7 @@ class ApiService {
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Item> items = [];
     if (connectionCode == 200) {
-      var response =  await dio.post(baseUrl + "product/inventory", data: {
+      var response =  await dio.get(baseUrl + "api/product/inventory", queryParameters: {
         "department": department
       });
       if (response.statusCode == 200) {
@@ -397,21 +401,31 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(String productnumber, String username, int amount,
+  Future<void> updateStock(String productNumber, String username, int amount,
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
 
+    dynamic data = {
+      "productNumber": productNumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude
+    };
+
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "product/setNewStock", data: {
-        "productnumber": productnumber,
-        "username": username,
-        "quantity": amount,
-        "latitude": latitude,
-        "longitude": longitude
-      });
+      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+    } else {
+      print("Adding item to offline queue:");
+      Map<String, dynamic> queueItem = {
+        "type": "UPDATE_STOCK",
+        "status": "PENDING",
+        "data": data
+      };
+      OfflineEnqueueService().addToQueue(queueItem);
     }
   }
 
@@ -569,11 +583,11 @@ class ApiService {
       });
     }
   }
-  /// Sets a new active departemnet in the local storage
+
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
-  /// Gets the active department from the local storage
+
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if(activeDepartment == null){
