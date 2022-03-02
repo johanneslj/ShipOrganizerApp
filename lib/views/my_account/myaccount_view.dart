@@ -6,21 +6,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatefulWidget {
-
   const MyAccount({Key? key}) : super(key: key);
-
 
   @override
   State<StatefulWidget> createState() => _MyAccount();
-  }
+}
 
 class _MyAccount extends State<MyAccount> {
-
   ApiService apiService = ApiService.getInstance();
 
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;
+
   @override
   void initState() {
     dataLoadFunction();
@@ -41,6 +39,7 @@ class _MyAccount extends State<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO make this view not overflow when a keyboard is open prior to entering it
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -49,22 +48,22 @@ class _MyAccount extends State<MyAccount> {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: _isLoading ? circularProgress()  :
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40),
-            child: Text(fullName,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyText1),
-          ),
-          Expanded(
-            child: Column(children: getMenuItems(admin, context)),
-          ),
-        ]),
-      )),
+      body: _isLoading
+          ? circularProgress()
+          : Center(
+              child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Text(fullName,
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+                ),
+                Expanded(
+                  child: Column(children: getMenuItems(admin, context)),
+                ),
+              ]),
+            )),
     );
   }
 
@@ -80,13 +79,11 @@ class _MyAccount extends State<MyAccount> {
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",
       arguments: "false",
-
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/recommendedInventory",
       arguments: "false",
-
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.billing,
@@ -109,26 +106,29 @@ class _MyAccount extends State<MyAccount> {
         departmentName: AppLocalizations.of(context)!.administerProducts,
         destination: "/administerProducts",
         arguments: "false",
-
       ));
     }
     return departmentCardList;
   }
+
   /// Gets Users rights from api service
-  Future<void> getUserRights() async{
+  Future<void> getUserRights() async {
     String result = await apiService.getUserRights();
-    if(result.contains("ADMIN")){
+    if (result.contains("ADMIN")) {
       setState(() {
-      admin = true;
-    });}
-  }
-  /// Gets Users full name from api service
-  Future<void> getUserFullName() async{
-    String result = await apiService.getUserName();
-      setState(() {
-        fullName = result;
+        admin = true;
       });
+    }
   }
+
+  /// Gets Users full name from api service
+  Future<void> getUserFullName() async {
+    String result = await apiService.getUserName();
+    setState(() {
+      fullName = result;
+    });
+  }
+
   /// Creates a container with a CircularProgressIndicator
   Container circularProgress() {
     return Container(
@@ -136,9 +136,7 @@ class _MyAccount extends State<MyAccount> {
       padding: const EdgeInsets.only(top: 10.0),
       child: const CircularProgressIndicator(
         strokeWidth: 2.0,
-
       ),
     );
   }
-
 }

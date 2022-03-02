@@ -78,6 +78,10 @@
   "couldntLogOut": "Failed to sign out",
   "notAllowedToCreateUser": "Du kan ikke lage bruker",
   "userAlreadyExists": "Den eposten er allerede registrert",
-  "badRequest": "Bad request"
+  "badRequest": "Bad request",
+  "failedToConfirmCode": "Fikk ikke bekreftet verifiserings koden",
+  "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",
+  "failedToGetMarkers": "Klarte ikke hente merkører"
+
 
 }
