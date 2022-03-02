@@ -36,6 +36,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

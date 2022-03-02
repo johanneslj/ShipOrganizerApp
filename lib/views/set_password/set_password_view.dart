@@ -35,6 +35,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Center(

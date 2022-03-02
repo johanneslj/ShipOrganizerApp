@@ -71,6 +71,13 @@
   "registerFailed": "Registrer bruker feilet",
   "editFailed": "Rediger bruker feilet",
   "deleteFailed": "Slett bruker feilet",
-  "administerProducts": "Rediger produkter"
+  "administerProducts": "Rediger produkter",
+
+  "failedToReadStorage": "Klarte ikke lese fra lagring",
+  "unableToSendCode": "Klarte ikke sende kode",
+  "couldntLogOut": "Failed to sign out",
+  "notAllowedToCreateUser": "Du kan ikke lage bruker",
+  "userAlreadyExists": "Den eposten er allerede registrert",
+  "badRequest": "Bad request"
 
 }

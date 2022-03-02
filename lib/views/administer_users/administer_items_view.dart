@@ -26,6 +26,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
+    _apiService.setContext(context);
     if (tableRows.isEmpty) {
       createUserRow();
     }

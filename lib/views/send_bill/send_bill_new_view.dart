@@ -54,6 +54,7 @@ class _newBill extends State<NewBill> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
         body: Column(
       children: [

@@ -50,6 +50,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     if (widget.isCreateUser) {
       return Scaffold(
         appBar: AppBar(

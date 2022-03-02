@@ -108,7 +108,7 @@ class _MyAccount extends State<MyAccount> {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerProducts,
         destination: "/administerProducts",
-        arguments: false,
+        arguments: "false",
 
       ));
     }

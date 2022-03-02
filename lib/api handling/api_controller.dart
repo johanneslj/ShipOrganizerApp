@@ -7,6 +7,7 @@ import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ApiService {
   /// Ensures there can only be created one of the API service
@@ -27,6 +28,10 @@ class ApiService {
   }
 
   ApiService._internal();
+
+  void setContext(BuildContext context) {
+    buildContext = context;
+  }
 
   FlutterSecureStorage storage = FlutterSecureStorage();
   String baseUrl = "http://10.22.186.180:8080/";
@@ -69,7 +74,8 @@ class ApiService {
         storage.write(key: "jwt", value: response.data);
         success = true;
       }
-    } on Exception catch (_, e) {
+    } catch (e) {
+      showErrorToast("You are not logged in");
       success = false;
     }
     return success;
@@ -85,7 +91,9 @@ class ApiService {
     try {
       await storage.delete(key: "jwt");
       success = true;
-    } on Exception catch (_, e) {}
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.couldntLogOut);
+    }
 
     return success;
   }
@@ -119,7 +127,23 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       await dio.post(baseUrl + "auth/register", data: data);
       success = true;
-    } on Exception catch (e) {}
+    } catch (e) {
+      if (e is DioError) {
+        switch (e.response!.statusCode) {
+          case 403:
+            showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
+            break;
+
+          case 409:
+            showErrorToast(AppLocalizations.of(buildContext)!.userAlreadyExists);
+            break;
+
+          case 400:
+            showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
+            break;
+        }
+      }
+    }
 
     return success;
   }
@@ -133,7 +157,9 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       await dio.get(baseUrl + "api/user/send-verification-code?email=" + email);
       success = true;
-    } on Exception catch (e) {
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.unableToSendCode);
+
       success = false;
     }
     return success;
@@ -365,9 +391,8 @@ class ApiService {
     List<Item> items = [];
 
     if (connectionCode == 200) {
-      var response =  await dio.post(baseUrl + "product/RecommendedInventory", data: {
-        "department": department
-      });
+      var response = await dio
+          .post(baseUrl + "product/RecommendedInventory", data: {"department": department});
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         for (var product in products) {
@@ -391,8 +416,7 @@ class ApiService {
                 break;
             }
           });
-          items.add(Item(
-              name: name, productNumber: number, ean13: ean13, amount: stock));
+          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
         }
       }
     }
@@ -401,8 +425,8 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(String productnumber, String username, int amount,
-      double latitude, double longitude) async {
+  Future<void> updateStock(
+      String productnumber, String username, int amount, double latitude, double longitude) async {
     int? connectionCode = await testConnection();
 
     String? token = await _getToken();
@@ -474,8 +498,7 @@ class ApiService {
                 break;
             }
           });
-          pendingOrders
-              .add(Order(imagename: imageName, department: department));
+          pendingOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -508,8 +531,7 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders
-              .add(Order(imagename: imageName, department: department));
+          confirmedOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -542,8 +564,7 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders
-              .add(Order(imagename: imageName, department: department));
+          confirmedOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -556,10 +577,8 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/update", data: {
-        "imageName": imageName,
-        "department": department
-      });
+      await dio.post(baseUrl + "orders/update",
+          data: {"imageName": imageName, "department": department});
     }
   }
 
@@ -569,26 +588,27 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/new", data: {
-        "imageName": imageName,
-        "department": department
-      });
+      await dio
+          .post(baseUrl + "orders/new", data: {"imageName": imageName, "department": department});
     }
   }
+
   /// Sets a new active departemnet in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
+
   /// Gets the active department from the local storage
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if (activeDepartment == null) {
       return "";
-    }
-    else {
+    } else {
       return activeDepartment;
     }
   }
 
-
+  void showErrorToast(String errorMessage) {
+    ScaffoldMessenger.of(buildContext).showSnackBar(SnackBar(content: Text(errorMessage)));
+  }
 }

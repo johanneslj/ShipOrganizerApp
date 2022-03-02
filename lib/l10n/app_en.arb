@@ -71,6 +71,13 @@
   "registerFailed": "Failed to register user",
   "editFailed": "Edit user failed",
   "deleteFailed": "Delete user failed",
-  "administerProducts": "Administer products"
+  "administerProducts": "Administer products",
+
+  "failedToReadStorage": "Failed to read storage",
+  "unableToSendCode": "Failed to send code",
+  "couldntLogOut": "Failed to sign out",
+  "notAllowedToCreateUser": "You are not allowed to create user",
+  "userAlreadyExists": "That email is already registered",
+  "badRequest": "Bad request"
 
 }
