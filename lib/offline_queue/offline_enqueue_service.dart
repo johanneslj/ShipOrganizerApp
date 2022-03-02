@@ -2,9 +2,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'dart:convert';
 
-
-import 'offline_enqueue_item.dart';
-
 class OfflineEnqueueService {
 
   static final OfflineEnqueueService _service = OfflineEnqueueService._internal();
