@@ -256,7 +256,7 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(int? id, String email, String fullName, List<String> departments) async {
     bool success = false;
     try {
       success = false;
