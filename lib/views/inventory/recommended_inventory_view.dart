@@ -28,36 +28,28 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   List<Item> items = [];
   List<Item> displayedItems = [];
+  late bool _isLoading = true;
+
 
   // TODO Implement with API
-  Department selectedDepartment = Department(departmentName: "Bridge");
+  Department selectedDepartment = Department(departmentName: "");
 
   @override
   void initState() {
     super.initState();
-    getItems();
-    // TODO Get items from API, or from local cache if offline.
-    /*items = [
-      Item(name: "Name", ean13: "1432456789059", amount: 200),
-      Item(name: "Product", ean13: "1432456789059", amount: 60),
-      Item(name: "Test123", ean13: "1432456789059", amount: 72),
-      Item(name: "Weird-stuff../123###13!", ean13: "1432456789059", amount: 40),
-      Item(name: "__234rfgg245", ean13: "1432456789059", amount: 300),
-      Item(name: "Product Name", ean13: "1432456789059", amount: 10),
-      Item(name: "Something", ean13: "1432456789059", amount: 100),
-      Item(name: "Yes", ean13: "1432456789059", amount: 900),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 5),
-      Item(name: "Something", ean13: "1432456789059", amount: 90),
-      Item(name: "Yes", ean13: "1432456789059", amount: 800),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 10),
-      Item(name: "Something", ean13: "1432456789059", amount: 150),
-      Item(name: "Yes", ean13: "1432456789059", amount: 1000),
-      Item(name: "asdfsdfgsdfg", ean13: "1432456789059", amount: 10),
-    ];*/
-
-    displayedItems = items;
+    dataLoadFunction();
   }
-
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    selectedDepartment.departmentName = await apiService.getActiveDepartment();
+    await getItems();
+    // fetch you data over here
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -73,9 +65,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
             onClear: onClear,
             filter: showSelectDepartmentMenu,
             controller: _controller,
+            recommended: true,
           )),
       drawer: const SideMenu(),
-      body: GestureDetector(
+      body: _isLoading ? circularProgress()  : GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: RefreshIndicator(onRefresh: () => getItems(),
           child: Inventory(items: displayedItems,isRecommended: true),
@@ -89,7 +82,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
       ),
     );
   }
-
 
   void onOrderStockUp() {
 
@@ -129,48 +121,55 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
-  void showSelectDepartmentMenu() {
+  void showSelectDepartmentMenu() async {
     showMenu(
         context: context,
         position: RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
-        items: getPopupMenuItems());
+        items: await getPopupMenuItems());
   }
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
-  List<PopupMenuItem> getPopupMenuItems() {
-    // TODO Get departments from API
-    return [
-      PopupMenuItem(
-        child: Text("Bridge"),
-        value: 1,
-      ),
-      PopupMenuItem(
-        child: Text("Factory"),
-        value: 2,
-      ),
-      PopupMenuItem(
-        child: Text("Deck"),
-        value: 3,
-      ),
-      PopupMenuItem(
-        child: Text("Storage"),
-        value: 4,
-      ),
-      PopupMenuItem(
-        child: Text("Office"),
-        value: 5,
-      ),
-      PopupMenuItem(
-        child: Text("Kitchen"),
-        value: 6,
-      ),
-    ];
+  Future<List<PopupMenuItem>> getPopupMenuItems() async {
+
+    List<String> departments = await apiService.getDepartments();
+    List<PopupMenuItem> popMenuItems = [];
+
+    for (String department in departments) {
+      popMenuItems.add(
+        PopupMenuItem(
+          child: Text(department),
+          value: 1,
+          onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });
+            selectedDepartment.departmentName = department;
+            await getItems();
+            setState(() {
+              _isLoading = false;
+            });
+          },
+        ),
+      );
+    }
+    return popMenuItems;
   }
   Future<void> getItems() async {
     List<Item> displayed = [];
-    displayed = await apiService.getRecommendedItems();
+    displayed = await apiService.getRecommendedItems(selectedDepartment.departmentName);
     setState((){
       displayedItems = displayed;
     });
+  }
+
+  /// Creates a container with a CircularProgressIndicator
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    );
   }
 }
