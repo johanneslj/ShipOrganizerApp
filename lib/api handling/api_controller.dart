@@ -6,6 +6,7 @@ import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/entities/user.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 class ApiService {
@@ -208,7 +209,7 @@ class ApiService {
     return users;
   }
 
-  Future<bool> editUser(String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(int? id, String email, String fullName, List<String> departments) async {
     bool success = false;
 
 //TODO Make this interact with backend :)
