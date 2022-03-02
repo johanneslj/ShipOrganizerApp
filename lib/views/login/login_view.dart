@@ -69,6 +69,7 @@ class _LoginViewState extends State<LoginView> {
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary, fontSize: 20)),
                         TextFormField(
+                          keyboardType: TextInputType.emailAddress,
                           validator: (val) => val!.isEmpty || !val.contains("@")
                               ? AppLocalizations.of(context)!.enterValidEmail
                               : null,
