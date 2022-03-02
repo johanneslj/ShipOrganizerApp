@@ -6,6 +6,7 @@ import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/entities/user.dart';
+import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -363,7 +364,8 @@ class ApiService {
                 reportFromData.setLongitude(reportFieldValue);
                 break;
               case "registrationDate":
-                reportFromData.setDate(DateTime.parse(reportFieldValue.split(".")[0]));
+                reportFromData
+                    .setDate(DateTime.parse(reportFieldValue.split(".")[0]));
                 break;
               case "fullName":
                 reportFromData.setUserName(reportFieldValue);
@@ -374,16 +376,20 @@ class ApiService {
         }
         double latitude = double.parse(key.split(", ")[0]);
         double longitude = double.parse(key.split(", ")[1]);
-        reports.putIfAbsent(LatLng(latitude, longitude), () => reportsOnSameLatLng);
+        reports.putIfAbsent(
+            LatLng(latitude, longitude), () => reportsOnSameLatLng);
       }
     });
     return reports;
   }
 
   ///Test connection to api server
-  Future<int?> testConnection() async {
-    var testConnection = await dio.get(baseUrl + "actuator/health");
-    return testConnection.statusCode;
+  Future<int> testConnection() async {
+    int code = 101;
+    await dio.get(baseUrl + "actuator/health")
+        .then((value) =>  value.statusCode != null ? code = value.statusCode! : code = 101)
+        .onError((error, stackTrace) => code = 101);
+    return code;
   }
 
   ///Gets all products from the backend server
@@ -478,20 +484,31 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(
-      String productNumber, String username, int amount, double latitude, double longitude) async {
+  Future<void> updateStock(String productNumber, String username, int amount,
+      double latitude, double longitude) async {
     int? connectionCode = await testConnection();
+
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
 
+    dynamic data = {
+      "productNumber": productNumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude
+    };
+
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "product/setNewStock", data: {
-        "productnumber": productNumber,
-        "username": username,
-        "quantity": amount,
-        "latitude": latitude,
-        "longitude": longitude
-      });
+      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+    } else {
+      print("Adding item to offline queue:");
+      Map<String, dynamic> queueItem = {
+        "type": "UPDATE_STOCK",
+        "status": "PENDING",
+        "data": data
+      };
+      OfflineEnqueueService().addToQueue(queueItem);
     }
   }
 
@@ -550,7 +567,8 @@ class ApiService {
                 break;
             }
           });
-          pendingOrders.add(Order(imagename: imageName, department: department));
+          pendingOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -566,8 +584,9 @@ class ApiService {
     List<Order> confirmedOrders = [];
     var response;
     if (connectionCode == 200) {
-      response = await dio
-          .post(baseUrl + "orders/user/pending", data: {"department": await getActiveDepartment()});
+      response = await dio.post(baseUrl + "orders/user/pending", data: {
+        "department": await getActiveDepartment()
+      });
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
@@ -583,7 +602,8 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders.add(Order(imagename: imageName, department: department));
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -616,7 +636,8 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders.add(Order(imagename: imageName, department: department));
+          confirmedOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -629,8 +650,10 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/update",
-          data: {"imageName": imageName, "department": department});
+      await dio.post(baseUrl + "orders/update", data: {
+        "imageName": imageName,
+        "department": department
+      });
     }
   }
 
@@ -640,17 +663,21 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio
-          .post(baseUrl + "orders/new", data: {"imageName": imageName, "department": department});
+      await dio.post(baseUrl + "orders/new", data: {
+        "imageName": imageName,
+        "department": department
+      });
     }
   }
 
   /// Sets a new active departemnet in the local storage
+
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
 
   /// Gets the active department from the local storage
+
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if (activeDepartment == null) {

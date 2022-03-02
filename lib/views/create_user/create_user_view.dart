@@ -265,6 +265,7 @@ class _CreateUserState extends State<CreateUser> {
                                         : () async {
                                             if (_formKey.currentState!.validate()) {
                                               bool success = await apiService.editUser(
+                                                widget.userToEdit?.id,
                                                   emailController.value.text,
                                                   fullNameController.value.text,
                                                   _selectedDepartments);
@@ -316,9 +317,9 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<bool> editUser(
-      String email, String fullName, List<String> departments) async {
+      int id, String email, String fullName, List<String> departments) async {
     setLoading(true);
-    bool success = await apiService.editUser(email, fullName, departments);
+    bool success = await apiService.editUser(id, email, fullName, departments);
     setLoading(false);
     return success;
   }

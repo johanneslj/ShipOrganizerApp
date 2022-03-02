@@ -5,6 +5,7 @@ import 'package:ship_organizer_app/entities/department.dart';
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
+  int? id;
   String? name;
   String? email;
   List<String> departments;
