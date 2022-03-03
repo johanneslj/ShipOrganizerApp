@@ -138,6 +138,7 @@ class ApiService {
       switch (e.response!.statusCode) {
         case 403:
           showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
+          forceLogOut();
           break;
 
         case 409:
@@ -282,6 +283,7 @@ class ApiService {
     } on DioError catch (e) {
       if (e.response!.statusCode == 403) {
         showErrorToast(AppLocalizations.of(buildContext)!.notAuthorizedToDeleteUser);
+        forceLogOut();
       } else {
         showErrorToast(AppLocalizations.of(buildContext)!.deleteFailed);
       }
@@ -364,8 +366,7 @@ class ApiService {
                 reportFromData.setLongitude(reportFieldValue);
                 break;
               case "registrationDate":
-                reportFromData
-                    .setDate(DateTime.parse(reportFieldValue.split(".")[0]));
+                reportFromData.setDate(DateTime.parse(reportFieldValue.split(".")[0]));
                 break;
               case "fullName":
                 reportFromData.setUserName(reportFieldValue);
@@ -376,8 +377,7 @@ class ApiService {
         }
         double latitude = double.parse(key.split(", ")[0]);
         double longitude = double.parse(key.split(", ")[1]);
-        reports.putIfAbsent(
-            LatLng(latitude, longitude), () => reportsOnSameLatLng);
+        reports.putIfAbsent(LatLng(latitude, longitude), () => reportsOnSameLatLng);
       }
     });
     return reports;
@@ -386,8 +386,9 @@ class ApiService {
   ///Test connection to api server
   Future<int> testConnection() async {
     int code = 101;
-    await dio.get(baseUrl + "actuator/health")
-        .then((value) =>  value.statusCode != null ? code = value.statusCode! : code = 101)
+    await dio
+        .get(baseUrl + "actuator/health")
+        .then((value) => value.statusCode != null ? code = value.statusCode! : code = 101)
         .onError((error, stackTrace) => code = 101);
     return code;
   }
@@ -403,7 +404,7 @@ class ApiService {
 
       if (connectionCode == 200) {
         var response =
-            await dio.post(baseUrl + "product/inventory", data: {"department": department});
+            await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
           String name = "";
@@ -484,32 +485,34 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(String productNumber, String username, int amount,
-      double latitude, double longitude) async {
-    int? connectionCode = await testConnection();
+  Future<void> updateStock(
+      String productNumber, String username, int amount, double latitude, double longitude) async {
 
-    String? token = await _getToken();
-    dio.options.headers["Authorization"] = "Bearer $token";
+      int? connectionCode = await testConnection();
 
-    dynamic data = {
-      "productNumber": productNumber,
-      "username": username,
-      "quantity": amount,
-      "latitude": latitude,
-      "longitude": longitude
-    };
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
 
-    if (connectionCode == 200) {
-      await dio.post(baseUrl + "api/product/setNewStock", data: data);
-    } else {
-      print("Adding item to offline queue:");
-      Map<String, dynamic> queueItem = {
-        "type": "UPDATE_STOCK",
-        "status": "PENDING",
-        "data": data
+      dynamic data = {
+        "productNumber": productNumber,
+        "username": username,
+        "quantity": amount,
+        "latitude": latitude,
+        "longitude": longitude
       };
-      OfflineEnqueueService().addToQueue(queueItem);
-    }
+
+      if (connectionCode == 200) {
+        await dio.post(baseUrl + "api/product/setNewStock", data: data);
+      } else {
+        print("Adding item to offline queue:");
+        Map<String, dynamic> queueItem = {
+          "type": "UPDATE_STOCK",
+          "status": "PENDING",
+          "data": data
+        };
+        OfflineEnqueueService().addToQueue(queueItem);
+      }
+
   }
 
   /// Forces a user to be logged out
@@ -520,14 +523,20 @@ class ApiService {
 
   ///Gets user rights. Checks if user has admin rights
   Future<String> getUserRights() async {
-    String? token = await _getToken();
-    dio.options.headers["Authorization"] = "Bearer $token";
-    int? connectionCode = await testConnection();
-    var response;
-    if (connectionCode == 200) {
-      response = await dio.get(baseUrl + "api/user/check-role");
+    String rights = "USER";
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      int? connectionCode = await testConnection();
+
+      if (connectionCode == 200) {
+        var response = await dio.get(baseUrl + "api/user/check-role");
+        rights = response.data;
+      }
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    return response.data;
+    return rights;
   }
 
   ///Gets user name
@@ -567,8 +576,7 @@ class ApiService {
                 break;
             }
           });
-          pendingOrders
-              .add(Order(imagename: imageName, department: department));
+          pendingOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -584,9 +592,8 @@ class ApiService {
     List<Order> confirmedOrders = [];
     var response;
     if (connectionCode == 200) {
-      response = await dio.post(baseUrl + "orders/user/pending", data: {
-        "department": await getActiveDepartment()
-      });
+      response = await dio
+          .post(baseUrl + "orders/user/pending", data: {"department": await getActiveDepartment()});
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
@@ -602,8 +609,7 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders
-              .add(Order(imagename: imageName, department: department));
+          confirmedOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -636,8 +642,7 @@ class ApiService {
                 break;
             }
           });
-          confirmedOrders
-              .add(Order(imagename: imageName, department: department));
+          confirmedOrders.add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -650,10 +655,8 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/update", data: {
-        "imageName": imageName,
-        "department": department
-      });
+      await dio.post(baseUrl + "orders/update",
+          data: {"imageName": imageName, "department": department});
     }
   }
 
@@ -663,10 +666,8 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "orders/new", data: {
-        "imageName": imageName,
-        "department": department
-      });
+      await dio
+          .post(baseUrl + "orders/new", data: {"imageName": imageName, "department": department});
     }
   }
 

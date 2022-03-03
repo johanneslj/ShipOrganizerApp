@@ -72,6 +72,8 @@
   "editFailed": "Edit user failed",
   "deleteFailed": "Delete user failed",
   "administerProducts": "Administer products",
+  "norwegian": "Norwegian",
+  "english":"English",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
