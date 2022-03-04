@@ -37,6 +37,7 @@ class _pendingBill extends State<PendingBill> {
   }
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return SafeArea(
         child: Scaffold(
             body: pendingOrders.isEmpty ? const Text("No pending orders")  :  _isLoading

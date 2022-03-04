@@ -53,7 +53,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    apiService.setContext(context);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize:

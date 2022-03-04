@@ -52,6 +52,7 @@ class _InventoryViewState extends State<InventoryView> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: PreferredSize(

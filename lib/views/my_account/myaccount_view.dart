@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/select_department/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../main.dart';
+
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatefulWidget {
-
-  const MyAccount({Key? key}) : super(key: key);
+  const MyAccount({Key? key,
+  }) : super(key: key);
 
 
   @override
   State<StatefulWidget> createState() => _MyAccount();
-  }
+}
 
 class _MyAccount extends State<MyAccount> {
-
   ApiService apiService = ApiService.getInstance();
 
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;
+
   @override
   void initState() {
     dataLoadFunction();
@@ -41,30 +44,99 @@ class _MyAccount extends State<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    //TODO BUG make this view not overflow when a keyboard is open prior to entering it
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(
+              icon: Icon(Icons.language_sharp, color: Theme.of(context).colorScheme.onPrimary),
+              iconSize: 35,
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () => {
+                        if (storage.read(key: "selectedLanguage") != null)
+                          {
+                            storage.delete(key: "selectedLanguage"),
+                            storage.write(key: "selectedLanguage", value: "nb"),
+                          },
+                        MainApp.setLocale(context, Locale("nb")),
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/NorwegianLanguageFlag.png",
+                            width: 30,
+                          ),
+                          Text(AppLocalizations.of(context)!.norwegian),
+                        ],
+                      ),
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      onTap: () => {
+                        if (storage.read(key: "selectedLanguage") != null)
+                          {
+                            storage.delete(key: "selectedLanguage"),
+                            storage.write(key: "selectedLanguage", value: "en"),
+                          },
+                        MainApp.setLocale(context, Locale("en")),
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/EnglishLanguageFlag.png",
+                            width: 30,
+                          ),
+                          Text(AppLocalizations.of(context)!.english),
+                        ],
+                      ),
+                      value: 2,
+                    )
+                  ])
+        ],
         automaticallyImplyLeading: false,
         title: Text(
           AppLocalizations.of(context)!.myAccount,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: _isLoading ? circularProgress()  :
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40),
-            child: Text(fullName,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyText1),
-          ),
-          Expanded(
-            child: Column(children: getMenuItems(admin, context)),
-          ),
-        ]),
-      )),
+      body: _isLoading
+          ? circularProgress()
+          : Center(
+              child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Text(fullName,
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+                ),
+                Expanded(
+                  child: Column(children: getMenuItems(admin, context)),
+                ),
+              ]),
+            )),
+    );
+  }
+
+  List<DropdownMenuItem<String>> dropdownItems = [
+    DropdownMenuItem(child: Text("English")),
+    DropdownMenuItem(child: Text("Norwegian"))
+  ];
+  String selectedValue = "Nothing";
+
+  showDropDownMenu() {
+    return showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(0, 0, 0.0, 0.0),
+      //position where you want to show the menu on screen
+      items: [
+        PopupMenuItem<String>(child: const Text('menu option 1'), value: '1'),
+        PopupMenuItem<String>(child: const Text('menu option 2'), value: '2'),
+        PopupMenuItem<String>(child: const Text('menu option 3'), value: '3'),
+      ],
+      elevation: 8.0,
     );
   }
 
@@ -80,13 +152,11 @@ class _MyAccount extends State<MyAccount> {
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",
       arguments: "false",
-
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.preferredInventory,
       destination: "/recommendedInventory",
       arguments: "false",
-
     ));
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.billing,
@@ -104,24 +174,34 @@ class _MyAccount extends State<MyAccount> {
         destination: "/administerUsers",
         arguments: "false",
       ));
+
+      departmentCardList.add(DepartmentCard(
+        departmentName: AppLocalizations.of(context)!.administerProducts,
+        destination: "/administerProducts",
+        arguments: "false",
+      ));
     }
     return departmentCardList;
   }
+
   /// Gets Users rights from api service
-  Future<void> getUserRights() async{
+  Future<void> getUserRights() async {
     String result = await apiService.getUserRights();
-    if(result.contains("ADMIN")){
+    if (result.contains("ADMIN")) {
       setState(() {
-      admin = true;
-    });}
-  }
-  /// Gets Users full name from api service
-  Future<void> getUserFullName() async{
-    String result = await apiService.getUserName();
-      setState(() {
-        fullName = result;
+        admin = true;
       });
+    }
   }
+
+  /// Gets Users full name from api service
+  Future<void> getUserFullName() async {
+    String result = await apiService.getUserName();
+    setState(() {
+      fullName = result;
+    });
+  }
+
   /// Creates a container with a CircularProgressIndicator
   Container circularProgress() {
     return Container(
@@ -129,9 +209,7 @@ class _MyAccount extends State<MyAccount> {
       padding: const EdgeInsets.only(top: 10.0),
       child: const CircularProgressIndicator(
         strokeWidth: 2.0,
-
       ),
     );
   }
-
 }

@@ -41,6 +41,7 @@ class _confimedBill extends State<ConfimedBill> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
         body: _isLoading ? circularProgress() :
         GridView.builder(

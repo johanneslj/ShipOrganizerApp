@@ -70,6 +70,20 @@
   "loginFailed": "Login feilet",
   "registerFailed": "Registrer bruker feilet",
   "editFailed": "Rediger bruker feilet",
-  "deleteFailed": "Slett bruker feilet"
+  "deleteFailed": "Slett bruker feilet",
+  "administerProducts": "Rediger produkter",
+  "norwegian": "Norsk",
+  "english": "Engelsk",
+
+  "failedToReadStorage": "Klarte ikke lese fra lagring",
+  "unableToSendCode": "Klarte ikke sende kode",
+  "couldntLogOut": "Failed to sign out",
+  "notAllowedToCreateUser": "Du kan ikke lage bruker",
+  "userAlreadyExists": "Den eposten er allerede registrert",
+  "badRequest": "Bad request",
+  "failedToConfirmCode": "Fikk ikke bekreftet verifiserings koden",
+  "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",
+  "failedToGetMarkers": "Klarte ikke hente merkører"
+
 
 }

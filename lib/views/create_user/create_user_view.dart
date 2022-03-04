@@ -50,6 +50,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     if (widget.isCreateUser) {
       return Scaffold(
         appBar: AppBar(
@@ -270,10 +271,6 @@ class _CreateUserState extends State<CreateUser> {
                                                   _selectedDepartments);
                                               if (success) {
                                                 Navigator.pushNamed(context, "/home");
-                                              } else {
-                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        AppLocalizations.of(context)!.editFailed)));
                                               }
                                             }
                                           },
@@ -293,10 +290,6 @@ class _CreateUserState extends State<CreateUser> {
                                                 emailController.value.text);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
-                                            } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      AppLocalizations.of(context)!.deleteFailed)));
                                             }
                                           },
                                     child: Text(AppLocalizations.of(context)!.deleteUser))),

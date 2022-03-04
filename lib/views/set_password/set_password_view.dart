@@ -35,6 +35,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Center(
@@ -74,29 +75,35 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: ButtonTheme(
+              disabledColor: Colors.grey,
               minWidth: 250.0,
               height: 100.0,
               child: ElevatedButton(
-                  onPressed: () async => {
-                        // Prompts user to enter valid email before trying to send code.
-                        if (emailController.text.isEmpty ||
-                            !emailRegex.hasMatch(emailController.text))
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!.enterValidEmail)))
-                          }
-                        else
-                          {
-                            if (await apiService.sendVerificationCode(emailController.value.text))
+                  onPressed: isLoading
+                      ? null
+                      : () async => {
+                            // Prompts user to enter valid email before trying to send code.
+                            if (emailController.text.isEmpty ||
+                                !emailRegex.hasMatch(emailController.text))
                               {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.sentCode))),
-                                setState(() {
-                                  page = 2;
-                                })
+                                    content: Text(AppLocalizations.of(context)!.enterValidEmail)))
                               }
-                          }
-                      },
+                            else
+                              {
+                                setLoading(true),
+                                if (await apiService
+                                    .sendVerificationCode(emailController.value.text))
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(AppLocalizations.of(context)!.sentCode))),
+                                    setState(() {
+                                      page = 2;
+                                    })
+                                  }
+                              },
+                            setLoading(false),
+                          },
                   child: Text(AppLocalizations.of(context)!.sendCode))),
         )
       ]),
@@ -125,24 +132,31 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Column(children: [
               ButtonTheme(
+                  disabledColor: Colors.grey,
                   minWidth: 250.0,
                   height: 100.0,
                   child: ElevatedButton(
-                      onPressed: () async => {
-                            // TODO Verify code with API
-                            if (await apiService.verifyVerificationCode(
-                                emailController.value.text, verificationCodeController.value.text))
-                              {
-                                setState(() {
-                                  page = 3;
-                                })
-                              }
-                            else
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.somethingWentWrong))),
-                              }
-                          },
+                      onPressed: isLoading
+                          ? null
+                          : () async => {
+                                // TODO Verify code with API
+                                setLoading(true),
+                                if (await apiService.verifyVerificationCode(
+                                    emailController.value.text,
+                                    verificationCodeController.value.text))
+                                  {
+                                    setState(() {
+                                      page = 3;
+                                    })
+                                  }
+                                else
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!.somethingWentWrong))),
+                                  },
+                                setLoading(false),
+                              },
                       child: Text(AppLocalizations.of(context)!.verifyCode))),
             ]))
       ]),
@@ -201,34 +215,43 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: ButtonTheme(
+              disabledColor: Colors.grey,
               minWidth: 250.0,
               height: 100.0,
               child: ElevatedButton(
-                  onPressed: () async => {
-                        // Gives feedback to user with a snack bar if trying to confirm invalid password.
-                        if (_isButtonDisabled)
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text(AppLocalizations.of(context)!.enterValidPasswordShort)))
-                          }
-                        else
-                          {
-                            // TODO Change password with API
-                            if (await apiService.setNewPassword(
-                                emailController.value.text,
-                                verificationCodeController.value.text,
-                                passwordController.value.text))
+                  onPressed: isLoading
+                      ? null
+                      : () async => {
+                            // Gives feedback to user with a snack bar if trying to confirm invalid password.
+                            if (_isButtonDisabled)
                               {
-                                Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                        AppLocalizations.of(context)!.enterValidPasswordShort)))
                               }
-                          }
-                      },
+                            else
+                              {
+                                // TODO Change password with API
+                                setLoading(true),
+                                if (await apiService.setNewPassword(
+                                    emailController.value.text,
+                                    verificationCodeController.value.text,
+                                    passwordController.value.text))
+                                  {
+                                    Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
+                                  }
+                              },
+                            setLoading(false),
+                          },
                   child: Text(AppLocalizations.of(context)!.confirm))),
         )
       ]),
     );
   }
+
+  bool isLoading = false;
+
+  setLoading(bool state) => setState(() => isLoading = state);
 
   /// Just in case :)
   Widget errorPage() {
