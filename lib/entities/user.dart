@@ -1,6 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ship_organizer_app/entities/department.dart';
-
 /// Represents a simple User
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)

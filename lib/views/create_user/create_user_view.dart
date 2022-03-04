@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
@@ -323,8 +322,7 @@ class _CreateUserState extends State<CreateUser> {
     return success;
   }
 
-  Future<bool> editUser(
-      int id, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(int id, String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.editUser(id, email, fullName, departments);
     setLoading(false);
