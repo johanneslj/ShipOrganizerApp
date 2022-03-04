@@ -22,7 +22,6 @@ class LoginView extends StatefulWidget {
 /// State of the login view.
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   ApiService apiService = ApiService.getInstance();
 
   String email = "";
@@ -33,6 +32,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Center(

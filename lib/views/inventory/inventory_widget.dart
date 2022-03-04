@@ -45,6 +45,7 @@ class Inventory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {

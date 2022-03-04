@@ -29,6 +29,7 @@ class SelectDepartmentView extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
+    apiService.setContext(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

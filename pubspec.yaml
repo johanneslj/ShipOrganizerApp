@@ -79,6 +79,8 @@ flutter:
   assets:
     - assets/FishingBoatSilhouette.jpg
     - assets/hue.jpeg
+    - assets/EnglishLanguageFlag.png
+    - assets/NorwegianLanguageFlag.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

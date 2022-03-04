@@ -6,7 +6,7 @@
   "changeDepartment" : "Change department",
   "changePassword":"Change password" ,
   "companyName": "Company name",
-  "confirm": "confirm",
+  "confirm": "Confirm",
   "confirmPassword": "Confirm password",
   "createUser": "Create User",
   "email": "E-mail",
@@ -70,6 +70,20 @@
   "loginFailed": "Login failed",
   "registerFailed": "Failed to register user",
   "editFailed": "Edit user failed",
-  "deleteFailed": "Delete user failed"
+  "deleteFailed": "Delete user failed",
+  "administerProducts": "Administer products",
+  "norwegian": "Norwegian",
+  "english":"English",
+
+  "failedToReadStorage": "Failed to read storage",
+  "unableToSendCode": "Failed to send code",
+  "couldntLogOut": "Failed to sign out",
+  "notAllowedToCreateUser": "You are not allowed to create user",
+  "userAlreadyExists": "That email is already registered",
+  "badRequest": "Bad request",
+  "failedToConfirmCode": "Failed to confirm verification code",
+  "couldNotChangePassword": "Could not change password",
+  "notAuthorizedToDeleteUser": "Not authorized to delete user",
+  "failedToGetMarkers": "Failed to get markers"
 
 }
