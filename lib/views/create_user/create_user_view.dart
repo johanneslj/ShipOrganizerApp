@@ -56,7 +56,8 @@ class _CreateUserState extends State<CreateUser> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () =>
+                {FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
           ),
           title: Text(
             AppLocalizations.of(context)!.createUser,
@@ -265,7 +266,7 @@ class _CreateUserState extends State<CreateUser> {
                                         : () async {
                                             if (_formKey.currentState!.validate()) {
                                               bool success = await apiService.editUser(
-                                                widget.userToEdit?.id,
+                                                  widget.userToEdit?.id,
                                                   emailController.value.text,
                                                   fullNameController.value.text,
                                                   _selectedDepartments);
@@ -286,8 +287,8 @@ class _CreateUserState extends State<CreateUser> {
                                     onPressed: isLoading
                                         ? null
                                         : () async {
-                                            bool success = await deleteUser(
-                                                emailController.value.text);
+                                            bool success =
+                                                await deleteUser(emailController.value.text);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             }
@@ -308,16 +309,14 @@ class _CreateUserState extends State<CreateUser> {
 
   setLoading(bool state) => setState(() => isLoading = state);
 
-  Future<bool> registerUser(
-      String email, String fullName, List<String> departments) async {
+  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.registerUser(email, fullName, departments);
     setLoading(false);
     return success;
   }
 
-  Future<bool> editUser(
-      int id, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(int id, String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.editUser(id, email, fullName, departments);
     setLoading(false);

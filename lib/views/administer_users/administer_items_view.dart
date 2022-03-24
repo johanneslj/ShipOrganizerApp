@@ -37,7 +37,9 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.administerUsers,
+          widget.isAdministeringUsers
+              ? AppLocalizations.of(context)!.administerUsers
+              : AppLocalizations.of(context)!.administerProducts,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
@@ -53,12 +55,12 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                       ? const <int, TableColumnWidth>{
                           0: FlexColumnWidth(0.4),
                           1: FlexColumnWidth(),
-                          2: FixedColumnWidth(64),
+                          2: FixedColumnWidth(65),
                         }
                       : const <int, TableColumnWidth>{
                           0: FlexColumnWidth(1.05),
                           1: FlexColumnWidth(),
-                          2: FixedColumnWidth(64),
+                          2: FixedColumnWidth(65),
                         },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: tableRows),
