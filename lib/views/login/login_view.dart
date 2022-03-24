@@ -113,7 +113,7 @@ class _LoginViewState extends State<LoginView> {
                                             //TODO actually validate the login attempt
                                             bool logInSuccessful = await login();
                                             if (logInSuccessful) {
-                                              Navigator.pushNamed(context, "/home");
+                                               await checkDepartments(context);
                                             } else {
                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                                   content: Text(
@@ -153,4 +153,18 @@ class _LoginViewState extends State<LoginView> {
     setLoading(false);
     return success;
   }
+
+
+  Future<void> checkDepartments(BuildContext context) async{
+    List<String> departments = await apiService.getDepartments();
+    if(departments.length > 1){
+       Navigator.pushNamed(context, "/selectDepartment");
+    }
+    else{
+       Navigator.pushNamed(context, "/home");
+    }
+
+
+  }
+
 }
