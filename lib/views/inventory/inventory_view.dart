@@ -46,6 +46,7 @@ class _InventoryViewState extends State<InventoryView> {
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
+    displayedItems = items;
     // fetch you data over here
     setState(() {
       _isLoading = false; // your loder will stop to finish after the data fetch
@@ -90,7 +91,6 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Sets state for displayed items to the result of the search.
   void onSearch() {
-    // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
@@ -168,7 +168,7 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> displayed = [];
     displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
-      displayedItems = displayed;
+      items = displayed;
     });
   }
 
