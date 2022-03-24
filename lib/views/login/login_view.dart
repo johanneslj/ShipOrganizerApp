@@ -151,7 +151,7 @@ class _LoginViewState extends State<LoginView> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              (const SetPasswordView()) //TODO ForgotPasswordView())),
+                                              (const SetPasswordView())
                                           ));
                                 },
                                 child: Text(
