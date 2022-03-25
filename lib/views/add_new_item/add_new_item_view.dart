@@ -24,6 +24,7 @@ class _newItem extends State<NewItem> {
   String searchQuery = "Search query";
   final _formKey = GlobalKey<FormState>();
   final ApiService _apiService = ApiService.getInstance();
+  String department = "";
 
   TextEditingController productNameController = TextEditingController();
   TextEditingController productNumberController = TextEditingController();
@@ -52,12 +53,25 @@ class _newItem extends State<NewItem> {
   }
 
   @override
+  void initState() {
+    getDepartment();
+  }
+
+  getDepartment() async {
+    String activeDepartment = await _apiService.getActiveDepartment();
+    setState(() {
+      department = activeDepartment;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (!widget.isCreateNew) {
       productNameController.text = widget.itemToEdit!.name;
       productNumberController.text = widget.itemToEdit!.productNumber!;
       stockController.text = widget.itemToEdit!.amount.toString();
     }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -77,54 +91,66 @@ class _newItem extends State<NewItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Text(AppLocalizations.of(context)!.activeDepartment + " : "+ department),
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(AppLocalizations.of(context)!.productName),
-                      TextFormField(
-                        controller: productNameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context)!.enterValidText;
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.productName,
-                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                      ),
-                      Text(AppLocalizations.of(context)!.productNumber),
-                      TextFormField(
-                        controller: productNumberController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context)!.enterValidText;
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.productNumber,
-                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                      ),
-                      Text(AppLocalizations.of(context)!.productStock),
-                      TextFormField(
-                          readOnly: !widget.isCreateNew,
-                          controller: stockController,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                          controller: productNameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.enterValidNumber;
+                              return AppLocalizations.of(context)!.enterValidText;
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.productStock,
-                            hintStyle: TextStyle(color: Theme.of(context).disabledColor),
-                          ),
-                          keyboardType: TextInputType.number),
+                              hintText: AppLocalizations.of(context)!.productName,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                        ),
+                      ),
+                      Text(AppLocalizations.of(context)!.productNumber),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                          readOnly: !widget.isCreateNew,
+                          controller: productNumberController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!.enterValidText;
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.productNumber,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                        ),
+                      ),
+                      Text(AppLocalizations.of(context)!.productStock),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                            readOnly: !widget.isCreateNew,
+                            controller: stockController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!.enterValidNumber;
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.productStock,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                            ),
+                            keyboardType: TextInputType.number),
+                      ),
                       Text(AppLocalizations.of(context)!.barcode),
                       TextFormField(
                         onChanged: (query) => updateSearchQuery(query),
@@ -141,25 +167,37 @@ class _newItem extends State<NewItem> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: ButtonTheme(
-                          minWidth: 250.0,
-                          height: 100.0,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                FocusScope.of(context).requestFocus(FocusNode());
-                                addNewItem(
-                                    productNameController.value.text,
-                                    productNumberController.value.text,
-                                    stockController.value.text,
-                                    barcodeController.value.text);
-                              }
-                            },
-                            child: Text(AppLocalizations.of(context)!.submit),
-                          ),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: ButtonTheme(
+                              minWidth: 250.0,
+                              height: 100.0,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    if (widget.isCreateNew) {
+                                      addNewItem(
+                                          productNameController.value.text,
+                                          productNumberController.value.text,
+                                          stockController.value.text,
+                                          barcodeController.value.text);
+                                    } else {
+                                      editItem(
+                                          productNameController.value.text,
+                                          productNumberController.value.text,
+                                          stockController.value.text);
+                                    }
+                                  }
+                                },
+                                child: Text(AppLocalizations.of(context)!.submit),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ],
                   ),
@@ -177,6 +215,17 @@ class _newItem extends State<NewItem> {
     setState(() {
       searchQuery = newQuery;
     });
+  }
+
+  /// Edits an already existing item
+  /// Stock cant be edited so it is not required to be passed here
+  /// Product number cant be edited but is necessary to identify the product
+  /// in the database
+  Future<void> editItem(String productName, String productNumber, String barcode) async {
+    bool success = await _apiService.editProduct(productName, productNumber, barcode);
+    if (success) {
+      Navigator.pop(context);
+    }
   }
 
   Future<void> addNewItem(

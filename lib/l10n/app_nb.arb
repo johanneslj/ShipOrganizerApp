@@ -81,6 +81,7 @@
   "uploadImage": "Last opp bilde",
   "photoLibrary": "Bilde bibliotek",
   "camera": "Kamera",
+  "activeDepartment": "Aktivt departement",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",

@@ -432,6 +432,70 @@ class ApiService {
     return success;
   }
 
+  Future<bool> editProduct(String productName, String productNumber, String barcode) async {
+    bool success = false;
+
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {
+        "productName": productName,
+        "productNumber": productNumber,
+        "barcode": barcode,
+        "department": await getActiveDepartment()
+      };
+
+      var response = await dio.post(baseUrl + "api/product/new-product", data: data);
+      if (response.statusCode == 200) {
+        success = true;
+      }
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    }
+
+    return success;
+  }
+
+  Future<List<Item>> getAllItems() async {
+    List<Item> items = [];
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      String department = await getActiveDepartment();
+      var response =
+      await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+      if (response.statusCode == 200) {
+        List<dynamic> products = List<dynamic>.from(response.data);
+        String name = "";
+        String number = "";
+        String ean13 = "";
+        int stock = 0;
+        for (var product in products) {
+          product.forEach((key, value) {
+            switch (key) {
+              case "barcode":
+                ean13 = value;
+                break;
+              case "productName":
+                name = value;
+                break;
+              case "productNumber":
+                number = value;
+                break;
+              case "stock":
+                stock = int.parse(value);
+                break;
+            }
+          });
+          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
+        }}
+
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    }
+    return items;
+  }
+
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems(String department) async {
@@ -444,10 +508,10 @@ class ApiService {
       if (connectionCode == 200) {
         if (date.year == 1900) {
           response =
-              await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
+              await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
         } else {
           String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
-          response = await dio.post(baseUrl + "api/product/UpdatedInventory",
+          response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
               data: {"department": department, "DateTime": formattedDate});
         }
         if (response.statusCode == 200) {
@@ -495,7 +559,7 @@ class ApiService {
     try {
       if (connectionCode == 200) {
         var response = await dio
-            .post(baseUrl + "product/RecommendedInventory", data: {"department": department});
+            .post(baseUrl + "api/product/RecommendedInventory", data: {"department": department});
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
           for (var product in products) {

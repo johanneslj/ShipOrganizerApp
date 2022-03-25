@@ -81,6 +81,7 @@
   "uploadImage": "Upload image",
   "photoLibrary": "Photo library",
   "camera": "Camera",
+  "activeDepartment": "Active department",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
