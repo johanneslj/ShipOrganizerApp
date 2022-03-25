@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ship_organizer_app/api handling//api_controller.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
+import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
+import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 import '../../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -95,6 +97,7 @@ class _LoginViewState extends State<LoginView> {
                               validator: (val) => val!.isEmpty || !val.contains("@")
                                   ? AppLocalizations.of(context)!.enterValidEmail
                                   : null,
+                              keyboardType: TextInputType.emailAddress,
                               // Username text field
                               controller: emailController,
                               decoration: InputDecoration(
@@ -134,7 +137,7 @@ class _LoginViewState extends State<LoginView> {
                                         if (_formKey.currentState!.validate()) {
                                           bool logInSuccessful = await login();
                                           if (logInSuccessful) {
-                                            Navigator.pushNamed(context, "/home");
+                                            await checkDepartments(context);
                                           } else {
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                                 content: Text(
