@@ -9,12 +9,15 @@ import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+
 
 class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
   late BuildContext buildContext;
+  late DateTime date = DateTime(1900);
 
   factory ApiService(BuildContext? context) {
     if (context != null) {
@@ -35,7 +38,7 @@ class ApiService {
   }
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://172.20.10.2:8080/";
 
   Dio dio = Dio();
 
@@ -79,6 +82,7 @@ class ApiService {
       var response = await dio.post(baseUrl + "auth/login", data: data);
       if (response.data != null) {
         storage.write(key: "jwt", value: response.data);
+        storage.write(key: "username", value: email);
         success = true;
       }
     } catch (e) {
@@ -401,10 +405,17 @@ class ApiService {
     try {
       int? connectionCode = await testConnection();
       dio.options.headers["Authorization"] = "Bearer $token";
-
+      var response;
       if (connectionCode == 200) {
-        var response =
-            await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
+        if(date.year == 1900){
+          response =
+          await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
+        }
+        else{
+          String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
+          response =
+          await dio.post(baseUrl + "api/product/UpdatedInventory", data: {"department": department,"DateTime":formattedDate});
+        }
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
           String name = "";
@@ -430,8 +441,10 @@ class ApiService {
             });
             items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
           }
+          date = DateTime.now();
         }
       }
+
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -498,7 +511,8 @@ class ApiService {
         "username": username,
         "quantity": amount,
         "latitude": latitude,
-        "longitude": longitude
+        "longitude": longitude,
+        "datetime" : DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
       };
 
       if (connectionCode == 200) {
@@ -678,7 +692,6 @@ class ApiService {
   }
 
   /// Gets the active department from the local storage
-
   Future<String> getActiveDepartment() async {
     String? activeDepartment = await storage.read(key: "activeDepartment");
     if (activeDepartment == null) {

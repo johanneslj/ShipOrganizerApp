@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
@@ -44,6 +46,7 @@ class _InventoryViewState extends State<InventoryView> {
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
+    displayedItems = items;
     // fetch you data over here
     setState(() {
       _isLoading = false; // your loder will stop to finish after the data fetch
@@ -66,6 +69,7 @@ class _InventoryViewState extends State<InventoryView> {
               filter: showSelectDepartmentMenu,
               controller: _controller,
               recommended: false,
+              onScan: scanBarcodeNormal,
             )),
         drawer: const SideMenu(),
         body: _isLoading ? circularProgress() : GestureDetector(
@@ -87,7 +91,6 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Sets state for displayed items to the result of the search.
   void onSearch() {
-    // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
@@ -107,6 +110,26 @@ class _InventoryViewState extends State<InventoryView> {
       displayedItems = result;
     });}
 
+
+  ///Method to scan the barcode
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes =
+      await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+    setState(() {
+      _controller.text = barcodeScanRes;
+    });
+  }
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
   void showSelectDepartmentMenu() async {
@@ -118,10 +141,8 @@ class _InventoryViewState extends State<InventoryView> {
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
-
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
-
     for (String department in departments) {
       popMenuItems.add(
         PopupMenuItem(
@@ -145,9 +166,27 @@ class _InventoryViewState extends State<InventoryView> {
 
   Future<void> getItems() async {
     List<Item> displayed = [];
-    displayed = await apiService.getItems(selectedDepartment.departmentName);
+      displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
-      displayedItems = displayed;
+      if(items.isEmpty) {
+        items = displayed;
+      }else {
+        if(displayed.isNotEmpty){
+          if (displayed.any((item) => item.productNumber == items[items.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
+            for(Item updatedItem in displayed){
+              final index = items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
+              if(index >=0){
+                items[index].amount = updatedItem.amount;
+              }
+            }
+          }
+          else{
+            items = displayed;
+          }
+        }
+      }
+
+      displayedItems = items;
     });
   }
 

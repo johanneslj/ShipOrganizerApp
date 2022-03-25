@@ -181,9 +181,8 @@ class Inventory extends StatelessWidget {
     var currentLocation = await _location.getLocation();
     var latitude = currentLocation.latitude!;
     var longitude = currentLocation.longitude!;
-    //TODO get username from local database
-    var username = "simondu@ntnu.no";
-    await apiService.updateStock(itemNumber!,username,amount,latitude,longitude);
+    var username = await apiService.storage.read(key: "username");
+    await apiService.updateStock(itemNumber!,username!,amount,latitude,longitude);
     onConfirm!();
   }
 }
