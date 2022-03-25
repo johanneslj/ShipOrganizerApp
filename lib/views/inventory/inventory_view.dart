@@ -168,8 +168,25 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> displayed = [];
       displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
-     items = displayed;
-     displayedItems = items;
+      if(items.isEmpty) {
+        items = displayed;
+      }else {
+        if(displayed.isNotEmpty){
+          if (displayed.any((item) => item.productNumber == items[items.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
+            for(Item updatedItem in displayed){
+              final index = items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
+              if(index >=0){
+                items[index].amount = updatedItem.amount;
+              }
+            }
+          }
+          else{
+            items = displayed;
+          }
+        }
+      }
+
+      displayedItems = items;
     });
   }
 
