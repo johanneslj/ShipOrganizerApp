@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
@@ -19,9 +20,11 @@ class NewItem extends StatefulWidget {
 }
 
 class _newItem extends State<NewItem> {
-  final TextEditingController _searchQueryController = TextEditingController();
+  final TextEditingController barcodeController = TextEditingController();
   String searchQuery = "Search query";
   final _formKey = GlobalKey<FormState>();
+  final ApiService _apiService = ApiService.getInstance();
+  String department = "";
 
   TextEditingController productNameController = TextEditingController();
   TextEditingController productNumberController = TextEditingController();
@@ -45,128 +48,192 @@ class _newItem extends State<NewItem> {
     if (!mounted) return;
 
     setState(() {
-      _searchQueryController.text = barcodeScanRes;
+      barcodeController.text = barcodeScanRes;
+    });
+  }
+
+  @override
+  void initState() {
+    getDepartment();
+  }
+
+  getDepartment() async {
+    String activeDepartment = await _apiService.getActiveDepartment();
+    setState(() {
+      department = activeDepartment;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!widget.isCreateNew) {
+    if (!widget.isCreateNew) {
       productNameController.text = widget.itemToEdit!.name;
       productNumberController.text = widget.itemToEdit!.productNumber!;
       stockController.text = widget.itemToEdit!.amount.toString();
     }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => {
-            FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
+          onPressed: () =>
+              {FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
         ),
-        title: Text( widget.isCreateNew ? AppLocalizations.of(context)!.addProduct :
-          AppLocalizations.of(context)!.editProduct,
+        title: Text(
+          widget.isCreateNew
+              ? AppLocalizations.of(context)!.addProduct
+              : AppLocalizations.of(context)!.editProduct,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
       body: Center(
-          child: SingleChildScrollView(
-              child: Column(
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
-              child: Form(
-                key: _formKey,
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text(AppLocalizations.of(context)!.productName),
-                  TextFormField(
-                    controller: productNameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.enterValidText;
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productName,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                  ),
-                  Text(AppLocalizations.of(context)!.productNumber),
-                  TextFormField(
-                    controller: productNumberController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.enterValidText;
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productNumber,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                  ),
-                  Text(AppLocalizations.of(context)!.productStock),
-                  TextFormField(
-                    readOnly: !widget.isCreateNew,
-                    controller: stockController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.enterValidNumber;
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productStock,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(AppLocalizations.of(context)!.activeDepartment + " : "+ department),
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppLocalizations.of(context)!.productName),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                          controller: productNameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!.enterValidText;
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.productName,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                        ),
                       ),
-                      keyboardType: TextInputType.number),
-                  Text(AppLocalizations.of(context)!.barcode),
-                  TextFormField(
-                    onChanged: (query) => updateSearchQuery(query),
-                    controller: _searchQueryController,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.barcode,
-                      hintStyle: TextStyle(color: Theme.of(context).disabledColor),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                          icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
-                          onPressed: () => {scanBarcodeNormal()},
-                        ), // icon is 48px widget.
+                      Text(AppLocalizations.of(context)!.productNumber),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                          readOnly: !widget.isCreateNew,
+                          controller: productNumberController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!.enterValidText;
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.productNumber,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                        ),
                       ),
-                    ),
+                      Text(AppLocalizations.of(context)!.productStock),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                            readOnly: !widget.isCreateNew,
+                            controller: stockController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!.enterValidNumber;
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.productStock,
+                              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                            ),
+                            keyboardType: TextInputType.number),
+                      ),
+                      Text(AppLocalizations.of(context)!.barcode),
+                      TextFormField(
+                        onChanged: (query) => updateSearchQuery(query),
+                        controller: barcodeController,
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.barcode,
+                          hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: IconButton(
+                              icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
+                              onPressed: () => {scanBarcodeNormal()},
+                            ), // icon is 48px widget.
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: ButtonTheme(
+                              minWidth: 250.0,
+                              height: 100.0,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    if (widget.isCreateNew) {
+                                      addNewItem(
+                                          productNameController.value.text,
+                                          productNumberController.value.text,
+                                          stockController.value.text,
+                                          barcodeController.value.text);
+                                    } else {
+                                      editItem(
+                                          productNameController.value.text,
+                                          productNumberController.value.text,
+                                          stockController.value.text);
+                                    }
+                                  }
+                                },
+                                child: Text(AppLocalizations.of(context)!.submit),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: ButtonTheme(
-                          minWidth: 250.0,
-                          height: 100.0,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Processing Data')),
-                                  );
-                                  sendToServer(context);
-                                }
-                              },
-                              child: Text(AppLocalizations.of(context)!.submit))))
-                ]),
-              ))
-        ],
-      ))),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  /// Update the searchbar with ean-code
+  /// Update the barcode field with ean-code
   void updateSearchQuery(String newQuery) {
     setState(() {
       searchQuery = newQuery;
     });
   }
 
-  void sendToServer(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+  /// Edits an already existing item
+  /// Stock cant be edited so it is not required to be passed here
+  /// Product number cant be edited but is necessary to identify the product
+  /// in the database
+  Future<void> editItem(String productName, String productNumber, String barcode) async {
+    bool success = await _apiService.editProduct(productName, productNumber, barcode);
+    if (success) {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> addNewItem(
+      String productName, String productNumber, String stock, String barcode) async {
+    //TODO actually create a new product in the database
+    bool success = await _apiService.createNewProduct(productName, productNumber, stock, barcode);
+    if (success) {
+      Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    }
   }
 }

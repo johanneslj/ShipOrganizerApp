@@ -123,7 +123,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         ));
       }
     } else {
-      List<Item> items = await _apiService.getItems(""); //TODO Use users department
+      List<Item> items = await _apiService.getAllItems();
       for (Item item in items) {
         rows.add(TableRow(
           children: [
