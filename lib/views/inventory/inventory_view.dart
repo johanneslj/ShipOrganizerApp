@@ -94,10 +94,10 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.name.contains(query)) {
+      if (item.name.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
       } else if (item.productNumber != null) {
-        if (item.productNumber!.contains(query)) {
+        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
           result.add(item);
         }
       } else if (item.ean13 != null) {
