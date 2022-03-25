@@ -32,6 +32,7 @@ class _InventoryViewState extends State<InventoryView> {
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
+  late int selectedRadioButton = 0;
 
   Department selectedDepartment = Department(departmentName: "");
 
@@ -139,20 +140,31 @@ class _InventoryViewState extends State<InventoryView> {
         items: await getPopupMenuItems());
   }
 
-  /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
+    /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
-    for (String department in departments) {
+    for(int i=0; i<departments.length; i++) {
       popMenuItems.add(
         PopupMenuItem(
-          child: Text(department),
-          value: 1,
+          child: Row(
+            children: [
+              Radio(
+                  groupValue: selectedRadioButton,
+                value: i, onChanged: (int? value) {  },
+                fillColor:MaterialStateColor.resolveWith((states) =>  Theme.of(context).colorScheme.secondary)
+
+              ),
+             Text(departments[i]),
+            ],
+          ),
           onTap: () async {
+            changeSelectedRadioButton(i);
             setState(() {
               _isLoading = true;
             });
-            selectedDepartment.departmentName = department;
+            selectedDepartment.departmentName = departments[i];
+            await apiService.storage.write(key:"items",value:"");
             await getItems();
             setState(() {
               _isLoading = false;
@@ -161,31 +173,51 @@ class _InventoryViewState extends State<InventoryView> {
         ),
       );
     }
+    /*for (String department in departments) {
+      popMenuItems.add(
+        PopupMenuItem(
+          child: Row(
+            children: <Widget>[
+              Radio(
+                groupValue: selectedRadioButton,
+                value: ,
+                onChanged: (int? value) {
+                  if(department ==  selectedDepartment.departmentName){
+                    changeSelectedRadioButton(value!);
+                  }
+                  },
+              ),
+              Text(department),
+            ],
+          ),
+          onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });
+            selectedDepartment.departmentName = department;
+            await apiService.storage.write(key:"items",value:"");
+            await getItems();
+            setState(() {
+              _isLoading = false;
+            });
+          },
+        ),
+      );
+    }*/
     return popMenuItems;
+  }
+
+  void changeSelectedRadioButton(int value){
+    setState(() {
+      selectedRadioButton = value;
+    });
   }
 
   Future<void> getItems() async {
     List<Item> displayed = [];
       displayed = await apiService.getItems(selectedDepartment.departmentName);
     setState((){
-      if(items.isEmpty) {
-        items = displayed;
-      }else {
-        if(displayed.isNotEmpty){
-          if (displayed.any((item) => item.productNumber == items[items.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
-            for(Item updatedItem in displayed){
-              final index = items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
-              if(index >=0){
-                items[index].amount = updatedItem.amount;
-              }
-            }
-          }
-          else{
-            items = displayed;
-          }
-        }
-      }
-
+      items = displayed;
       displayedItems = items;
     });
   }

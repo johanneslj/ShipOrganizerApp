@@ -157,7 +157,9 @@ class Inventory extends StatelessWidget {
           return AddRemoveItemDialog(item: item, isAdd: true);
         }).then((amount) async => {
           // TODO Implement with API. Add to call queue.
-          if (amount is int) {  await updateStock(item.productNumber,amount, context),}
+          if (amount is int) {
+            item.amount = item.amount + amount,
+            await updateStock(item.productNumber,amount, context),}
         });
   }
 
@@ -170,6 +172,7 @@ class Inventory extends StatelessWidget {
         }).then((amount) async =>  {
           // TODO Implement with API. Add to call queue.
           if (amount is int) {
+            item.amount = item.amount - amount,
             await updateStock(item.productNumber,-amount, context)
           }
         });
