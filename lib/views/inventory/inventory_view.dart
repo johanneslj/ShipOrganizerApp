@@ -52,6 +52,7 @@ class _InventoryViewState extends State<InventoryView> {
     setState(() {
       _isLoading = false; // your loder will stop to finish after the data fetch
     });
+    apiService.getUserRights();
   }
 
   @override

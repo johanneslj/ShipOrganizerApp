@@ -165,8 +165,8 @@ class _MyAccount extends State<MyAccount> {
 
   /// Gets Users rights from api service
   Future<void> getUserRights() async {
-    String result = await apiService.getUserRights();
-    if (result.contains("ADMIN")) {
+    String? result = await apiService.storage.read(key: "userRights");
+    if (result!.contains("ADMIN")) {
       setState(() {
         admin = true;
       });

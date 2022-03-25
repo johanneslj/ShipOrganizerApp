@@ -604,7 +604,7 @@ class ApiService {
   }
 
   ///Gets user rights. Checks if user has admin rights
-  Future<String> getUserRights() async {
+  Future<void> getUserRights() async {
     String rights = "USER";
     try {
       String? token = await _getToken();
@@ -618,7 +618,7 @@ class ApiService {
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    return rights;
+    storage.write(key: "userRights",value: rights);
   }
 
   ///Gets user name
