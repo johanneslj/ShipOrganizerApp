@@ -74,91 +74,101 @@ class _newItem extends State<NewItem> {
         ),
       ),
       body: Center(
-          child: SingleChildScrollView(
-              child: Column(
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
-              child: Form(
-                key: _formKey,
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text(AppLocalizations.of(context)!.productName),
-                  TextFormField(
-                    controller: productNameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.enterValidText;
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productName,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                  ),
-                  Text(AppLocalizations.of(context)!.productNumber),
-                  TextFormField(
-                    controller: productNumberController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.enterValidText;
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productNumber,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                  ),
-                  Text(AppLocalizations.of(context)!.productStock),
-                  TextFormField(
-                      readOnly: !widget.isCreateNew,
-                      controller: stockController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.enterValidNumber;
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.productStock,
-                        hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(AppLocalizations.of(context)!.productName),
+                      TextFormField(
+                        controller: productNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return AppLocalizations.of(context)!.enterValidText;
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.productName,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                       ),
-                      keyboardType: TextInputType.number),
-                  Text(AppLocalizations.of(context)!.barcode),
-                  TextFormField(
-                    onChanged: (query) => updateSearchQuery(query),
-                    controller: barcodeController,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.barcode,
-                      hintStyle: TextStyle(color: Theme.of(context).disabledColor),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                          icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
-                          onPressed: () => {scanBarcodeNormal()},
-                        ), // icon is 48px widget.
+                      Text(AppLocalizations.of(context)!.productNumber),
+                      TextFormField(
+                        controller: productNumberController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return AppLocalizations.of(context)!.enterValidText;
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.productNumber,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
                       ),
-                    ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: ButtonTheme(
+                      Text(AppLocalizations.of(context)!.productStock),
+                      TextFormField(
+                          readOnly: !widget.isCreateNew,
+                          controller: stockController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!.enterValidNumber;
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.productStock,
+                            hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                          ),
+                          keyboardType: TextInputType.number),
+                      Text(AppLocalizations.of(context)!.barcode),
+                      TextFormField(
+                        onChanged: (query) => updateSearchQuery(query),
+                        controller: barcodeController,
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.barcode,
+                          hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: IconButton(
+                              icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
+                              onPressed: () => {scanBarcodeNormal()},
+                            ), // icon is 48px widget.
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: ButtonTheme(
                           minWidth: 250.0,
                           height: 100.0,
                           child: ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  addNewItem(
-                                      productNameController.value.text,
-                                      productNumberController.value.text,
-                                      stockController.value.text,
-                                      barcodeController.value.text);
-                                }
-                              },
-                              child: Text(AppLocalizations.of(context)!.submit))))
-                ]),
-              ))
-        ],
-      ))),
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                FocusScope.of(context).requestFocus(FocusNode());
+                                addNewItem(
+                                    productNameController.value.text,
+                                    productNumberController.value.text,
+                                    stockController.value.text,
+                                    barcodeController.value.text);
+                              }
+                            },
+                            child: Text(AppLocalizations.of(context)!.submit),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -169,8 +179,12 @@ class _newItem extends State<NewItem> {
     });
   }
 
-  void addNewItem(String productName, String productNumber, String stock, String barcode) {
+  Future<void> addNewItem(
+      String productName, String productNumber, String stock, String barcode) async {
     //TODO actually create a new product in the database
-    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    bool success = await _apiService.createNewProduct(productName, productNumber, stock, barcode);
+    if (success) {
+      Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    }
   }
 }

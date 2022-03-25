@@ -408,11 +408,27 @@ class ApiService {
   }
 
   /// Creates a new product which can be added to the backend
-  Future<bool> createNewProduct(String productName, int productNumber, int stock, String barcode) async {
+  Future<bool> createNewProduct(
+      String productName, String productNumber, String stock, String barcode) async {
     bool success = false;
-    //TODO make this create new product in backend
+    try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {
+        "productName": productName,
+        "productNumber": productNumber,
+        "stock": stock,
+        "barcode": barcode,
+        "department": await getActiveDepartment()
+      };
 
-
+      var response = await dio.post(baseUrl + "api/product/new-product", data: data);
+      if (response.statusCode == 200) {
+        success = true;
+      }
+    } catch (e) {
+      showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    }
     return success;
   }
 
