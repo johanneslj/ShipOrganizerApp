@@ -66,9 +66,9 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
                   child: Column(
                     children: [
-                      //TODO use real logo
+                      //TODO use real logo"assets/MaoyiLogo.jpg"
                       Image.asset(
-                        "assets/FishingBoatSilhouette.jpg",
+                        "assets/MaoyiLogo.png",
                         width: 200,
                       ),
                       Text(
@@ -151,9 +151,7 @@ class _LoginViewState extends State<LoginView> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              (const SetPasswordView())
-                                          ));
+                                          builder: (context) => (const SetPasswordView())));
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.forgotPassword,
@@ -189,17 +187,12 @@ class _LoginViewState extends State<LoginView> {
     return success;
   }
 
-
-  Future<void> checkDepartments(BuildContext context) async{
+  Future<void> checkDepartments(BuildContext context) async {
     List<String> departments = await apiService.getDepartments();
-    if(departments.length > 1){
-       Navigator.pushNamed(context, "/selectDepartment");
+    if (departments.length > 1) {
+      Navigator.pushNamed(context, "/selectDepartment");
+    } else {
+      Navigator.pushNamed(context, "/home");
     }
-    else{
-       Navigator.pushNamed(context, "/home");
-    }
-
-
   }
-
 }
