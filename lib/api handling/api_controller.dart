@@ -12,7 +12,6 @@ import 'package:ship_organizer_app/views/inventory/item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-
 class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
@@ -262,12 +261,18 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(String? oldEmail, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(
+      String? oldEmail, String email, String fullName, List<String> departments) async {
     bool success = false;
     try {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
-      var data = {"name": fullName, "oldEmail":oldEmail, "newEmail":email, "departments": departments};
+      var data = {
+        "name": fullName,
+        "oldEmail": oldEmail,
+        "newEmail": email,
+        "departments": departments
+      };
       var response = await dio.post(baseUrl + "api/user/edit-user", data: data);
       success = false;
     } catch (e) {
@@ -402,6 +407,15 @@ class ApiService {
     return code;
   }
 
+  /// Creates a new product which can be added to the backend
+  Future<bool> createNewProduct(String productName, int productNumber, int stock, String barcode) async {
+    bool success = false;
+    //TODO make this create new product in backend
+
+
+    return success;
+  }
+
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems(String department) async {
@@ -412,14 +426,13 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response;
       if (connectionCode == 200) {
-        if(date.year == 1900){
+        if (date.year == 1900) {
           response =
-          await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
-        }
-        else{
+              await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
+        } else {
           String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
-          response =
-          await dio.post(baseUrl + "api/product/UpdatedInventory", data: {"department": department,"DateTime":formattedDate});
+          response = await dio.post(baseUrl + "api/product/UpdatedInventory",
+              data: {"department": department, "DateTime": formattedDate});
         }
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
@@ -449,7 +462,6 @@ class ApiService {
           date = DateTime.now();
         }
       }
-
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -505,33 +517,27 @@ class ApiService {
   /// Update stock for a specific product
   Future<void> updateStock(
       String productNumber, String username, int amount, double latitude, double longitude) async {
+    int? connectionCode = await testConnection();
 
-      int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
 
-      String? token = await _getToken();
-      dio.options.headers["Authorization"] = "Bearer $token";
+    dynamic data = {
+      "productNumber": productNumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude,
+      "datetime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+    };
 
-      dynamic data = {
-        "productNumber": productNumber,
-        "username": username,
-        "quantity": amount,
-        "latitude": latitude,
-        "longitude": longitude,
-        "datetime" : DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
-      };
-
-      if (connectionCode == 200) {
-        await dio.post(baseUrl + "api/product/setNewStock", data: data);
-      } else {
-        print("Adding item to offline queue:");
-        Map<String, dynamic> queueItem = {
-          "type": "UPDATE_STOCK",
-          "status": "PENDING",
-          "data": data
-        };
-        OfflineEnqueueService().addToQueue(queueItem);
-      }
-
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+    } else {
+      print("Adding item to offline queue:");
+      Map<String, dynamic> queueItem = {"type": "UPDATE_STOCK", "status": "PENDING", "data": data};
+      OfflineEnqueueService().addToQueue(queueItem);
+    }
   }
 
   /// Forces a user to be logged out

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
@@ -19,9 +20,10 @@ class NewItem extends StatefulWidget {
 }
 
 class _newItem extends State<NewItem> {
-  final TextEditingController _searchQueryController = TextEditingController();
+  final TextEditingController barcodeController = TextEditingController();
   String searchQuery = "Search query";
   final _formKey = GlobalKey<FormState>();
+  final ApiService _apiService = ApiService.getInstance();
 
   TextEditingController productNameController = TextEditingController();
   TextEditingController productNumberController = TextEditingController();
@@ -45,13 +47,13 @@ class _newItem extends State<NewItem> {
     if (!mounted) return;
 
     setState(() {
-      _searchQueryController.text = barcodeScanRes;
+      barcodeController.text = barcodeScanRes;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!widget.isCreateNew) {
+    if (!widget.isCreateNew) {
       productNameController.text = widget.itemToEdit!.name;
       productNumberController.text = widget.itemToEdit!.productNumber!;
       stockController.text = widget.itemToEdit!.amount.toString();
@@ -61,11 +63,13 @@ class _newItem extends State<NewItem> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => {
-            FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
+          onPressed: () =>
+              {FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
         ),
-        title: Text( widget.isCreateNew ? AppLocalizations.of(context)!.addProduct :
-          AppLocalizations.of(context)!.editProduct,
+        title: Text(
+          widget.isCreateNew
+              ? AppLocalizations.of(context)!.addProduct
+              : AppLocalizations.of(context)!.editProduct,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
@@ -106,8 +110,8 @@ class _newItem extends State<NewItem> {
                   ),
                   Text(AppLocalizations.of(context)!.productStock),
                   TextFormField(
-                    readOnly: !widget.isCreateNew,
-                    controller: stockController,
+                      readOnly: !widget.isCreateNew,
+                      controller: stockController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return AppLocalizations.of(context)!.enterValidNumber;
@@ -122,7 +126,7 @@ class _newItem extends State<NewItem> {
                   Text(AppLocalizations.of(context)!.barcode),
                   TextFormField(
                     onChanged: (query) => updateSearchQuery(query),
-                    controller: _searchQueryController,
+                    controller: barcodeController,
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)!.barcode,
                       hintStyle: TextStyle(color: Theme.of(context).disabledColor),
@@ -143,12 +147,11 @@ class _newItem extends State<NewItem> {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Processing Data')),
-                                  );
-                                  sendToServer(context);
+                                  addNewItem(
+                                      productNameController.value.text,
+                                      productNumberController.value.text,
+                                      stockController.value.text,
+                                      barcodeController.value.text);
                                 }
                               },
                               child: Text(AppLocalizations.of(context)!.submit))))
@@ -159,14 +162,15 @@ class _newItem extends State<NewItem> {
     );
   }
 
-  /// Update the searchbar with ean-code
+  /// Update the barcode field with ean-code
   void updateSearchQuery(String newQuery) {
     setState(() {
       searchQuery = newQuery;
     });
   }
 
-  void sendToServer(BuildContext context) {
+  void addNewItem(String productName, String productNumber, String stock, String barcode) {
+    //TODO actually create a new product in the database
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
   }
 }
