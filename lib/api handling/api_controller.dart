@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,6 @@ import 'package:intl/intl.dart';
 
 
 class ApiService {
-  /// Ensures there can only be created one of the API service
-  /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
   late BuildContext buildContext;
   late DateTime date = DateTime(1900);
@@ -38,7 +35,7 @@ class ApiService {
     buildContext = context;
   }
 
-  FlutterSecureStorage storage = FlutterSecureStorage();
+  FlutterSecureStorage storage = const FlutterSecureStorage();
   String baseUrl = "http://10.22.195.237:8080/";
 
   Dio dio = Dio();
@@ -239,23 +236,19 @@ class ApiService {
   /// Returns a list of users
   Future<List<User>> getAllUsers() async {
     List<User> users = [];
-
     try {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.get(baseUrl + "api/user/all-users");
-
       List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
       for (Map<String, dynamic> user in usersListMap) {
         User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
         users.add(createdUser);
       }
-    } on DioError catch (e) {
+    } on DioError {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
-
       users = [User(name: "Unable to ", email: "get users", departments: [])];
     }
-
     return users;
   }
 
@@ -406,7 +399,7 @@ class ApiService {
     try {
       int? connectionCode = await testConnection();
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response;
+      Response response;
       if (connectionCode == 200) {
         if(date.year == 1900){
           response =
@@ -415,7 +408,8 @@ class ApiService {
         else{
           String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
           response =
-          await dio.post(baseUrl + "api/product/UpdatedInventory", data: {"department": department,"DateTime":formattedDate});
+          await dio.post(baseUrl + "api/product/UpdatedInventory",
+              data: {"department": department,"DateTime":formattedDate});
         }
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
@@ -463,7 +457,7 @@ class ApiService {
     try {
       if (connectionCode == 200) {
         var response = await dio
-            .post(baseUrl + "product/RecommendedInventory", data: {"department": department});
+            .post(baseUrl + "product/get-recommended-inventory", data: {"department": department});
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
           for (var product in products) {
@@ -517,9 +511,8 @@ class ApiService {
       };
 
       if (connectionCode == 200) {
-        await dio.post(baseUrl + "api/product/setNewStock", data: data);
+        await dio.post(baseUrl + "api/product/set-new-stock", data: data);
       } else {
-        print("Adding item to offline queue:");
         Map<String, dynamic> queueItem = {
           "type": "UPDATE_STOCK",
           "status": "PENDING",
@@ -558,11 +551,7 @@ class ApiService {
   Future<String> getUserName() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
-    int? connectionCode = await testConnection();
-    var response;
-    if (connectionCode == 200) {
-      response = await dio.get(baseUrl + "api/user/name");
-    }
+    Response response = await dio.get(baseUrl + "api/user/name");
     return response.data;
   }
 
@@ -573,7 +562,7 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Order> pendingOrders = [];
-    var response;
+    Response response;
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "orders/admin/pending");
       if (response.statusCode == 200) {
@@ -605,7 +594,7 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Order> confirmedOrders = [];
-    var response;
+    Response response;
     if (connectionCode == 200) {
       response = await dio
           .post(baseUrl + "orders/user/pending", data: {"department": await getActiveDepartment()});
@@ -638,7 +627,7 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     List<Order> confirmedOrders = [];
-    var response;
+    Response response;
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "orders/confirmed");
 
@@ -686,8 +675,7 @@ class ApiService {
     }
   }
 
-  /// Sets a new active departemnet in the local storage
-
+  /// Sets a new active department in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
   }
