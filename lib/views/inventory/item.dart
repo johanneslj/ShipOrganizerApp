@@ -6,4 +6,11 @@ class Item {
   final String? productNumber;
   final String? ean13;
   int amount;
+
+  Map toJson() => {
+    'name': name,
+    'productNumber': productNumber,
+    'ean13': ean13,
+    'amount': amount,
+  };
 }
