@@ -75,6 +75,7 @@
   "editProduct": "Rediger produkt",
   "norwegian": "Norsk",
   "english": "Engelsk",
+  "noPendingOrders": "Ingen ventende ordre",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",

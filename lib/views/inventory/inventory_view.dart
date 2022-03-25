@@ -40,6 +40,7 @@ class _InventoryViewState extends State<InventoryView> {
     dataLoadFunction();
     super.initState();
   }
+
   dataLoadFunction() async {
     setState(() {
       _isLoading = true; // your loader has started to load
@@ -72,13 +73,17 @@ class _InventoryViewState extends State<InventoryView> {
               onScan: scanBarcodeNormal,
             )),
         drawer: const SideMenu(),
-        body: _isLoading ? circularProgress() : GestureDetector(
-          // Used to remove keyboard on tap outside.
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: RefreshIndicator(onRefresh: () => getItems(),
-          child: Inventory(items: displayedItems,onConfirm:getItems),color: colorScheme.onPrimary,
-              backgroundColor: colorScheme.primary),
-        ));
+        body: _isLoading
+            ? circularProgress()
+            : GestureDetector(
+                // Used to remove keyboard on tap outside.
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: RefreshIndicator(
+                    onRefresh: () => getItems(),
+                    child: Inventory(items: displayedItems, onConfirm: getItems),
+                    color: colorScheme.onPrimary,
+                    backgroundColor: colorScheme.primary),
+              ));
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -108,8 +113,8 @@ class _InventoryViewState extends State<InventoryView> {
     }
     setState(() {
       displayedItems = result;
-    });}
-
+    });
+  }
 
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -118,7 +123,7 @@ class _InventoryViewState extends State<InventoryView> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes =
-      await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -130,6 +135,7 @@ class _InventoryViewState extends State<InventoryView> {
       _controller.text = barcodeScanRes;
     });
   }
+
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
   void showSelectDepartmentMenu() async {
@@ -166,21 +172,24 @@ class _InventoryViewState extends State<InventoryView> {
 
   Future<void> getItems() async {
     List<Item> displayed = [];
-      displayed = await apiService.getItems(selectedDepartment.departmentName);
-    setState((){
-      if(items.isEmpty) {
+    displayed = await apiService.getItems(selectedDepartment.departmentName);
+    setState(() {
+      if (items.isEmpty) {
         items = displayed;
-      }else {
-        if(displayed.isNotEmpty){
-          if (displayed.any((item) => item.productNumber == items[items.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
-            for(Item updatedItem in displayed){
-              final index = items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
-              if(index >=0){
+      } else {
+        if (displayed.isNotEmpty) {
+          if (displayed.any((item) =>
+              item.productNumber ==
+              items[items.indexWhere((element) => element.productNumber == item.productNumber)]
+                  .productNumber)) {
+            for (Item updatedItem in displayed) {
+              final index =
+                  items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
+              if (index >= 0) {
                 items[index].amount = updatedItem.amount;
               }
             }
-          }
-          else{
+          } else {
             items = displayed;
           }
         }

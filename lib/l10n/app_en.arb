@@ -75,6 +75,7 @@
   "editProduct": "Edit product",
   "norwegian": "Norwegian",
   "english":"English",
+  "noPendingOrders": "No pending orders",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
