@@ -18,23 +18,44 @@ class OfflineEnqueueService {
   static List<Map<String, dynamic>> _queue = [];
 
   startService() async {
-    await apiService
-        .testConnection()
-        .then((value) => value != 200 ? _isOffline = true : _isOffline = false);
-    if (_serviceRunning) return;
-    if (_isOffline) return;
+    if (await _isOfflineOrServiceAlreadyRunning()) {
+      return;
+    }
     _serviceRunning = true;
-    await _storage
-        .read(key: "OFFLINE_QUEUE")
-        .then((string) => string != null ? _queue = _queueFromString(string) : []);
+    await _updateQueueFromStorage();
     List<Map<String, dynamic>> pendingItems = _getPendingItems();
     if (pendingItems.isEmpty){
       _serviceRunning = false;
       return;
     }
     await _processItems(pendingItems);
+    _storeQueueAndStopService();
+  }
+
+  addToQueue(Map<String, dynamic> model) async {
+    _queue.add(model);
+    _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
+  }
+
+  void _storeQueueAndStopService() {
     _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
     _serviceRunning = false;
+  }
+
+  Future<List<dynamic>> _updateQueueFromStorage() {
+    return _storage
+      .read(key: "OFFLINE_QUEUE")
+      .then((string) => string != null ? _queue = _queueFromString(string) : []);
+  }
+
+  Future<bool> _isOfflineOrServiceAlreadyRunning() async {
+    await apiService
+        .testConnection()
+        .then((value) => value != 200 ? _isOffline = true : _isOffline = false);
+    if (_isOffline || _serviceRunning) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> _processItems(List<Map<String, dynamic>> pendingItems) async {
@@ -47,11 +68,6 @@ class OfflineEnqueueService {
          item["status"] = "ERROR: " + ex.toString();
       }
     }
-  }
-
-  addToQueue(Map<String, dynamic> model) async {
-    _queue.add(model);
-    _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
   }
 
   _processItem(Map<String, dynamic> model) async {
