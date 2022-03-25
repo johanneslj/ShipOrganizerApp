@@ -421,7 +421,7 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response;
       if (connectionCode == 200) {
-        if(date.year == 1900){
+        if(date.year == 1900 || localstorage?.length == 0) {
           response =
           await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
         }
@@ -460,7 +460,7 @@ class ApiService {
                 amount: stock));
           }
 
-          if(localstorage?.length == 0){
+          if(localstorage?.length == 0 || localstorage == "[]"){
             storage.write(key: "items", value: jsonEncode(apiItems));
           }
           else{
@@ -490,6 +490,7 @@ class ApiService {
                 newItems.add(Item(
                     name: name, productNumber: number, ean13: ean13, amount: stock));
               }
+              if(newItems.isNotEmpty){
             if (apiItems.any((item) => item.productNumber == newItems[newItems.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
               for (Item updatedItem in apiItems) {
                 final index = newItems.indexWhere((element) =>
@@ -500,6 +501,7 @@ class ApiService {
               }
               await storage.write(key: "items", value: jsonEncode(newItems));
             }
+          }
             apiItems = newItems;
           }
           date = DateTime.now();
@@ -612,7 +614,7 @@ class ApiService {
   }
 
   ///Gets user name
-  Future<String> getUserName() async {
+  Future<void> getUserName() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     int? connectionCode = await testConnection();
@@ -620,7 +622,7 @@ class ApiService {
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "api/user/name");
     }
-    return response.data;
+    storage.write(key: "name", value: response.data);;
   }
 
   /// Gets pending order from api.

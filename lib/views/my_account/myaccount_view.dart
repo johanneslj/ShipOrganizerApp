@@ -175,9 +175,9 @@ class _MyAccount extends State<MyAccount> {
 
   /// Gets Users full name from api service
   Future<void> getUserFullName() async {
-    String result = await apiService.getUserName();
+    String? result = await apiService.storage.read(key: "name");
     setState(() {
-      fullName = result;
+      fullName = result!;
     });
   }
 

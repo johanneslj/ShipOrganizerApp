@@ -43,14 +43,14 @@ class _InventoryViewState extends State<InventoryView> {
   }
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
     displayedItems = items;
-    // fetch you data over here
+
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
     apiService.getUserRights();
   }
@@ -144,6 +144,10 @@ class _InventoryViewState extends State<InventoryView> {
     /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     List<String> departments = await apiService.getDepartments();
+    String activeDepartment = await apiService.getActiveDepartment();
+    departments.remove(activeDepartment);
+    departments.insert(0, activeDepartment);
+
     List<PopupMenuItem> popMenuItems = [];
     for(int i=0; i<departments.length; i++) {
       popMenuItems.add(
@@ -152,9 +156,8 @@ class _InventoryViewState extends State<InventoryView> {
             children: [
               Radio(
                   groupValue: selectedRadioButton,
-                value: i, onChanged: (int? value) {  },
-                fillColor:MaterialStateColor.resolveWith((states) =>  Theme.of(context).colorScheme.secondary)
-
+                  value: i, onChanged: (int? value) {  },
+                  fillColor:MaterialStateColor.resolveWith((states) =>  Theme.of(context).colorScheme.secondary)
               ),
              Text(departments[i]),
             ],
