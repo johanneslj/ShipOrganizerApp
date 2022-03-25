@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ import 'package:intl/intl.dart';
 
 
 class ApiService {
+  /// Ensures there can only be created one of the API service
+  /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
   late BuildContext buildContext;
   late DateTime date = DateTime(1900);
@@ -395,13 +398,15 @@ class ApiService {
   ///Returns a list of all the products
   Future<List<Item>> getItems(String department) async {
     String? token = await _getToken();
-    List<Item> items = [];
+    List<Item> apiItems = [];
+    List<Item> newItems = [];
+    var localstorage = await storage.read(key: "items");
     try {
       int? connectionCode = await testConnection();
       dio.options.headers["Authorization"] = "Bearer $token";
       Response response;
       if (connectionCode == 200) {
-        if(date.year == 1900){
+        if(date.year == 1900 || localstorage?.length == 0) {
           response =
           await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
         }
@@ -434,7 +439,56 @@ class ApiService {
                   break;
               }
             });
-            items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
+            apiItems.add(Item(
+                name: name,
+                productNumber: number,
+                ean13: ean13,
+                amount: stock));
+          }
+
+          if(localstorage?.length == 0 || localstorage == "[]"){
+            storage.write(key: "items", value: jsonEncode(apiItems));
+          }
+          else{
+            String? storageString = await storage.read(key: "items");
+              List<dynamic> storageItems = jsonDecode(storageString!);
+              String name = "";
+              String number = "";
+              String ean13 = "";
+              int stock = 0;
+              for (var product in storageItems) {
+                product.forEach((key, value) {
+                  switch (key) {
+                    case "ean13":
+                      ean13 = value;
+                      break;
+                    case "name":
+                      name = value;
+                      break;
+                    case "productNumber":
+                      number = value;
+                      break;
+                    case "amount":
+                      stock = value;
+                      break;
+                  }
+                });
+                newItems.add(Item(
+                    name: name, productNumber: number, ean13: ean13, amount: stock));
+              }
+              if(newItems.isNotEmpty){
+            if (apiItems.any((item) => item.productNumber == newItems[newItems.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
+              for (Item updatedItem in apiItems) {
+                final index = newItems.indexWhere((element) =>
+                element.productNumber == updatedItem.productNumber);
+                if (index >= 0) {
+                  newItems[index].amount = updatedItem.amount;
+                }
+              }
+              await storage.write(key: "items", value: jsonEncode(newItems));
+            }
+          }
+            apiItems = newItems;
           }
           date = DateTime.now();
         }
@@ -443,8 +497,7 @@ class ApiService {
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-
-    return items;
+    return apiItems;
   }
 
   ///Gets all products for the recommended inventory report
@@ -456,8 +509,8 @@ class ApiService {
     List<Item> items = [];
     try {
       if (connectionCode == 200) {
-        var response = await dio
-            .post(baseUrl + "product/get-recommended-inventory", data: {"department": department});
+        var response = await dio.post(baseUrl + "product/RecommendedInventory",
+            data: {"department": department});
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
           for (var product in products) {
@@ -493,34 +546,32 @@ class ApiService {
   }
 
   /// Update stock for a specific product
-  Future<void> updateStock(
-      String productNumber, String username, int amount, double latitude, double longitude) async {
+  Future<void> updateStock(String productNumber, String username, int amount,
+      double latitude, double longitude) async {
+    int? connectionCode = await testConnection();
 
-      int? connectionCode = await testConnection();
+    String? token = await _getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
 
-      String? token = await _getToken();
-      dio.options.headers["Authorization"] = "Bearer $token";
+    dynamic data = {
+      "productNumber": productNumber,
+      "username": username,
+      "quantity": amount,
+      "latitude": latitude,
+      "longitude": longitude,
+      "datetime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+    };
 
-      dynamic data = {
-        "productNumber": productNumber,
-        "username": username,
-        "quantity": amount,
-        "latitude": latitude,
-        "longitude": longitude,
-        "datetime" : DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+    if (connectionCode == 200) {
+      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+    } else {
+      Map<String, dynamic> queueItem = {
+        "type": "UPDATE_STOCK",
+        "status": "PENDING",
+        "data": data
       };
-
-      if (connectionCode == 200) {
-        await dio.post(baseUrl + "api/product/set-new-stock", data: data);
-      } else {
-        Map<String, dynamic> queueItem = {
-          "type": "UPDATE_STOCK",
-          "status": "PENDING",
-          "data": data
-        };
-        OfflineEnqueueService().addToQueue(queueItem);
-      }
-
+      OfflineEnqueueService().addToQueue(queueItem);
+    }
   }
 
   /// Forces a user to be logged out
@@ -548,11 +599,15 @@ class ApiService {
   }
 
   ///Gets user name
-  Future<String> getUserName() async {
+  Future<void> getUserName() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
-    Response response = await dio.get(baseUrl + "api/user/name");
-    return response.data;
+    int? connectionCode = await testConnection();
+    var response;
+    if (connectionCode == 200) {
+      response = await dio.get(baseUrl + "api/user/name");
+    }
+    storage.write(key: "name", value: response.data);;
   }
 
   /// Gets pending order from api.
@@ -596,8 +651,8 @@ class ApiService {
     List<Order> confirmedOrders = [];
     Response response;
     if (connectionCode == 200) {
-      response = await dio
-          .post(baseUrl + "orders/user/pending", data: {"department": await getActiveDepartment()});
+      response = await dio.post(baseUrl + "orders/user/pending",
+          data: {"department": await getActiveDepartment()});
       if (response.statusCode == 200) {
         List<dynamic> orders = List<dynamic>.from(response.data);
         for (var order in orders) {
