@@ -86,7 +86,7 @@ class ApiService {
         success = true;
       }
     } catch (e) {
-      showErrorToast("You are not logged in");
+      //showErrorToast();
       success = false;
     }
     return success;

@@ -21,7 +21,7 @@ class AdministerUsersView extends StatefulWidget {
 
 class _AdministerUsersViewState extends State<AdministerUsersView> {
   final ApiService _apiService = ApiService.getInstance();
-
+  bool _isLoading = false;
   List<TableRow> tableRows = [];
 
   @override
@@ -37,40 +37,47 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.administerUsers,
+          widget.isAdministeringUsers
+              ? AppLocalizations.of(context)!.administerUsers
+              : AppLocalizations.of(context)!.administerProducts,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Table(
-                  border: const TableBorder(
-                      horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
-                  columnWidths: widget.isAdministeringUsers
-                      ? const <int, TableColumnWidth>{
-                          0: FlexColumnWidth(0.4),
-                          1: FlexColumnWidth(),
-                          2: FixedColumnWidth(64),
-                        }
-                      : const <int, TableColumnWidth>{
-                          0: FlexColumnWidth(1.05),
-                          1: FlexColumnWidth(),
-                          2: FixedColumnWidth(64),
-                        },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  children: tableRows),
-            )
-          ],
-        ),
-      ),
+      body: _isLoading
+          ? circularProgress()
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: Table(
+                        border: const TableBorder(
+                            horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
+                        columnWidths: widget.isAdministeringUsers
+                            ? const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(0.4),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(65),
+                              }
+                            : const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(1.05),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(65),
+                              },
+                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                        children: tableRows),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
   /// creates an additional row in the table for each user
   Future<void> createUserRow() async {
+    setState(() {
+      _isLoading = true;
+    });
     List<TableRow> rows = [];
     rows.add(
       widget.isAdministeringUsers
@@ -143,35 +150,19 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     }
 
     setState(() {
-      this.tableRows = rows;
+      _isLoading = false;
+      tableRows = rows;
     });
   }
 
-  /// Shows a confirmation dialog for deleting a user
-  AlertDialog showConfirmationDialog(String personToDelete) {
-    Widget cancelButton = TextButton(
-      child: Text(AppLocalizations.of(context)!.cancel),
-      onPressed: () {
-        Navigator.pop(context);
-      },
+  /// Show a small loading circle on screen
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
     );
-    Widget continueButton = TextButton(
-      child: Text(AppLocalizations.of(context)!.delete),
-      onPressed: () {
-        //TODO make this delete user from server
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text(AppLocalizations.of(context)!.deleteUser),
-      content: Text(AppLocalizations.of(context)!.deleteConfirmationDialog + personToDelete),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    return alert;
   }
 }

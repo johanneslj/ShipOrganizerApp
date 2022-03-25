@@ -9,9 +9,9 @@ import '../../main.dart';
 /// My account class. Here the user has access to different actions for user management.
 /// There is different menu options based on if the user has admin rights or not
 class MyAccount extends StatefulWidget {
-  const MyAccount({Key? key,
+  const MyAccount({
+    Key? key,
   }) : super(key: key);
-
 
   @override
   State<StatefulWidget> createState() => _MyAccount();
@@ -45,7 +45,6 @@ class _MyAccount extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     FlutterSecureStorage storage = const FlutterSecureStorage();
-    //TODO BUG make this view not overflow when a keyboard is open prior to entering it
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -117,26 +116,6 @@ class _MyAccount extends State<MyAccount> {
                 ),
               ]),
             )),
-    );
-  }
-
-  List<DropdownMenuItem<String>> dropdownItems = [
-    DropdownMenuItem(child: Text("English")),
-    DropdownMenuItem(child: Text("Norwegian"))
-  ];
-  String selectedValue = "Nothing";
-
-  showDropDownMenu() {
-    return showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(0, 0, 0.0, 0.0),
-      //position where you want to show the menu on screen
-      items: [
-        PopupMenuItem<String>(child: const Text('menu option 1'), value: '1'),
-        PopupMenuItem<String>(child: const Text('menu option 2'), value: '2'),
-        PopupMenuItem<String>(child: const Text('menu option 3'), value: '3'),
-      ],
-      elevation: 8.0,
     );
   }
 
