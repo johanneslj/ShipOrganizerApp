@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class ApiService {
   }
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://172.20.10.2:8080/";
+  String baseUrl = "http://10.22.195.237:8080/";
 
   Dio dio = Dio();
 
@@ -81,8 +82,10 @@ class ApiService {
     try {
       var response = await dio.post(baseUrl + "auth/login", data: data);
       if (response.data != null) {
-        storage.write(key: "jwt", value: response.data);
-        storage.write(key: "username", value: email);
+        Map<String, dynamic> user = json.decode(response.data);
+        storage.write(key: "jwt", value: user["token"]);
+        storage.write(key: "name", value: user["fullname"]);
+        storage.write(key: "username", value: user["email"]);
         success = true;
       }
     } catch (e) {
