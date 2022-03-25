@@ -4,18 +4,17 @@ import 'dart:convert';
 
 class OfflineEnqueueService {
 
+  OfflineEnqueueService._internal();
+  bool _serviceRunning = false;
+  bool _isOffline = false;
+  final ApiService _apiService = ApiService.getInstance();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  static List<Map<String, dynamic>> _queue = [];
   static final OfflineEnqueueService _service = OfflineEnqueueService._internal();
 
   factory OfflineEnqueueService() {
     return _service;
   }
-
-  OfflineEnqueueService._internal();
-  bool _serviceRunning = false;
-  ApiService apiService = ApiService.getInstance();
-  bool _isOffline = false;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static List<Map<String, dynamic>> _queue = [];
 
   startService() async {
     if (await _isOfflineOrServiceAlreadyRunning()) {
@@ -49,7 +48,7 @@ class OfflineEnqueueService {
   }
 
   Future<bool> _isOfflineOrServiceAlreadyRunning() async {
-    await apiService
+    await _apiService
         .testConnection()
         .then((value) => value != 200 ? _isOffline = true : _isOffline = false);
     if (_isOffline || _serviceRunning) {
@@ -80,7 +79,7 @@ class OfflineEnqueueService {
 
   void _updateStockOffline(Map<String, dynamic> model) {
     Map<String, dynamic> data = model["data"];
-    apiService.updateStock(
+    _apiService.updateStock(
         data["productNumber"],
         data["username"],
         data["quantity"],
