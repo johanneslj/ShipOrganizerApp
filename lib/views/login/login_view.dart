@@ -66,9 +66,9 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
                   child: Column(
                     children: [
-                      //TODO use real logo"assets/MaoyiLogo.jpg"
+                      //TODO use real logo
                       Image.asset(
-                        "assets/MaoyiLogo.png",
+                        "assets/maoyi-logo-white.png",
                         width: 200,
                       ),
                       Text(

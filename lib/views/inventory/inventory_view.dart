@@ -32,6 +32,7 @@ class _InventoryViewState extends State<InventoryView> {
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
+  late int selectedRadioButton = 0;
 
   Department selectedDepartment = Department(departmentName: "");
 
@@ -40,18 +41,18 @@ class _InventoryViewState extends State<InventoryView> {
     dataLoadFunction();
     super.initState();
   }
-
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
     displayedItems = items;
-    // fetch you data over here
+
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
+    apiService.getUserRights();
   }
 
   @override
@@ -73,17 +74,13 @@ class _InventoryViewState extends State<InventoryView> {
               onScan: scanBarcodeNormal,
             )),
         drawer: const SideMenu(),
-        body: _isLoading
-            ? circularProgress()
-            : GestureDetector(
-                // Used to remove keyboard on tap outside.
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: RefreshIndicator(
-                    onRefresh: () => getItems(),
-                    child: Inventory(items: displayedItems, onConfirm: getItems),
-                    color: colorScheme.onPrimary,
-                    backgroundColor: colorScheme.primary),
-              ));
+        body: _isLoading ? circularProgress() : GestureDetector(
+          // Used to remove keyboard on tap outside.
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: RefreshIndicator(onRefresh: () => getItems(),
+          child: Inventory(items: displayedItems,onConfirm:getItems),color: colorScheme.onPrimary,
+              backgroundColor: colorScheme.primary),
+        ));
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -99,10 +96,10 @@ class _InventoryViewState extends State<InventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.name.contains(query)) {
+      if (item.name.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
       } else if (item.productNumber != null) {
-        if (item.productNumber!.contains(query)) {
+        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
           result.add(item);
         }
       } else if (item.ean13 != null) {
@@ -113,8 +110,8 @@ class _InventoryViewState extends State<InventoryView> {
     }
     setState(() {
       displayedItems = result;
-    });
-  }
+    });}
+
 
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -123,7 +120,7 @@ class _InventoryViewState extends State<InventoryView> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes =
-          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -135,7 +132,6 @@ class _InventoryViewState extends State<InventoryView> {
       _controller.text = barcodeScanRes;
     });
   }
-
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
   void showSelectDepartmentMenu() async {
@@ -145,20 +141,34 @@ class _InventoryViewState extends State<InventoryView> {
         items: await getPopupMenuItems());
   }
 
-  /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
+    /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     List<String> departments = await apiService.getDepartments();
+    String activeDepartment = await apiService.getActiveDepartment();
+    departments.remove(activeDepartment);
+    departments.insert(0, activeDepartment);
+
     List<PopupMenuItem> popMenuItems = [];
-    for (String department in departments) {
+    for(int i=0; i<departments.length; i++) {
       popMenuItems.add(
         PopupMenuItem(
-          child: Text(department),
-          value: 1,
+          child: Row(
+            children: [
+              Radio(
+                  groupValue: selectedRadioButton,
+                  value: i, onChanged: (int? value) {  },
+                  fillColor:MaterialStateColor.resolveWith((states) =>  Theme.of(context).colorScheme.secondary)
+              ),
+             Text(departments[i]),
+            ],
+          ),
           onTap: () async {
+            changeSelectedRadioButton(i);
             setState(() {
               _isLoading = true;
             });
-            selectedDepartment.departmentName = department;
+            selectedDepartment.departmentName = departments[i];
+            await apiService.storage.write(key:"items",value:"");
             await getItems();
             setState(() {
               _isLoading = false;
@@ -167,34 +177,51 @@ class _InventoryViewState extends State<InventoryView> {
         ),
       );
     }
+    /*for (String department in departments) {
+      popMenuItems.add(
+        PopupMenuItem(
+          child: Row(
+            children: <Widget>[
+              Radio(
+                groupValue: selectedRadioButton,
+                value: ,
+                onChanged: (int? value) {
+                  if(department ==  selectedDepartment.departmentName){
+                    changeSelectedRadioButton(value!);
+                  }
+                  },
+              ),
+              Text(department),
+            ],
+          ),
+          onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });
+            selectedDepartment.departmentName = department;
+            await apiService.storage.write(key:"items",value:"");
+            await getItems();
+            setState(() {
+              _isLoading = false;
+            });
+          },
+        ),
+      );
+    }*/
     return popMenuItems;
+  }
+
+  void changeSelectedRadioButton(int value){
+    setState(() {
+      selectedRadioButton = value;
+    });
   }
 
   Future<void> getItems() async {
     List<Item> displayed = [];
-    displayed = await apiService.getItems(selectedDepartment.departmentName);
-    setState(() {
-      if (items.isEmpty) {
-        items = displayed;
-      } else {
-        if (displayed.isNotEmpty) {
-          if (displayed.any((item) =>
-              item.productNumber ==
-              items[items.indexWhere((element) => element.productNumber == item.productNumber)]
-                  .productNumber)) {
-            for (Item updatedItem in displayed) {
-              final index =
-                  items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
-              if (index >= 0) {
-                items[index].amount = updatedItem.amount;
-              }
-            }
-          } else {
-            items = displayed;
-          }
-        }
-      }
-
+      displayed = await apiService.getItems(selectedDepartment.departmentName);
+    setState((){
+      items = displayed;
       displayedItems = items;
     });
   }
