@@ -61,10 +61,11 @@ class _newItem extends State<NewItem> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => {
+            FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
         ),
-        title: Text(
-          AppLocalizations.of(context)!.addProduct,
+        title: Text( widget.isCreateNew ? AppLocalizations.of(context)!.addProduct :
+          AppLocalizations.of(context)!.editProduct,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
