@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,8 +35,7 @@ class _newBill extends State<NewBill> {
   }
 
   _imgFromCamera() async {
-    final image = (await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 50));
+    final image = (await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 50));
     if (image == null) return;
     setState(() {
       _image = File(image.path);
@@ -43,8 +43,7 @@ class _newBill extends State<NewBill> {
   }
 
   _imgFromGallery() async {
-    final image = (await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 50));
+    final image = (await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 50));
 
     if (image == null) return;
     setState(() {
@@ -58,52 +57,63 @@ class _newBill extends State<NewBill> {
     return Scaffold(
         body: Column(
       children: [
-        const Text("Select a department"),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Text(AppLocalizations.of(context)!.selectDepartment),
+        ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DropdownButtonFormField(
-                icon: const IconTheme(
-                    data: IconThemeData(color:Colors.black),
-                    child: Icon(Icons.arrow_downward_sharp)),
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 1),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: DropdownButtonFormField(
+                  icon: const IconTheme(
+                      data: IconThemeData(color: Colors.black),
+                      child: Icon(Icons.arrow_downward_sharp)),
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 1),
-                  ),
-                ),
-                validator: (value) =>
-                    value == null ? "Select a Department" : null,
-                dropdownColor: Theme.of(context).colorScheme.onPrimary,
-                value: selectedValue,
-
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedValue = newValue!;
-                  });
-                },
-                items: dropdownItems),
+                  validator: (value) =>
+                      value == null ? AppLocalizations.of(context)!.selectADepartment : null,
+                  dropdownColor: Theme.of(context).colorScheme.onPrimary,
+                  value: selectedValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedValue = newValue!;
+                    });
+                  },
+                  items: dropdownItems),
+            ),
           ],
         ),
         _image != null
-            ? Image.file(_image!, width: 200, height: 300, fit: BoxFit.cover)
-            : const Text("No Photo"),
-        ElevatedButton(
-            child: Text(
-              "Upload image",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            onPressed: () => {_showPicker(context)}),
-        ElevatedButton(
-            child: Text(
-              "Submit",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            onPressed: () => {
-              submitToServer(),
-              Navigator.of(context).pop()}),
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.file(_image!, width: 200, height: 300, fit: BoxFit.cover))
+            : Text(AppLocalizations.of(context)!.noPhoto),
+        Padding(
+          padding: const EdgeInsets.all(5),
+          child: ElevatedButton(
+              child: Text(
+                AppLocalizations.of(context)!.uploadImage,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              onPressed: () => {_showPicker(context)}),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(5),
+          child: ElevatedButton(
+              child: Text(
+                AppLocalizations.of(context)!.submit,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              onPressed: () => {submitToServer(), Navigator.of(context).pop()}),
+        )
       ],
     ));
   }
@@ -111,7 +121,7 @@ class _newBill extends State<NewBill> {
   ///Creates the menu items based on the department list
   Future<void> getdropdownItems() async {
     List<DropdownMenuItem<String>> menuItems = <DropdownMenuItem<String>>[];
-    List<String> departments  = await getDepartments();
+    List<String> departments = await getDepartments();
     for (String department in departments) {
       DropdownMenuItem<String> departmentCard = DropdownMenuItem(
         child: Text(department),
@@ -125,14 +135,13 @@ class _newBill extends State<NewBill> {
   }
 
   //Gets the departments from the backend server
-  Future<List<String>> getDepartments() async{
-    String? allValues = await apiService.storage.read(key:"departments");
-    List<String> departments  = [];
-    if(allValues != null) {
+  Future<List<String>> getDepartments() async {
+    String? allValues = await apiService.storage.read(key: "departments");
+    List<String> departments = [];
+    if (allValues != null) {
       departments.add(allValues.replaceAll("[", "").replaceAll("]", "").toString());
     }
     return departments;
-
   }
 
   //Creates the picker for the user to choose between the gallery and the camera
@@ -147,7 +156,7 @@ class _newBill extends State<NewBill> {
                     leading: const IconTheme(
                         data: IconThemeData(color: Colors.white),
                         child: Icon(Icons.photo_library_sharp)),
-                    title: Text('Photo Library',
+                    title: Text(AppLocalizations.of(context)!.photoLibrary,
                         style: Theme.of(context).textTheme.headline6),
                     onTap: () {
                       _imgFromGallery();
@@ -155,9 +164,10 @@ class _newBill extends State<NewBill> {
                     }),
                 ListTile(
                   leading: const IconTheme(
-                      data: IconThemeData(color: Colors.white),
-                      child: Icon(Icons.photo_camera_sharp),),
-                  title: Text('Camera',
+                    data: IconThemeData(color: Colors.white),
+                    child: Icon(Icons.photo_camera_sharp),
+                  ),
+                  title: Text(AppLocalizations.of(context)!.camera,
                       style: Theme.of(context).textTheme.headline6),
                   onTap: () {
                     _imgFromCamera();
