@@ -82,14 +82,12 @@ class ApiService {
     try {
       var response = await dio.post(baseUrl + "auth/login", data: data);
       if (response.data != null) {
-        Map<String, dynamic> user = json.decode(response.data);
-        storage.write(key: "jwt", value: user["token"]);
-        storage.write(key: "name", value: user["fullname"]);
-        storage.write(key: "username", value: user["email"]);
+        storage.write(key: "jwt", value: response.data["token"]);
+        storage.write(key: "name", value: response.data["fullname"]);
+        storage.write(key: "username", value: response.data["email"]);
         success = true;
       }
     } catch (e) {
-      //showErrorToast();
       success = false;
     }
     return success;
