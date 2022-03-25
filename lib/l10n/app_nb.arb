@@ -75,7 +75,6 @@
   "editProduct": "Rediger produkt",
   "norwegian": "Norsk",
   "english": "Engelsk",
-
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",
   "couldntLogOut": "Failed to sign out",
@@ -83,6 +82,7 @@
   "userAlreadyExists": "Den eposten er allerede registrert",
   "badRequest": "Bad request",
   "failedToConfirmCode": "Fikk ikke bekreftet verifiserings koden",
+  "couldNotChangePassword": "Kunne ikke endre passord",
   "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",
   "failedToGetMarkers": "Klarte ikke hente merkører"
 
