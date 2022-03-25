@@ -40,7 +40,7 @@ class OfflineEnqueueService {
         .then((string) => string != null ? _queue = _queueFromString(string) : []);
 
     // Search all the pending items in the queue
-    List<dynamic> pendingItems =
+    List<Map<String, dynamic>> pendingItems =
         _queue.where((item) => item["status"] == "PENDING").toList();
 
     // If the queue doesn't have any items the service is stopped
