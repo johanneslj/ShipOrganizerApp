@@ -73,6 +73,7 @@ class SelectDepartmentView extends StatefulWidget {
       );
       departmentCardList.add(departmentCard);
     }
+    await apiService.storage.write(key: "items", value: "");
     setState(() {
       departments = departmentCardList;
     });

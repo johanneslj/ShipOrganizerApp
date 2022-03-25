@@ -66,15 +66,9 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
                   child: Column(
                     children: [
-                      //TODO use real logo
                       Image.asset(
-                        "assets/FishingBoatSilhouette.jpg",
+                        "assets/maoyi-logo-white.png",
                         width: 200,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.companyName,
-                        style: const TextStyle(
-                            color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

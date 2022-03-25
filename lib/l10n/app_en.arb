@@ -75,7 +75,6 @@
   "editProduct": "Edit product",
   "norwegian": "Norwegian",
   "english":"English",
-
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
   "couldntLogOut": "Failed to sign out",

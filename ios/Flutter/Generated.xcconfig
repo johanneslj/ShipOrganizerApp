@@ -1,15 +1,13 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/usr/local/Caskroom/flutter/2.2.3/flutter
-FLUTTER_APPLICATION_PATH=/Users/simon/Desktop/BachlorOppgave/Frontend
+FLUTTER_ROOT=/Users/johanneslj/Local/flutter
+FLUTTER_APPLICATION_PATH=/Users/johanneslj/AndroidStudioProjects/ship_organizer_app
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=/Users/simon/Desktop/BachlorOppgave/Frontend/lib/main.dart
+FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=0.1.0
 FLUTTER_BUILD_NUMBER=1
-EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386 arm64
-DART_DEFINES=Zmx1dHRlci5pbnNwZWN0b3Iuc3RydWN0dXJlZEVycm9ycz10cnVl,RkxVVFRFUl9XRUJfQVVUT19ERVRFQ1Q9dHJ1ZQ==
+EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386
 DART_OBFUSCATION=false
-EXTRA_FRONT_END_OPTIONS=--no-sound-null-safety
-TRACK_WIDGET_CREATION=true
+TRACK_WIDGET_CREATION=false
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=/Users/simon/Desktop/BachlorOppgave/Frontend/.dart_tool/package_config.json
+PACKAGE_CONFIG=.packages
