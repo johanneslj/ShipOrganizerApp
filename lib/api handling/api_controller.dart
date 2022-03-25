@@ -39,7 +39,7 @@ class ApiService {
   }
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.195.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
 
   Dio dio = Dio();
 
@@ -262,9 +262,13 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(int? id, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(String? oldEmail, String email, String fullName, List<String> departments) async {
     bool success = false;
     try {
+      String? token = await _getToken();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var data = {"name": fullName, "oldEmail":oldEmail, "newEmail":email, "departments": departments};
+      var response = await dio.post(baseUrl + "api/user/edit-user", data: data);
       success = false;
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);

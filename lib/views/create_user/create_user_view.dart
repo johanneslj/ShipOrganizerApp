@@ -263,9 +263,10 @@ class _CreateUserState extends State<CreateUser> {
                                     onPressed: isLoading
                                         ? null
                                         : () async {
+                                      FocusScope.of(context).requestFocus(FocusNode());
                                             if (_formKey.currentState!.validate()) {
                                               bool success = await apiService.editUser(
-                                                  widget.userToEdit?.id,
+                                                  widget.userToEdit?.email,
                                                   emailController.value.text,
                                                   fullNameController.value.text,
                                                   _selectedDepartments);
@@ -311,13 +312,6 @@ class _CreateUserState extends State<CreateUser> {
   Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.registerUser(email, fullName, departments);
-    setLoading(false);
-    return success;
-  }
-
-  Future<bool> editUser(int id, String email, String fullName, List<String> departments) async {
-    setLoading(true);
-    bool success = await apiService.editUser(id, email, fullName, departments);
     setLoading(false);
     return success;
   }
