@@ -41,7 +41,7 @@ class Inventory extends StatelessWidget {
 
   final Location _location = Location();
 
-  ApiService apiService = ApiService.getInstance();
+  final ApiService apiService = ApiService.getInstance();
 
   @override
   Widget build(BuildContext context) {
