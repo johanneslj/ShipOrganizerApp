@@ -68,6 +68,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
             filter: showSelectDepartmentMenu,
             controller: _controller,
             recommended: true,
+            isMobile: true,
             onScan: scanBarcodeNormal,
           )),
       drawer: const SideMenu(),

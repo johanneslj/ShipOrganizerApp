@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'inventory_widget.dart';
+import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'item.dart';
 
 /// View where the user can see the inventory for their department.
@@ -14,9 +16,7 @@ import 'item.dart';
 /// Uses the [Inventory] widget to display the items. When adding or removing items a confirmation
 /// [AddRemoveItemDialog] pops up and prompts user for amount to add or remove of item.
 ///
-/// TODO User and API calls for inventory usage should be handled here.
 ///
-/// TODO Implement caching to local storage to be able to close and open app offline, in case of no internet.
 class InventoryView extends StatefulWidget {
   const InventoryView({Key? key}) : super(key: key);
 
@@ -41,6 +41,7 @@ class _InventoryViewState extends State<InventoryView> {
     dataLoadFunction();
     super.initState();
   }
+
   dataLoadFunction() async {
     setState(() {
       _isLoading = true;
@@ -57,30 +58,107 @@ class _InventoryViewState extends State<InventoryView> {
 
   @override
   Widget build(BuildContext context) {
-    apiService.setContext(context);
     final colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
+    bool mobile =
+        (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
+    apiService.setContext(context);
+    return createView(context, colorScheme);
+
+      Scaffold(
+      appBar: PreferredSize(
+          preferredSize:
+              // Creates top padding for the top bar so that it starts below status/notification bar.
+              mobile
+                  ? Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).viewPadding.top + 32.0)
+                  : Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).viewPadding.top + 60.0),
+          child: TopBar(
+            onSearch: onSearch,
+            onClear: onClear,
+            filter: showSelectDepartmentMenu,
+            controller: _controller,
+            recommended: false,
+            isMobile: false,
+            onScan: scanBarcodeNormal,
+          )),
+      body: _isLoading ? circularProgress() : createView(context, colorScheme),
+    );
+  }
+
+
+  Widget createView(BuildContext context, colorScheme) {
+    if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
+      return
+      Scaffold(
         appBar: PreferredSize(
             preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
+            // Creates top padding for the top bar so that it starts below status/notification bar.
                 Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 32.0),
+                MediaQuery.of(context).viewPadding.top + 32.0),
             child: TopBar(
               onSearch: onSearch,
               onClear: onClear,
               filter: showSelectDepartmentMenu,
               controller: _controller,
               recommended: false,
+              isMobile: true,
               onScan: scanBarcodeNormal,
             )),
         drawer: const SideMenu(),
-        body: _isLoading ? circularProgress() : GestureDetector(
+        body: _isLoading
+            ? circularProgress()
+            : GestureDetector(
           // Used to remove keyboard on tap outside.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: RefreshIndicator(onRefresh: () => getItems(),
-          child: Inventory(items: displayedItems,onConfirm:getItems),color: colorScheme.onPrimary,
+          child: RefreshIndicator(
+              onRefresh: () => getItems(),
+              child: Inventory(items: displayedItems, onConfirm: getItems),
+              color: colorScheme.onPrimary,
               backgroundColor: colorScheme.primary),
-        ));
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: PreferredSize(
+            preferredSize:
+            // Creates top padding for the top bar so that it starts below status/notification bar.
+                Size(MediaQuery.of(context).size.width,
+                MediaQuery.of(context).viewPadding.top + 60.0),
+            child: TopBar(
+              onSearch: onSearch,
+              onClear: onClear,
+              filter: showSelectDepartmentMenu,
+              controller: _controller,
+              recommended: false,
+              isMobile: false,
+              onScan: scanBarcodeNormal,
+            )),
+        body: _isLoading
+            ? circularProgress()
+            : Row(
+          children: [
+            const Expanded(
+              flex: 2,
+              child: SideMenu(),
+            ),
+            Expanded(
+                flex: 5,
+                child: GestureDetector(
+                  // Used to remove keyboard on tap outside.
+                  onTap: () =>
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                  child: RefreshIndicator(
+                      onRefresh: () => getItems(),
+                      child: Inventory(
+                          items: displayedItems, onConfirm: getItems),
+                      color: colorScheme.onPrimary,
+                      backgroundColor: colorScheme.primary),
+                )),
+          ],
+        ),
+      );
+    }
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -110,8 +188,8 @@ class _InventoryViewState extends State<InventoryView> {
     }
     setState(() {
       displayedItems = result;
-    });}
-
+    });
+  }
 
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -119,8 +197,8 @@ class _InventoryViewState extends State<InventoryView> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes =
-      await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -132,6 +210,7 @@ class _InventoryViewState extends State<InventoryView> {
       _controller.text = barcodeScanRes;
     });
   }
+
   /// Displays the select department pop up menu, where the user can select which department's inventory
   /// they want to view.
   void showSelectDepartmentMenu() async {
@@ -141,7 +220,7 @@ class _InventoryViewState extends State<InventoryView> {
         items: await getPopupMenuItems());
   }
 
-    /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
+  /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     List<String> departments = await apiService.getDepartments();
     String activeDepartment = await apiService.getActiveDepartment();
@@ -149,17 +228,18 @@ class _InventoryViewState extends State<InventoryView> {
     departments.insert(0, activeDepartment);
 
     List<PopupMenuItem> popMenuItems = [];
-    for(int i=0; i<departments.length; i++) {
+    for (int i = 0; i < departments.length; i++) {
       popMenuItems.add(
         PopupMenuItem(
           child: Row(
             children: [
               Radio(
                   groupValue: selectedRadioButton,
-                  value: i, onChanged: (int? value) {  },
-                  fillColor:MaterialStateColor.resolveWith((states) =>  Theme.of(context).colorScheme.secondary)
-              ),
-             Text(departments[i]),
+                  value: i,
+                  onChanged: (int? value) {},
+                  fillColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).colorScheme.secondary)),
+              Text(departments[i]),
             ],
           ),
           onTap: () async {
@@ -168,7 +248,7 @@ class _InventoryViewState extends State<InventoryView> {
               _isLoading = true;
             });
             selectedDepartment.departmentName = departments[i];
-            await apiService.storage.write(key:"items",value:"");
+            await apiService.storage.write(key: "items", value: "");
             await getItems();
             setState(() {
               _isLoading = false;
@@ -211,7 +291,7 @@ class _InventoryViewState extends State<InventoryView> {
     return popMenuItems;
   }
 
-  void changeSelectedRadioButton(int value){
+  void changeSelectedRadioButton(int value) {
     setState(() {
       selectedRadioButton = value;
     });
@@ -219,8 +299,8 @@ class _InventoryViewState extends State<InventoryView> {
 
   Future<void> getItems() async {
     List<Item> displayed = [];
-      displayed = await apiService.getItems(selectedDepartment.departmentName);
-    setState((){
+    displayed = await apiService.getItems(selectedDepartment.departmentName);
+    setState(() {
       items = displayed;
       displayedItems = items;
     });
