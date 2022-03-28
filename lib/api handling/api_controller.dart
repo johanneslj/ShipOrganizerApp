@@ -99,7 +99,12 @@ class ApiService {
   /// The data is sent to the API where it is handled to create a new user
   Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     bool success = false;
-    var data = {'email': email, 'fullname': fullName, 'departments': departments};
+
+    var data = {
+      'email': email,
+      'fullname': fullName,
+      'departments': departments
+    };
     try {
       await _setBearerForAuthHeader();
       await dio.post(baseUrl + "auth/register", data: data);
@@ -178,8 +183,8 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(
-      String? oldEmail, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(String? oldEmail, String email, String fullName,
+      List<String> departments) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
@@ -272,14 +277,15 @@ class ApiService {
   }
 
   /// Creates a new product which can be added to the backend
-  Future<bool> createNewProduct(
-      String productName, String productNumber, String stock, String barcode) async {
+  Future<bool> createNewProduct(String productName, String productNumber,
+      String desiredStock, String stock, String barcode) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
       var data = {
         "productName": productName,
         "productNumber": productNumber,
+        "desiredStock": desiredStock,
         "stock": stock,
         "barcode": barcode,
         "department": await getActiveDepartment()
@@ -295,7 +301,8 @@ class ApiService {
     return success;
   }
 
-  Future<bool> editProduct(String productName, String productNumber, String barcode) async {
+  Future<bool> editProduct(String productName, String productNumber,
+      String desiredStock, String barcode) async {
     bool success = false;
 
     try {
@@ -303,11 +310,13 @@ class ApiService {
       var data = {
         "productName": productName,
         "productNumber": productNumber,
+        "desiredStock": desiredStock,
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
 
-      var response = await dio.post(baseUrl + "api/product/new-product", data: data);
+      var response =
+          await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }

@@ -82,6 +82,7 @@
   "photoLibrary": "Photo library",
   "camera": "Camera",
   "activeDepartment": "Active department",
+  "desiredStock": "Desired stock",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
