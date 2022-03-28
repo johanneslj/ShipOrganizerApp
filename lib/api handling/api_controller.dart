@@ -130,20 +130,24 @@ class ApiService {
       await dio.post(baseUrl + "auth/register", data: data);
       success = true;
     } on DioError catch (e) {
-      switch (e.response!.statusCode) {
-        case 403:
-          showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
-          forceLogOut();
-          break;
-        case 409:
-          showErrorToast(AppLocalizations.of(buildContext)!.userAlreadyExists);
-          break;
-        case 400:
-          showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
-          break;
-      }
+      handleRegistrationDioError(e);
     }
     return success;
+  }
+
+  void handleRegistrationDioError(DioError e) {
+    switch (e.response!.statusCode) {
+      case 403:
+        showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
+        forceLogOut();
+        break;
+      case 409:
+        showErrorToast(AppLocalizations.of(buildContext)!.userAlreadyExists);
+        break;
+      case 400:
+        showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
+        break;
+    }
   }
 
   /// Uses a users email to send them a verification code
@@ -169,18 +173,24 @@ class ApiService {
     try {
       String? token = await _getToken();
       if (token != null) {
-        dio.options.headers["Authorization"] = "Bearer $token";
-        await dio.get(baseUrl +
-            "api/user/check-valid-verification-code?email=" +
-            email +
-            "&code=" +
-            verificationCode);
-        success = true;
+        success = await verifyCodeAndGetSuccess(token, email, verificationCode);
       }
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.failedToConfirmCode);
       success = false;
     }
+    return success;
+  }
+
+  Future<bool> verifyCodeAndGetSuccess(String token, String email, String verificationCode) async {
+    bool success = false;
+    dio.options.headers["Authorization"] = "Bearer $token";
+    await dio.get(baseUrl +
+        "api/user/check-valid-verification-code?email=" +
+        email +
+        "&code=" +
+        verificationCode);
+    success = true;
     return success;
   }
 
@@ -200,17 +210,21 @@ class ApiService {
         storage.delete(key: "jwt");
       }
     } on DioError catch (e) {
-      switch (e.response!.statusCode) {
-        case 304:
-          showErrorToast(AppLocalizations.of(buildContext)!.couldNotChangePassword);
-          break;
-        case 400:
-          showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
-          break;
-      }
+      handleNewPasswordDioError(e);
       success = false;
     }
     return success;
+  }
+
+  void handleNewPasswordDioError(DioError e) {
+    switch (e.response!.statusCode) {
+      case 304:
+        showErrorToast(AppLocalizations.of(buildContext)!.couldNotChangePassword);
+        break;
+      case 400:
+        showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
+        break;
+    }
   }
 
   /// Gets all the users from the server
