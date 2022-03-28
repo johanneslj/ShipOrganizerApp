@@ -14,17 +14,19 @@ import 'package:intl/intl.dart';
 
 
 class ApiService {
-  /// Ensures there can only be created one of the API service
-  /// This makes it a singleton
   static final ApiService _apiService = ApiService._internal();
   late BuildContext buildContext;
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+  Dio dio = Dio();
+  String baseUrl = "http://10.22.195.237:8080/";
   late DateTime date = DateTime(1900);
+
+  ApiService._internal();
 
   factory ApiService(BuildContext? context) {
     if (context != null) {
       _apiService.buildContext = context;
     }
-
     return _apiService;
   }
 
@@ -32,16 +34,9 @@ class ApiService {
     return _apiService;
   }
 
-  ApiService._internal();
-
   void setContext(BuildContext context) {
     buildContext = context;
   }
-
-  FlutterSecureStorage storage = const FlutterSecureStorage();
-  String baseUrl = "http://10.22.195.237:8080/";
-
-  Dio dio = Dio();
 
   /// Validates the token which is currently in secure storage
   /// Returns false if token is invalid else it returns true
@@ -67,7 +62,6 @@ class ApiService {
     } catch (e) {
       token = "No Token";
     }
-
     return token;
   }
 
@@ -77,7 +71,6 @@ class ApiService {
   /// is stored on the device in secure storage
   Future<bool> attemptToLogIn(String email, String password) async {
     bool success = false;
-
     var data = {'email': email, 'password': password};
     try {
       var response = await dio.post(baseUrl + "auth/login", data: data);
@@ -99,14 +92,12 @@ class ApiService {
   /// false otherwise
   Future<bool> signOut() async {
     bool success = false;
-
     try {
       await storage.delete(key: "jwt");
       success = true;
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.couldntLogOut);
     }
-
     return success;
   }
 
@@ -132,7 +123,6 @@ class ApiService {
   /// The data is sent to the API where it is handled to create a new user
   Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     bool success = false;
-
     var data = {'email': email, 'fullname': fullName, 'departments': departments};
     try {
       String? token = await _getToken();
@@ -145,17 +135,14 @@ class ApiService {
           showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
           forceLogOut();
           break;
-
         case 409:
           showErrorToast(AppLocalizations.of(buildContext)!.userAlreadyExists);
           break;
-
         case 400:
           showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
           break;
       }
     }
-
     return success;
   }
 
@@ -170,7 +157,6 @@ class ApiService {
       success = true;
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.unableToSendCode);
-
       success = false;
     }
     return success;
@@ -180,7 +166,6 @@ class ApiService {
   /// Returns true if the code is valid otherwise it returns false
   Future<bool> verifyVerificationCode(String email, String verificationCode) async {
     bool success = false;
-
     try {
       String? token = await _getToken();
       if (token != null) {
@@ -190,14 +175,12 @@ class ApiService {
             email +
             "&code=" +
             verificationCode);
-
         success = true;
       }
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.failedToConfirmCode);
       success = false;
     }
-
     return success;
   }
 
@@ -207,9 +190,7 @@ class ApiService {
   /// user depending on the error code received
   Future<bool> setNewPassword(String email, String verificationCode, String password) async {
     bool success = false;
-
     var data = {'email': email, 'code': verificationCode, 'password': password};
-
     try {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
@@ -223,15 +204,12 @@ class ApiService {
         case 304:
           showErrorToast(AppLocalizations.of(buildContext)!.couldNotChangePassword);
           break;
-
         case 400:
           showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
           break;
       }
-
       success = false;
     }
-
     return success;
   }
 
@@ -265,7 +243,7 @@ class ApiService {
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    //TODO Make this interact with backend :)
+    // TODO Make this interact with backend :)
 
     return success;
   }
@@ -311,7 +289,6 @@ class ApiService {
         const LatLng(0, 0): [Report()]
       };
     }
-
     return mapMarkers;
   }
 
@@ -331,7 +308,6 @@ class ApiService {
         const LatLng(0, 0): [Report()]
       };
     }
-
     return mapMarkers;
   }
 
@@ -348,9 +324,6 @@ class ApiService {
       List<Report> reportsOnSameLatLng = <Report>[];
       for (var report in List<dynamic>.from(value)) {
         {
-          /// A report is constructed using the factory pattern
-          /// First an empty Report is created then each of its fields
-          /// are set sequentially until all of them have a value
           Report reportFromData = Report();
           Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
             switch (identifier) {
@@ -466,7 +439,6 @@ class ApiService {
           date = DateTime.now();
         }
       }
-
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -491,7 +463,6 @@ class ApiService {
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-
     return items;
   }
 
@@ -530,10 +501,8 @@ class ApiService {
   Future<void> updateStock(String productNumber, String username, int amount,
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
-
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
-
     dynamic data = {
       "productNumber": productNumber,
       "username": username,
@@ -542,7 +511,6 @@ class ApiService {
       "longitude": longitude,
       "datetime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
     };
-
     if (connectionCode == 200) {
       await dio.post(baseUrl + "api/product/setNewStock", data: data);
     } else {
@@ -568,7 +536,6 @@ class ApiService {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
       int? connectionCode = await testConnection();
-
       if (connectionCode == 200) {
         var response = await dio.get(baseUrl + "api/user/check-role");
         rights = response.data;
