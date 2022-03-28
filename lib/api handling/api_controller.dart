@@ -444,6 +444,41 @@ class ApiService {
           date = DateTime.now();
         }
       }
+      else{
+        if(localStorage != null){
+          if(localStorage.length > 3){
+            String? storageString = await storage.read(key: "items");
+            List<dynamic> storageItems = jsonDecode(storageString!);
+            String name = "";
+            String number = "";
+            String ean13 = "";
+            int stock = 0;
+            for (var product in storageItems) {
+              product.forEach((key, value) {
+                switch (key) {
+                  case "ean13":
+                    ean13 = value;
+                    break;
+                  case "name":
+                    name = value;
+                    break;
+                  case "productNumber":
+                    number = value;
+                    break;
+                  case "amount":
+                    stock = value;
+                    break;
+                }
+              });
+              newItems.add(Item(
+                  name: name, productNumber: number, ean13: ean13, amount: stock));
+            }
+            apiItems = newItems;
+          }
+        }
+
+      }
+
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -459,7 +494,7 @@ class ApiService {
     try {
       if (connectionCode == 200) {
         var response = await dio
-            .post(baseUrl + "product/RecommendedInventory", data: {"department": department});
+            .post(baseUrl + "api/product/get-recommended-inventory", data: {"department": department});
         if (response.statusCode == 200) {
           items = _getItemsFromResponse(response);
         }
@@ -506,6 +541,7 @@ class ApiService {
       if (connectionCode == 200) {
         var response = await dio.get(baseUrl + "api/user/check-role");
         rights = response.data;
+        storage.write(key: "userRights", value: rights);
       }
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
