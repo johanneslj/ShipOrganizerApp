@@ -554,7 +554,7 @@ class ApiService {
                 amount: stock));
           }
 
-          if(localstorage?.length == 0 || localstorage == "[]"){
+          if(localstorage?.length == 0 || localstorage == "[]" || localstorage == null){
             storage.write(key: "items", value: jsonEncode(apiItems));
           }
           else{
