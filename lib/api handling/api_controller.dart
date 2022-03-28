@@ -449,31 +449,12 @@ class ApiService {
 
   /// Gets pending order from api.
   /// Returns a list of orders
-  Future<List<Order>> getPendingOrder() async {
+  Future<List<Order>> getPendingOrders() async {
     int? connectionCode = await testConnection();
     await _setBearerForAuthHeader();
     List<Order> pendingOrders = [];
-    Response response;
     if (connectionCode == 200) {
-      response = await dio.get(baseUrl + "orders/admin/pending");
-      if (response.statusCode == 200) {
-        List<dynamic> orders = List<dynamic>.from(response.data);
-        for (var order in orders) {
-          String imageName = "";
-          String department = "";
-          order.forEach((key, value) {
-            switch (key) {
-              case "imagename":
-                imageName = value;
-                break;
-              case "departmentName":
-                department = value;
-                break;
-            }
-          });
-          pendingOrders.add(Order(imagename: imageName, department: department));
-        }
-      }
+      pendingOrders = await _getPendingOrdersFromApi();
     }
     return pendingOrders;
   }
@@ -521,22 +502,7 @@ class ApiService {
       response = await dio.get(baseUrl + "orders/confirmed");
 
       if (response.statusCode == 200) {
-        List<dynamic> orders = List<dynamic>.from(response.data);
-        for (var order in orders) {
-          String imageName = "";
-          String department = "";
-          order.forEach((key, value) {
-            switch (key) {
-              case "imagename":
-                imageName = value;
-                break;
-              case "departmentName":
-                department = value;
-                break;
-            }
-          });
-          confirmedOrders.add(Order(imagename: imageName, department: department));
-        }
+        confirmedOrders = _getOrdersFromResponse(response);
       }
     }
     return confirmedOrders;
@@ -573,6 +539,36 @@ class ApiService {
   /// Sets a new active department in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
+  }
+
+  Future<List<Order>> _getPendingOrdersFromApi() async {
+    List<Order> pendingOrders = [];
+    Response response = await dio.get(baseUrl + "orders/admin/pending");
+    if (response.statusCode == 200) {
+      pendingOrders = _getOrdersFromResponse(response);
+    }
+    return pendingOrders;
+  }
+
+  List<Order> _getOrdersFromResponse(Response<dynamic> response) {
+    List<Order> pendingOrders = [];
+    List<dynamic> orders = List<dynamic>.from(response.data);
+    for (var order in orders) {
+      String imageName = "";
+      String department = "";
+      order.forEach((key, value) {
+        switch (key) {
+          case "imagename":
+            imageName = value;
+            break;
+          case "departmentName":
+            department = value;
+            break;
+        }
+      });
+      pendingOrders.add(Order(imagename: imageName, department: department));
+    }
+    return pendingOrders;
   }
 
   /// Uses the response from the API to create a Map with

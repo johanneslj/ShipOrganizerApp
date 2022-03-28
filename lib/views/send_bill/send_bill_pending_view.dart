@@ -116,7 +116,7 @@ class _pendingBill extends State<PendingBill> {
 
   Future<void> getPendingOrder() async {
     List<Order> order = [];
-    order = await apiService.getPendingOrder();
+    order = await apiService.getPendingOrders();
     setState(() {
       pendingOrders = order;
     });
