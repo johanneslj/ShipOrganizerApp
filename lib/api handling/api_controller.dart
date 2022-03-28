@@ -18,7 +18,7 @@ class ApiService {
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
   String baseUrl = "http://10.22.195.237:8080/";
-  late DateTime date = DateTime(1900);
+  late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
 
@@ -131,23 +131,13 @@ class ApiService {
     bool success = false;
     try {
       if (null != await _getToken()) {
-        success = await verifyCodeAndGetSuccess(email, verificationCode);
+        success = await _verifyCodeAndGetSuccess(email, verificationCode);
       }
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.failedToConfirmCode);
       success = false;
     }
     return success;
-  }
-
-  Future<bool> verifyCodeAndGetSuccess(String email, String verificationCode) async {
-    _setBearerForAuthHeader();
-    Response response = await dio.get(baseUrl +
-        "api/user/check-valid-verification-code?email=" +
-        email +
-        "&code=" +
-        verificationCode);
-    return response.statusCode == 200;
   }
 
   /// Uses email verification code and password to set a new password for a user
@@ -177,12 +167,7 @@ class ApiService {
     List<User> users = [];
     try {
       await _setBearerForAuthHeader();
-      var response = await dio.get(baseUrl + "api/user/all-users");
-      List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
-      for (Map<String, dynamic> user in usersListMap) {
-        User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
-        users.add(createdUser);
-      }
+      users = await _getAllUsersFromApi();
     } on DioError {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
       users = [User(name: "Unable to ", email: "get users", departments: [])];
@@ -247,7 +232,7 @@ class ApiService {
       var response = await dio.get(
         baseUrl + "reports/all-reports",
       );
-      mapMarkers = createReportsFromData(response);
+      mapMarkers = _createReportsFromData(response);
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.failedToGetMarkers);
       mapMarkers = {
@@ -266,7 +251,7 @@ class ApiService {
     try {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.get(baseUrl + "reports/reports-with-name=$name");
-      mapMarkers = createReportsFromData(response);
+      mapMarkers = _createReportsFromData(response);
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.failedToGetMarkers);
       mapMarkers = {
@@ -274,52 +259,6 @@ class ApiService {
       };
     }
     return mapMarkers;
-  }
-
-  /// Uses the response from the API to create a Map with
-  /// LatLng as keys with lists of reports as values
-  ///
-  /// The reports are created from the data, added to a list
-  /// and then lastly added to a map, based on if they should
-  /// be grouped together
-  Map<LatLng, List<Report>> createReportsFromData(var response) {
-    Map<LatLng, List<Report>> reports = <LatLng, List<Report>>{};
-    Map<String, dynamic> markers = Map<String, dynamic>.from(response.data);
-    markers.forEach((key, value) {
-      List<Report> reportsOnSameLatLng = <Report>[];
-      for (var report in List<dynamic>.from(value)) {
-        {
-          Report reportFromData = Report();
-          Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
-            switch (identifier) {
-              case "productName":
-                reportFromData.setName(reportFieldValue);
-                break;
-              case "quantity":
-                reportFromData.setQuantity(reportFieldValue);
-                break;
-              case "latitude":
-                reportFromData.setLatitude(reportFieldValue);
-                break;
-              case "longitude":
-                reportFromData.setLongitude(reportFieldValue);
-                break;
-              case "registrationDate":
-                reportFromData.setDate(DateTime.parse(reportFieldValue.split(".")[0]));
-                break;
-              case "fullName":
-                reportFromData.setUserName(reportFieldValue);
-                break;
-            }
-          });
-          reportsOnSameLatLng.add(reportFromData);
-        }
-        double latitude = double.parse(key.split(", ")[0]);
-        double longitude = double.parse(key.split(", ")[1]);
-        reports.putIfAbsent(LatLng(latitude, longitude), () => reportsOnSameLatLng);
-      }
-    });
-    return reports;
   }
 
   ///Test connection to api server
@@ -398,91 +337,33 @@ class ApiService {
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems(String department) async {
-    String? token = await _getToken();
-    List<Item> apiItems = [];
-    List<Item> newItems = [];
-    var localStorage = await storage.read(key: "items") ?? "[]";
+    List<Item> updatedAllItems = [];
+    var localStorage = await storage.read(key: "items");
     try {
-      int? connectionCode = await testConnection();
-      dio.options.headers["Authorization"] = "Bearer $token";
-      Response response;
-      if (connectionCode == 200) {
-        if (date.year == 1900 || localStorage.isEmpty) {
-          response =
-              await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
-        } else {
-          String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
-          response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
-              data: {"department": department, "DateTime": formattedDate});
-        }
-        if (response.statusCode == 200) {
-          apiItems = _getItemsFromResponse(response);
-          if (localStorage.isEmpty || localStorage == "[]") {
-            storage.write(key: "items", value: jsonEncode(apiItems));
-          } else {
-            String? storageString = await storage.read(key: "items");
-            List<dynamic> storageItems = jsonDecode(storageString!);
-            newItems = _getItemsFromJson(storageItems);
-            if (newItems.isNotEmpty) {
-              if (apiItems.any((item) =>
-                  item.productNumber ==
-                  newItems[newItems
-                          .indexWhere((element) => element.productNumber == item.productNumber)]
-                      .productNumber)) {
-                for (Item updatedItem in apiItems) {
-                  final index = newItems
-                      .indexWhere((element) => element.productNumber == updatedItem.productNumber);
-                  if (index >= 0) {
-                    newItems[index].amount = updatedItem.amount;
-                  }
-                }
-                await storage.write(key: "items", value: jsonEncode(newItems));
-              }
-            }
-            apiItems = newItems;
-          }
-          date = DateTime.now();
-        }
+      _setBearerForAuthHeader();
+      if (200 == await testConnection()) {
+        updatedAllItems = await _updateStoreAndGetItems(localStorage, department);
+      } else {
+        updatedAllItems = await _getItemsFromStorage(localStorage);
       }
-      else{
-        if(localStorage != null){
-          if(localStorage.length > 3){
-            String? storageString = await storage.read(key: "items");
-            List<dynamic> storageItems = jsonDecode(storageString!);
-            String name = "";
-            String number = "";
-            String ean13 = "";
-            int stock = 0;
-            for (var product in storageItems) {
-              product.forEach((key, value) {
-                switch (key) {
-                  case "ean13":
-                    ean13 = value;
-                    break;
-                  case "name":
-                    name = value;
-                    break;
-                  case "productNumber":
-                    number = value;
-                    break;
-                  case "amount":
-                    stock = value;
-                    break;
-                }
-              });
-              newItems.add(Item(
-                  name: name, productNumber: number, ean13: ean13, amount: stock));
-            }
-            apiItems = newItems;
-          }
-        }
-
-      }
-
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    return apiItems;
+    return updatedAllItems;
+  }
+
+  Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
+      String? localStorage, String department) async {
+    Response response;
+    if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
+      response =
+          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+    } else {
+      String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
+      response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
+          data: {"department": department, "DateTime": formattedDate});
+    }
+    return response;
   }
 
   ///Gets all products for the recommended inventory report
@@ -493,8 +374,8 @@ class ApiService {
     List<Item> items = [];
     try {
       if (connectionCode == 200) {
-        var response = await dio
-            .post(baseUrl + "api/product/get-recommended-inventory", data: {"department": department});
+        var response = await dio.post(baseUrl + "api/product/get-recommended-inventory",
+            data: {"department": department});
         if (response.statusCode == 200) {
           items = _getItemsFromResponse(response);
         }
@@ -694,6 +575,52 @@ class ApiService {
     await storage.write(key: "activeDepartment", value: department);
   }
 
+  /// Uses the response from the API to create a Map with
+  /// LatLng as keys with lists of reports as values
+  ///
+  /// The reports are created from the data, added to a list
+  /// and then lastly added to a map, based on if they should
+  /// be grouped together
+  Map<LatLng, List<Report>> _createReportsFromData(var response) {
+    Map<LatLng, List<Report>> reports = <LatLng, List<Report>>{};
+    Map<String, dynamic> markers = Map<String, dynamic>.from(response.data);
+    markers.forEach((key, value) {
+      List<Report> reportsOnSameLatLng = <Report>[];
+      for (var report in List<dynamic>.from(value)) {
+        {
+          Report reportFromData = Report();
+          Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
+            switch (identifier) {
+              case "productName":
+                reportFromData.setName(reportFieldValue);
+                break;
+              case "quantity":
+                reportFromData.setQuantity(reportFieldValue);
+                break;
+              case "latitude":
+                reportFromData.setLatitude(reportFieldValue);
+                break;
+              case "longitude":
+                reportFromData.setLongitude(reportFieldValue);
+                break;
+              case "registrationDate":
+                reportFromData.setDate(DateTime.parse(reportFieldValue.split(".")[0]));
+                break;
+              case "fullName":
+                reportFromData.setUserName(reportFieldValue);
+                break;
+            }
+          });
+          reportsOnSameLatLng.add(reportFromData);
+        }
+        double latitude = double.parse(key.split(", ")[0]);
+        double longitude = double.parse(key.split(", ")[1]);
+        reports.putIfAbsent(LatLng(latitude, longitude), () => reportsOnSameLatLng);
+      }
+    });
+    return reports;
+  }
+
   List<Item> _getItemsFromResponse(Response<dynamic> response) {
     List<dynamic> products = List<dynamic>.from(response.data);
     return _getItemsFromJson(products);
@@ -727,26 +654,6 @@ class ApiService {
     return items;
   }
 
-  bool _storeUserDataFromResponseAndGetSuccess(Response<dynamic> response) {
-    if (response.data != null) {
-      storage.write(key: "jwt", value: response.data["token"]);
-      storage.write(key: "name", value: response.data["fullname"]);
-      storage.write(key: "username", value: response.data["email"]);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  List<String> _getDepartmentsFromResponse(Response<dynamic> response) {
-    List<String> departments = [];
-    List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
-    for (var department in departmentsList) {
-      departments.add(department["name"]);
-    }
-    return departments;
-  }
-
   Future<void> _setBearerForAuthHeader() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
@@ -762,6 +669,47 @@ class ApiService {
       token = "No Token";
     }
     return token;
+  }
+
+  bool _storeUserDataFromResponseAndGetSuccess(Response<dynamic> response) {
+    if (response.data != null) {
+      storage.write(key: "jwt", value: response.data["token"]);
+      storage.write(key: "name", value: response.data["fullname"]);
+      storage.write(key: "username", value: response.data["email"]);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<User>> _getAllUsersFromApi() async {
+    List<User> users = [];
+    var response = await dio.get(baseUrl + "api/user/all-users");
+    List<Map<String, dynamic>> usersListMap = List<Map<String, dynamic>>.from(response.data);
+    for (Map<String, dynamic> user in usersListMap) {
+      User createdUser = User(name: user["name"], email: user["email"], departments: ["Bridge"]);
+      users.add(createdUser);
+    }
+    return users;
+  }
+
+  Future<bool> _verifyCodeAndGetSuccess(String email, String verificationCode) async {
+    _setBearerForAuthHeader();
+    Response response = await dio.get(baseUrl +
+        "api/user/check-valid-verification-code?email=" +
+        email +
+        "&code=" +
+        verificationCode);
+    return response.statusCode == 200;
+  }
+
+  List<String> _getDepartmentsFromResponse(Response<dynamic> response) {
+    List<String> departments = [];
+    List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
+    for (var department in departmentsList) {
+      departments.add(department["name"]);
+    }
+    return departments;
   }
 
   void _handleRegistrationDioError(DioError e) {
@@ -788,6 +736,53 @@ class ApiService {
         _showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
         break;
     }
+  }
+
+  Future<List<Item>> _updateStoreAndGetItems(String? localStorage, String department) async {
+    List<Item> updatedItemList = [];
+    Response response =
+    await _fetchNecessaryResponseWithItemsToUpdate(localStorage, department);
+    if (response.statusCode == 200) {
+      List<Item> apiItems = _getItemsFromResponse(response);
+      if (localStorage == null || localStorage.isEmpty || localStorage == "[]") {
+        updatedItemList = apiItems;
+        storage.write(key: "items", value: jsonEncode(updatedItemList));
+      } else {
+        updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
+      }
+      lastUpdatedDate = DateTime.now();
+    }
+    return updatedItemList;
+  }
+
+  Future<List<Item>> _updateAndStoreItems(List<Item> apiItems, List<Item> updatedItemList) async {
+    String? storageString = await storage.read(key: "items");
+    List<Item> itemsFromStorage = _getItemsFromJson(jsonDecode(storageString!));
+    _updateItemsFromApiToList(apiItems, itemsFromStorage);
+    updatedItemList = itemsFromStorage;
+    await storage.write(key: "items", value: jsonEncode(updatedItemList));
+    return updatedItemList;
+  }
+
+  void _updateItemsFromApiToList(List<Item> updatedItems, List<Item> items) {
+    for (Item updatedItem in updatedItems) {
+      final index =
+          items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
+      if (index >= 0) {
+        items[index].amount = updatedItem.amount;
+      } else if (index == -1) {
+        items.add(updatedItem);
+      }
+    }
+  }
+
+  Future<List<Item>> _getItemsFromStorage(String? localStorage) async {
+    List<Item> storedItems = [];
+    if (localStorage != null && localStorage.length > 3) {
+      String? storageString = await storage.read(key: "items");
+      storedItems = _getItemsFromJson(jsonDecode(storageString!));
+    }
+    return storedItems;
   }
 
   void _showErrorToast(String errorMessage) {
