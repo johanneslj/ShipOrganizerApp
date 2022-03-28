@@ -195,8 +195,6 @@ class ApiService {
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    //TODO Make this interact with backend :)
-
     return success;
   }
 
@@ -286,7 +284,6 @@ class ApiService {
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
-
       var response = await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
@@ -300,7 +297,6 @@ class ApiService {
   Future<bool> editProduct(
       String productName, String productNumber, String desiredStock, String barcode) async {
     bool success = false;
-
     try {
       await _setBearerForAuthHeader();
       var data = {
@@ -310,7 +306,6 @@ class ApiService {
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
-
       var response = await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
@@ -318,7 +313,6 @@ class ApiService {
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-
     return success;
   }
 
@@ -490,7 +484,6 @@ class ApiService {
     Response response;
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "orders/confirmed");
-
       if (response.statusCode == 200) {
         confirmedOrders = _getOrdersFromResponse(response);
       }
