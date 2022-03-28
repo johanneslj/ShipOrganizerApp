@@ -32,13 +32,12 @@ class _MyAccount extends State<MyAccount> {
 
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     await getUserRights();
     await getUserFullName();
-    // fetch you data over here
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
   }
 
