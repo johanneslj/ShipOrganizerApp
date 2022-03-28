@@ -190,8 +190,8 @@ class ApiService {
         "newEmail": email,
         "departments": departments
       };
-      var response = await dio.post(baseUrl + "api/user/edit-user", data: data);
-      success = false;
+      Response response = await dio.post(baseUrl + "api/user/edit-user", data: data);
+      success = response.statusCode == 220;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -629,22 +629,23 @@ class ApiService {
       int desiredStock = 0;
       product.forEach((key, value) {
         switch (key) {
-          case "ean13":
+          case "barcode":
             ean13 = value;
             break;
-          case "name":
+          case "productName":
             name = value;
             break;
           case "productNumber":
             number = value;
             break;
-          case "amount":
+          case "stock":
             stock = int.parse(value);
             break;
           case "desiredStock":
             desiredStock = int.parse(value);
             break;
         }
+
       });
       items.add(Item(
           name: name,
