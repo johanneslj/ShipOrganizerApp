@@ -417,34 +417,7 @@ class ApiService {
               data: {"department": department,"DateTime":formattedDate});
         }
         if (response.statusCode == 200) {
-          List<dynamic> products = List<dynamic>.from(response.data);
-          String name = "";
-          String number = "";
-          String ean13 = "";
-          int stock = 0;
-          for (var product in products) {
-            product.forEach((key, value) {
-              switch (key) {
-                case "barcode":
-                  ean13 = value;
-                  break;
-                case "productName":
-                  name = value;
-                  break;
-                case "productNumber":
-                  number = value;
-                  break;
-                case "stock":
-                  stock = int.parse(value);
-                  break;
-              }
-            });
-            apiItems.add(Item(
-                name: name,
-                productNumber: number,
-                ean13: ean13,
-                amount: stock));
-          }
+          addProductsFromResponseToList(response, apiItems);
 
           if(localstorage?.length == 0 || localstorage == "[]"){
             storage.write(key: "items", value: jsonEncode(apiItems));
@@ -512,30 +485,7 @@ class ApiService {
         var response = await dio.post(baseUrl + "product/RecommendedInventory",
             data: {"department": department});
         if (response.statusCode == 200) {
-          List<dynamic> products = List<dynamic>.from(response.data);
-          for (var product in products) {
-            String name = "";
-            String number = "";
-            String ean13 = "";
-            int stock = 0;
-            product.forEach((key, value) {
-              switch (key) {
-                case "barcode":
-                  ean13 = value;
-                  break;
-                case "productName":
-                  name = value;
-                  break;
-                case "productNumber":
-                  number = value;
-                  break;
-                case "stock":
-                  stock = int.parse(value);
-                  break;
-              }
-            });
-            items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
-          }
+          addProductsFromResponseToList(response, items);
         }
       }
     } catch (e) {
@@ -543,6 +493,37 @@ class ApiService {
     }
 
     return items;
+  }
+
+  void addProductsFromResponseToList(Response<dynamic> response, List<Item> apiItems) {
+    List<dynamic> products = List<dynamic>.from(response.data);
+    for (var product in products) {
+      String name = "";
+      String number = "";
+      String ean13 = "";
+      int stock = 0;
+      product.forEach((key, value) {
+        switch (key) {
+          case "barcode":
+            ean13 = value;
+            break;
+          case "productName":
+            name = value;
+            break;
+          case "productNumber":
+            number = value;
+            break;
+          case "stock":
+            stock = int.parse(value);
+            break;
+        }
+      });
+      apiItems.add(Item(
+          name: name,
+          productNumber: number,
+          ean13: ean13,
+          amount: stock));
+    }
   }
 
   /// Update stock for a specific product
