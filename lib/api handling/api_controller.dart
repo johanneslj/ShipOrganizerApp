@@ -467,7 +467,7 @@ class ApiService {
       };
 
       var response =
-          await dio.post(baseUrl + "api/product/new-product", data: data);
+          await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
