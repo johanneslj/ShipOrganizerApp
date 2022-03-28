@@ -66,9 +66,15 @@ class _LoginViewState extends State<LoginView> {
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
                   child: Column(
                     children: [
+                      //TODO use real logo
                       Image.asset(
                         "assets/maoyi-logo-white.png",
                         width: 200,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.companyName,
+                        style: const TextStyle(
+                            color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -145,9 +151,7 @@ class _LoginViewState extends State<LoginView> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              (const SetPasswordView())
-                                          ));
+                                          builder: (context) => (const SetPasswordView())));
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.forgotPassword,
@@ -183,17 +187,12 @@ class _LoginViewState extends State<LoginView> {
     return success;
   }
 
-
-  Future<void> checkDepartments(BuildContext context) async{
+  Future<void> checkDepartments(BuildContext context) async {
     List<String> departments = await apiService.getDepartments();
-    if(departments.length > 1){
-       Navigator.pushNamed(context, "/selectDepartment");
+    if (departments.length > 1) {
+      Navigator.pushNamed(context, "/selectDepartment");
+    } else {
+      Navigator.pushNamed(context, "/home");
     }
-    else{
-       Navigator.pushNamed(context, "/home");
-    }
-
-
   }
-
 }

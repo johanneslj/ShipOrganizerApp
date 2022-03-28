@@ -28,18 +28,14 @@ class SideMenu extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline6,
                     )),
                 const Divider(),
-                // TODO Add routes
-                _createRouteTextButton(context, AppLocalizations.of(context)!.scanNewInventory,
-                    const Icon(Icons.archive_sharp), '/'),
-                const Divider(),
-                _createRouteTextButton(context, AppLocalizations.of(context)!.map,
-                    const Icon(Icons.pin_drop_sharp), '/map'),
-                const Divider(),
                 _createRouteTextButton(context, AppLocalizations.of(context)!.addProduct,
                     const Icon(Icons.shopping_cart_sharp), '/newProduct'),
                 const Divider(),
                 _createRouteTextButton(context, AppLocalizations.of(context)!.recommendedInventory,
                     const Icon(Icons.inventory_sharp), '/recommendedInventory'),
+                const Divider(),
+                _createRouteTextButton(context, AppLocalizations.of(context)!.map,
+                    const Icon(Icons.pin_drop_sharp), '/map'),
               ],
             )),
             Expanded(
@@ -48,7 +44,7 @@ class SideMenu extends StatelessWidget {
               child: TextButton(
                   onPressed: () async {
                     bool success = await apiService.signOut();
-                    if(success) {
+                    if (success) {
                       Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
                     }
                   },

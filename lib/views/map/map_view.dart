@@ -17,8 +17,7 @@ class MapView extends StatefulWidget {
     Key? key,
     this.itemToShow,
   }) : super(key: key);
-  final String? itemToShow; //TODO make map widget use this to only show where this item
-  // has been used and not other items on the map
+  final String? itemToShow;
 
   @override
   State<StatefulWidget> createState() => _MapViewState();
