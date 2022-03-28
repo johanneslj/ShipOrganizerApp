@@ -100,11 +100,7 @@ class ApiService {
   Future<bool> registerUser(String email, String fullName, List<String> departments) async {
     bool success = false;
 
-    var data = {
-      'email': email,
-      'fullname': fullName,
-      'departments': departments
-    };
+    var data = {'email': email, 'fullname': fullName, 'departments': departments};
     try {
       await _setBearerForAuthHeader();
       await dio.post(baseUrl + "auth/register", data: data);
@@ -183,8 +179,8 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(String? oldEmail, String email, String fullName,
-      List<String> departments) async {
+  Future<bool> editUser(
+      String? oldEmail, String email, String fullName, List<String> departments) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
@@ -277,8 +273,8 @@ class ApiService {
   }
 
   /// Creates a new product which can be added to the backend
-  Future<bool> createNewProduct(String productName, String productNumber,
-      String desiredStock, String stock, String barcode) async {
+  Future<bool> createNewProduct(String productName, String productNumber, String desiredStock,
+      String stock, String barcode) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
@@ -301,8 +297,8 @@ class ApiService {
     return success;
   }
 
-  Future<bool> editProduct(String productName, String productNumber,
-      String desiredStock, String barcode) async {
+  Future<bool> editProduct(
+      String productName, String productNumber, String desiredStock, String barcode) async {
     bool success = false;
 
     try {
@@ -315,8 +311,7 @@ class ApiService {
         "department": await getActiveDepartment()
       };
 
-      var response =
-          await dio.post(baseUrl + "api/product/edit-product", data: data);
+      var response = await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -638,6 +633,7 @@ class ApiService {
       String number = "";
       String ean13 = "";
       int stock = 0;
+      int desiredStock = 0;
       product.forEach((key, value) {
         switch (key) {
           case "ean13":
@@ -652,9 +648,17 @@ class ApiService {
           case "amount":
             stock = int.parse(value);
             break;
+          case "desiredStock":
+            desiredStock = int.parse(value);
+            break;
         }
       });
-      items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
+      items.add(Item(
+          name: name,
+          productNumber: number,
+          ean13: ean13,
+          desiredStock: desiredStock,
+          amount: stock));
     }
     return items;
   }
@@ -745,8 +749,7 @@ class ApiService {
 
   Future<List<Item>> _updateStoreAndGetItems(String? localStorage, String department) async {
     List<Item> updatedItemList = [];
-    Response response =
-    await _fetchNecessaryResponseWithItemsToUpdate(localStorage, department);
+    Response response = await _fetchNecessaryResponseWithItemsToUpdate(localStorage, department);
     if (response.statusCode == 200) {
       List<Item> apiItems = _getItemsFromResponse(response);
       if (localStorage == null || localStorage.isEmpty || localStorage == "[]") {
