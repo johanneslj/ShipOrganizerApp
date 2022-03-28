@@ -69,9 +69,9 @@ class _newItem extends State<NewItem> {
   @override
   Widget build(BuildContext context) {
     if (!widget.isCreateNew) {
-      productNameController.text = widget.itemToEdit!.name;
+      productNameController.text = widget.itemToEdit!.productName;
       productNumberController.text = widget.itemToEdit!.productNumber!;
-      stockController.text = widget.itemToEdit!.amount.toString();
+      stockController.text = widget.itemToEdit!.stock.toString();
       desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
     }
 

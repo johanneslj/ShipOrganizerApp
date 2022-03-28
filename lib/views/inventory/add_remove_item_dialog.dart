@@ -30,7 +30,7 @@ class AddRemoveItemDialog extends Dialog {
         children: [
           Text(
             AppLocalizations.of(context)!.howMany +
-                item.name +
+                item.productName +
                 (isAdd
                     ? AppLocalizations.of(context)!.toAdd
                     : AppLocalizations.of(context)!.toRemove),
