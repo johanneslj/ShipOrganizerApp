@@ -517,12 +517,12 @@ class ApiService {
       if (connectionCode == 200) {
         if(date.year == 1900 || localstorage?.length == 0) {
           response =
-          await dio.post(baseUrl + "api/product/inventory", data: {"department": department});
+          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
         }
         else{
           String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
           response =
-          await dio.post(baseUrl + "api/product/UpdatedInventory", data: {"department": department,"DateTime":formattedDate});
+          await dio.post(baseUrl + "api/product/recently-updated-inventory", data: {"department": department,"DateTime":formattedDate});
         }
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
