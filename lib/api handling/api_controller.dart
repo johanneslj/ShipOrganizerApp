@@ -190,13 +190,11 @@ class ApiService {
         "newEmail": email,
         "departments": departments
       };
-      var response = await dio.post(baseUrl + "api/user/edit-user", data: data);
-      success = false;
+      Response response = await dio.post(baseUrl + "api/user/edit-user", data: data);
+      success = response.statusCode == 220;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    //TODO Make this interact with backend :)
-
     return success;
   }
 
@@ -286,7 +284,6 @@ class ApiService {
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
-
       var response = await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
@@ -300,7 +297,6 @@ class ApiService {
   Future<bool> editProduct(
       String productName, String productNumber, String desiredStock, String barcode) async {
     bool success = false;
-
     try {
       await _setBearerForAuthHeader();
       var data = {
@@ -310,7 +306,6 @@ class ApiService {
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
-
       var response = await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
@@ -318,7 +313,6 @@ class ApiService {
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-
     return success;
   }
 
@@ -354,20 +348,6 @@ class ApiService {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
     return updatedAllItems;
-  }
-
-  Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
-      String? localStorage, String department) async {
-    Response response;
-    if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
-      response =
-          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
-    } else {
-      String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
-      response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
-          data: {"department": department, "DateTime": formattedDate});
-    }
-    return response;
   }
 
   ///Gets all products for the recommended inventory report
@@ -504,7 +484,6 @@ class ApiService {
     Response response;
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "orders/confirmed");
-
       if (response.statusCode == 200) {
         confirmedOrders = _getOrdersFromResponse(response);
       }
@@ -543,6 +522,20 @@ class ApiService {
   /// Sets a new active department in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
+  }
+
+  Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
+      String? localStorage, String department) async {
+    Response response;
+    if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
+      response =
+      await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+    } else {
+      String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
+      response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
+          data: {"department": department, "DateTime": formattedDate});
+    }
+    return response;
   }
 
   Future<List<Order>> _getPendingOrdersFromApi() async {
@@ -637,22 +630,23 @@ class ApiService {
       int desiredStock = 0;
       product.forEach((key, value) {
         switch (key) {
-          case "ean13":
+          case "barcode":
             ean13 = value;
             break;
-          case "name":
+          case "productName":
             name = value;
             break;
           case "productNumber":
             number = value;
             break;
-          case "amount":
+          case "stock":
             stock = int.parse(value);
             break;
           case "desiredStock":
             desiredStock = int.parse(value);
             break;
         }
+
       });
       items.add(Item(
           name: name,
