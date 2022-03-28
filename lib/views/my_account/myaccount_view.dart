@@ -23,6 +23,7 @@ class _MyAccount extends State<MyAccount> {
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;
+  bool hasMultipleDepartments = false;
 
   @override
   void initState() {
@@ -34,6 +35,10 @@ class _MyAccount extends State<MyAccount> {
     setState(() {
       _isLoading = true;
     });
+    List<String> departments = await apiService.getDepartments();
+    if (departments.length > 1) {
+      hasMultipleDepartments = true;
+    }
     await getUserRights();
     await getUserFullName();
     setState(() {
@@ -48,7 +53,8 @@ class _MyAccount extends State<MyAccount> {
       appBar: AppBar(
         actions: [
           PopupMenuButton(
-              icon: Icon(Icons.language_sharp, color: Theme.of(context).colorScheme.onPrimary),
+              icon: Icon(Icons.language_sharp,
+                  color: Theme.of(context).colorScheme.onPrimary),
               iconSize: 35,
               itemBuilder: (context) => [
                     PopupMenuItem(
@@ -103,12 +109,14 @@ class _MyAccount extends State<MyAccount> {
           ? circularProgress()
           : Center(
               child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 30, right: 30, top: 60, bottom: 10),
               child: Column(children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 40),
                   child: Text(fullName,
-                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
                 Expanded(
                   child: Column(children: getMenuItems(admin, context)),
@@ -121,11 +129,13 @@ class _MyAccount extends State<MyAccount> {
   /// Gets the right menu items base on admin rights
   List<Widget> getMenuItems(bool admin, BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
-    departmentCardList.add(DepartmentCard(
-      departmentName: AppLocalizations.of(context)!.changeDepartment,
-      destination: "/selectDepartment",
-      arguments: "false",
-    ));
+    if (hasMultipleDepartments) {
+      departmentCardList.add(DepartmentCard(
+        departmentName: AppLocalizations.of(context)!.changeDepartment,
+        destination: "/selectDepartment",
+        arguments: "false",
+      ));
+    }
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",
