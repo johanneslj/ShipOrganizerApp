@@ -677,7 +677,7 @@ class ApiService {
     List<Item> items = [];
     try {
       if (connectionCode == 200) {
-        var response = await dio.post(baseUrl + "product/RecommendedInventory",
+        var response = await dio.post(baseUrl + "api/product/get-recommended-inventory",
             data: {"department": department});
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
