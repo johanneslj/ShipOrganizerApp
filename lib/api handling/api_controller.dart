@@ -12,7 +12,6 @@ import 'package:ship_organizer_app/views/inventory/item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-
 class ApiService {
   /// Ensures there can only be created one of the API service
   /// This makes it a singleton
@@ -39,7 +38,7 @@ class ApiService {
   }
 
   FlutterSecureStorage storage = FlutterSecureStorage();
-  String baseUrl = "http://10.22.193.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
 
   Dio dio = Dio();
 
@@ -116,7 +115,8 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     var response = await dio.get(baseUrl + "api/user/departments");
-    List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
+    List<Map<String, dynamic>> departmentsList =
+        List<Map<String, dynamic>>.from(response.data);
     List<String> departments = [];
     for (var department in departmentsList) {
       departments.add(department["name"]);
@@ -130,10 +130,15 @@ class ApiService {
 
   /// Uses an email, password and list of departments to register a new user
   /// The data is sent to the API where it is handled to create a new user
-  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
+  Future<bool> registerUser(
+      String email, String fullName, List<String> departments) async {
     bool success = false;
 
-    var data = {'email': email, 'fullname': fullName, 'departments': departments};
+    var data = {
+      'email': email,
+      'fullname': fullName,
+      'departments': departments
+    };
     try {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
@@ -142,7 +147,8 @@ class ApiService {
     } on DioError catch (e) {
       switch (e.response!.statusCode) {
         case 403:
-          showErrorToast(AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
+          showErrorToast(
+              AppLocalizations.of(buildContext)!.notAllowedToCreateUser);
           forceLogOut();
           break;
 
@@ -178,7 +184,8 @@ class ApiService {
 
   /// Verifies if the code that has been entered is correct
   /// Returns true if the code is valid otherwise it returns false
-  Future<bool> verifyVerificationCode(String email, String verificationCode) async {
+  Future<bool> verifyVerificationCode(
+      String email, String verificationCode) async {
     bool success = false;
 
     try {
@@ -205,7 +212,8 @@ class ApiService {
   /// Returns true if successful false otherwise
   /// If an error is received from the server a error toast is shown to the
   /// user depending on the error code received
-  Future<bool> setNewPassword(String email, String verificationCode, String password) async {
+  Future<bool> setNewPassword(
+      String email, String verificationCode, String password) async {
     bool success = false;
 
     var data = {'email': email, 'code': verificationCode, 'password': password};
@@ -221,7 +229,8 @@ class ApiService {
     } on DioError catch (e) {
       switch (e.response!.statusCode) {
         case 304:
-          showErrorToast(AppLocalizations.of(buildContext)!.couldNotChangePassword);
+          showErrorToast(
+              AppLocalizations.of(buildContext)!.couldNotChangePassword);
           break;
 
         case 400:
@@ -264,8 +273,8 @@ class ApiService {
   /// Edits a users different details,
   /// An admin can send in to change another users email,
   /// full name, and which departments they have access to
-  Future<bool> editUser(
-      String? oldEmail, String email, String fullName, List<String> departments) async {
+  Future<bool> editUser(String? oldEmail, String email, String fullName,
+      List<String> departments) async {
     bool success = false;
     try {
       String? token = await _getToken();
@@ -369,7 +378,8 @@ class ApiService {
           /// First an empty Report is created then each of its fields
           /// are set sequentially until all of them have a value
           Report reportFromData = Report();
-          Map<String, dynamic>.from(report).forEach((identifier, reportFieldValue) {
+          Map<String, dynamic>.from(report)
+              .forEach((identifier, reportFieldValue) {
             switch (identifier) {
               case "productName":
                 reportFromData.setName(reportFieldValue);
@@ -415,8 +425,8 @@ class ApiService {
   }
 
   /// Creates a new product which can be added to the backend
-  Future<bool> createNewProduct(
-      String productName, String productNumber, String stock, String barcode) async {
+  Future<bool> createNewProduct(String productName, String productNumber,
+      String desiredStock, String stock, String barcode) async {
     bool success = false;
     try {
       String? token = await _getToken();
@@ -424,12 +434,14 @@ class ApiService {
       var data = {
         "productName": productName,
         "productNumber": productNumber,
+        "desiredStock": desiredStock,
         "stock": stock,
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
 
-      var response = await dio.post(baseUrl + "api/product/new-product", data: data);
+      var response =
+          await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -439,7 +451,8 @@ class ApiService {
     return success;
   }
 
-  Future<bool> editProduct(String productName, String productNumber, String barcode) async {
+  Future<bool> editProduct(String productName, String productNumber,
+      String desiredStock, String barcode) async {
     bool success = false;
 
     try {
@@ -448,11 +461,13 @@ class ApiService {
       var data = {
         "productName": productName,
         "productNumber": productNumber,
+        "desiredStock": desiredStock,
         "barcode": barcode,
         "department": await getActiveDepartment()
       };
 
-      var response = await dio.post(baseUrl + "api/product/new-product", data: data);
+      var response =
+          await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -469,13 +484,14 @@ class ApiService {
       String? token = await _getToken();
       dio.options.headers["Authorization"] = "Bearer $token";
       String department = await getActiveDepartment();
-      var response =
-      await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+      var response = await dio.post(baseUrl + "api/product/get-inventory",
+          data: {"department": department});
       if (response.statusCode == 200) {
         List<dynamic> products = List<dynamic>.from(response.data);
         String name = "";
         String number = "";
         String ean13 = "";
+        int desiredStock = 0;
         int stock = 0;
         for (var product in products) {
           product.forEach((key, value) {
@@ -489,14 +505,18 @@ class ApiService {
               case "productNumber":
                 number = value;
                 break;
+              case "desiredStock":
+                desiredStock = int.parse(value);
+                break;
               case "stock":
                 stock = int.parse(value);
                 break;
             }
           });
-          items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
-        }}
-
+          items.add(Item(
+              name: name, productNumber: number, ean13: ean13, desiredStock: desiredStock, amount: stock));
+        }
+      }
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -515,14 +535,14 @@ class ApiService {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response;
       if (connectionCode == 200) {
-        if(date.year == 1900 || localstorage?.length == 0) {
-          response =
-          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
-        }
-        else{
+        if (date.year == 1900 || localstorage?.length == 0) {
+          response = await dio.post(baseUrl + "api/product/get-inventory",
+              data: {"department": department});
+        } else {
           String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(date);
-          response =
-          await dio.post(baseUrl + "api/product/recently-updated-inventory", data: {"department": department,"DateTime":formattedDate});
+          response = await dio.post(
+              baseUrl + "api/product/recently-updated-inventory",
+              data: {"department": department, "DateTime": formattedDate});
         }
         if (response.statusCode == 200) {
           List<dynamic> products = List<dynamic>.from(response.data);
@@ -554,56 +574,9 @@ class ApiService {
                 amount: stock));
           }
 
-          if(localstorage?.length == 0 || localstorage == "[]"){
+          if (localstorage?.length == 0 || localstorage == "[]") {
             storage.write(key: "items", value: jsonEncode(apiItems));
-          }
-          else{
-            String? storageString = await storage.read(key: "items");
-              List<dynamic> storageItems = jsonDecode(storageString!);
-              String name = "";
-              String number = "";
-              String ean13 = "";
-              int stock = 0;
-              for (var product in storageItems) {
-                product.forEach((key, value) {
-                  switch (key) {
-                    case "ean13":
-                      ean13 = value;
-                      break;
-                    case "name":
-                      name = value;
-                      break;
-                    case "productNumber":
-                      number = value;
-                      break;
-                    case "amount":
-                      stock = value;
-                      break;
-                  }
-                });
-                newItems.add(Item(
-                    name: name, productNumber: number, ean13: ean13, amount: stock));
-              }
-              if(newItems.isNotEmpty){
-            if (apiItems.any((item) => item.productNumber == newItems[newItems.indexWhere((element) => element.productNumber == item.productNumber)].productNumber)) {
-              for (Item updatedItem in apiItems) {
-                final index = newItems.indexWhere((element) =>
-                element.productNumber == updatedItem.productNumber);
-                if (index >= 0) {
-                  newItems[index].amount = updatedItem.amount;
-                }
-              }
-              await storage.write(key: "items", value: jsonEncode(newItems));
-            }
-          }
-            apiItems = newItems;
-          }
-          date = DateTime.now();
-        }
-      }
-      else{
-        if(localstorage!=null){
-          if(localstorage.length > 3){
+          } else {
             String? storageString = await storage.read(key: "items");
             List<dynamic> storageItems = jsonDecode(storageString!);
             String name = "";
@@ -628,14 +601,67 @@ class ApiService {
                 }
               });
               newItems.add(Item(
-                  name: name, productNumber: number, ean13: ean13, amount: stock));
+                  name: name,
+                  productNumber: number,
+                  ean13: ean13,
+                  amount: stock));
+            }
+            if (newItems.isNotEmpty) {
+              if (apiItems.any((item) =>
+                  item.productNumber ==
+                  newItems[newItems.indexWhere((element) =>
+                          element.productNumber == item.productNumber)]
+                      .productNumber)) {
+                for (Item updatedItem in apiItems) {
+                  final index = newItems.indexWhere((element) =>
+                      element.productNumber == updatedItem.productNumber);
+                  if (index >= 0) {
+                    newItems[index].amount = updatedItem.amount;
+                  }
+                }
+                await storage.write(key: "items", value: jsonEncode(newItems));
+              }
+            }
+            apiItems = newItems;
+          }
+          date = DateTime.now();
+        }
+      } else {
+        if (localstorage != null) {
+          if (localstorage.length > 3) {
+            String? storageString = await storage.read(key: "items");
+            List<dynamic> storageItems = jsonDecode(storageString!);
+            String name = "";
+            String number = "";
+            String ean13 = "";
+            int stock = 0;
+            for (var product in storageItems) {
+              product.forEach((key, value) {
+                switch (key) {
+                  case "ean13":
+                    ean13 = value;
+                    break;
+                  case "name":
+                    name = value;
+                    break;
+                  case "productNumber":
+                    number = value;
+                    break;
+                  case "amount":
+                    stock = value;
+                    break;
+                }
+              });
+              newItems.add(Item(
+                  name: name,
+                  productNumber: number,
+                  ean13: ean13,
+                  amount: stock));
             }
             apiItems = newItems;
           }
         }
-
       }
-
     } catch (e) {
       showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
@@ -676,7 +702,11 @@ class ApiService {
                   break;
               }
             });
-            items.add(Item(name: name, productNumber: number, ean13: ean13, amount: stock));
+            items.add(Item(
+                name: name,
+                productNumber: number,
+                ean13: ean13,
+                amount: stock));
           }
         }
       }
@@ -749,7 +779,8 @@ class ApiService {
     if (connectionCode == 200) {
       response = await dio.get(baseUrl + "api/user/name");
     }
-    storage.write(key: "name", value: response.data);;
+    storage.write(key: "name", value: response.data);
+    ;
   }
 
   /// Gets pending order from api.
@@ -777,7 +808,8 @@ class ApiService {
                 break;
             }
           });
-          pendingOrders.add(Order(imagename: imageName, department: department));
+          pendingOrders
+              .add(Order(imagename: imageName, department: department));
         }
       }
     }
@@ -869,8 +901,8 @@ class ApiService {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     if (connectionCode == 200) {
-      await dio
-          .post(baseUrl + "orders/new", data: {"imageName": imageName, "department": department});
+      await dio.post(baseUrl + "orders/new",
+          data: {"imageName": imageName, "department": department});
     }
   }
 
@@ -891,6 +923,7 @@ class ApiService {
   }
 
   void showErrorToast(String errorMessage) {
-    ScaffoldMessenger.of(buildContext).showSnackBar(SnackBar(content: Text(errorMessage)));
+    ScaffoldMessenger.of(buildContext)
+        .showSnackBar(SnackBar(content: Text(errorMessage)));
   }
 }
