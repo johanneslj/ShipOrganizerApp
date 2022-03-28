@@ -128,7 +128,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         rows.add(TableRow(
           children: [
             Text(
-              item.name,
+              item.productName,
               style: Theme.of(context).textTheme.caption,
             ),
             Text(

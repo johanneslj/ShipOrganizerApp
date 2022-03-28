@@ -344,7 +344,7 @@ class ApiService {
       } else {
         updatedAllItems = await _getItemsFromStorage(localStorage);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
     return updatedAllItems;
@@ -529,7 +529,7 @@ class ApiService {
     Response response;
     if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
       response =
-      await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
     } else {
       String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
       response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
@@ -639,20 +639,27 @@ class ApiService {
             number = value;
             break;
           case "stock":
-            stock = int.parse(value);
+            if (value.runtimeType == String) {
+              stock = int.parse(value);
+            } else {
+              stock = value;
+            }
             break;
           case "desiredStock":
-            desiredStock = int.parse(value);
+            if (value.runtimeType == String) {
+              desiredStock = int.parse(value);
+            } else {
+              desiredStock = value;
+            }
             break;
         }
-
       });
       items.add(Item(
-          name: name,
+          productName: name,
           productNumber: number,
-          ean13: ean13,
+          barcode: ean13,
           desiredStock: desiredStock,
-          amount: stock));
+          stock: stock));
     }
     return items;
   }
@@ -771,7 +778,7 @@ class ApiService {
       final index =
           items.indexWhere((element) => element.productNumber == updatedItem.productNumber);
       if (index >= 0) {
-        items[index].amount = updatedItem.amount;
+        items[index].stock = updatedItem.stock;
       } else if (index == -1) {
         items.add(updatedItem);
       }
