@@ -356,20 +356,6 @@ class ApiService {
     return updatedAllItems;
   }
 
-  Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
-      String? localStorage, String department) async {
-    Response response;
-    if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
-      response =
-          await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
-    } else {
-      String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
-      response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
-          data: {"department": department, "DateTime": formattedDate});
-    }
-    return response;
-  }
-
   ///Gets all products for the recommended inventory report
   ///Returns list of all products that needs to be refilled
   Future<List<Item>> getRecommendedItems(String department) async {
@@ -543,6 +529,20 @@ class ApiService {
   /// Sets a new active department in the local storage
   Future<void> setActiveDepartment(String department) async {
     await storage.write(key: "activeDepartment", value: department);
+  }
+
+  Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
+      String? localStorage, String department) async {
+    Response response;
+    if (lastUpdatedDate.year == 1900 || localStorage == null || localStorage.isEmpty) {
+      response =
+      await dio.post(baseUrl + "api/product/get-inventory", data: {"department": department});
+    } else {
+      String formattedDate = DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
+      response = await dio.post(baseUrl + "api/product/recently-updated-inventory",
+          data: {"department": department, "DateTime": formattedDate});
+    }
+    return response;
   }
 
   Future<List<Order>> _getPendingOrdersFromApi() async {
