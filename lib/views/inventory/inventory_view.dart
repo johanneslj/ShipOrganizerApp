@@ -38,8 +38,8 @@ class _InventoryViewState extends State<InventoryView> {
 
   @override
   void initState() {
-    dataLoadFunction();
     super.initState();
+    dataLoadFunction();
   }
 
   dataLoadFunction() async {

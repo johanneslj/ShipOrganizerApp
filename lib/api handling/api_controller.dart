@@ -85,6 +85,10 @@ class ApiService {
   /// Gets the list of departments a user has access to from the API
   /// Returns a list of available departments
   Future<List<String>> getDepartments() async {
+    List<String> storedDepartments = await _getStoredDepartments();
+    if (storedDepartments.isNotEmpty) {
+      return storedDepartments;
+    }
     await _setBearerForAuthHeader();
     var response = await dio.get(baseUrl + "api/user/departments");
     List<String> departments = _getDepartmentsFromResponse(response);
@@ -93,6 +97,29 @@ class ApiService {
       storage.write(key: "activeDepartment", value: departments[0]);
     }
     return departments;
+  }
+
+  Future<List<String>> _getStoredDepartments() async {
+    List<String> departments = [];
+    if (await storage.containsKey(key: "departments")) {
+      await storage
+          .read(key: "departments")
+          .then((value) => departments = _decodeListFromString(value!));
+      }
+    return departments;
+  }
+
+  List<String> _decodeListFromString(String string) {
+    List<String> list = [];
+    if (string.startsWith("[")) {
+      string = string.replaceFirst("[", "");
+    }
+    if (string.endsWith("]")) {
+      string = string.replaceFirst("]", "", string.length - 1);
+    }
+    string = string.replaceAll(", ", ",");
+    list = string.split(",");
+    return list;
   }
 
   /// Uses an email, password and list of departments to register a new user
@@ -719,7 +746,7 @@ class ApiService {
     List<String> departments = [];
     List<Map<String, dynamic>> departmentsList = List<Map<String, dynamic>>.from(response.data);
     for (var department in departmentsList) {
-      departments.add(department["name"]);
+      departments.add(department["name"].toString());
     }
     return departments;
   }
