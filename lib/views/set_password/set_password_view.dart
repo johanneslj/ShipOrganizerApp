@@ -29,6 +29,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   bool _isButtonDisabled = true;
 
+  bool _hasEnteredEmail = false;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController verificationCodeController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -39,7 +41,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     apiService.setContext(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
+        centerTitle: true,
+        leading: _hasEnteredEmail ? const Text("") : IconButton(
           icon: Icon(Icons.arrow_back,
               color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => {
@@ -78,9 +81,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Enter email to get verification code
         Text(AppLocalizations.of(context)!.email,
             style: Theme.of(context).textTheme.headline5),
@@ -90,50 +91,58 @@ class _SetPasswordViewState extends State<SetPasswordView> {
               : AppLocalizations.of(context)!.enterValidEmail,
           // Username text field
           controller: emailController,
-          decoration:
-              InputDecoration(hintText: AppLocalizations.of(context)!.email),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.email,
+              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
         ),
 
         // Send code button
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: ButtonTheme(
-              disabledColor: Colors.grey,
-              minWidth: 250.0,
-              height: 100.0,
-              child: ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () async => {
-                            // Prompts user to enter valid email before trying to send code.
-                            if (emailController.text.isEmpty ||
-                                !emailRegex.hasMatch(emailController.text))
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .enterValidEmail)))
-                              }
-                            else
-                              {
-                                setLoading(true),
-                                if (await apiService.sendVerificationCode(
-                                    emailController.value.text))
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ButtonTheme(
+                  disabledColor: Colors.grey,
+                  minWidth: 250.0,
+                  height: 100.0,
+                  child: ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () async => {
+                                // Prompts user to enter valid email before trying to send code.
+                                if (emailController.text.isEmpty ||
+                                    !emailRegex.hasMatch(emailController.text))
                                   {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content: Text(
                                                 AppLocalizations.of(context)!
-                                                    .sentCode))),
-                                    setState(() {
-                                      page = 2;
-                                    })
+                                                    .enterValidEmail)))
                                   }
+                                else
+                                  {
+                                    setLoading(true),
+                                    if (await apiService.sendVerificationCode(
+                                        emailController.value.text))
+                                      {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .sentCode))),
+                                        _hasEnteredEmail = true,
+                                        setState(() {
+                                          page = 2;
+                                        })
+                                      }
+                                  },
+                                setLoading(false),
                               },
-                            setLoading(false),
-                          },
-                  child: Text(AppLocalizations.of(context)!.sendCode))),
+                      child: Text(AppLocalizations.of(context)!.sendCode)))
+            ],
+          ),
         )
       ]),
     );
