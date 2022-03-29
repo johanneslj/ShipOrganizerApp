@@ -17,7 +17,7 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://10.22.195.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -266,9 +266,8 @@ class ApiService {
   Future<int> testConnection() async {
     int code = 101;
     await dio
-        .get(baseUrl + "actuator/health")
-        .then((value) => value.statusCode != null ? code = value.statusCode! : code = 101)
-        .onError((error, stackTrace) => code = 101);
+    .get(baseUrl + "connection")
+    .then((value) => value.statusCode != null ? code = value.statusCode! : null);
     return code;
   }
 
