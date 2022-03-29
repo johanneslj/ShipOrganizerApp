@@ -28,7 +28,6 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
 
   getEmail() async {
     _email = (await _apiService.storage.read(key: "username"))!;
-    _receivers.add(_email);
     setState(() {});
   }
 
@@ -94,12 +93,22 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
               ),
             ),
             ElevatedButton(
-                onPressed: () => {
-                  if(_receivers.isNotEmpty) {
-                    sendMissingInventory()
+                onPressed: () async {
+                  if (_receivers.isNotEmpty) {
+                    bool success = await sendMissingInventory();
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.emailWillBeSent)));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(AppLocalizations.of(context)!
+                              .somethingWentWrong)));
+                    }
                   } else {
-                ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseEnterEmails))),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            AppLocalizations.of(context)!.pleaseEnterEmails)));
                   }
                 },
                 child: Text(AppLocalizations.of(context)!.sendMissingInventory))
@@ -131,7 +140,10 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
     return emailAddresses;
   }
 
-  void sendMissingInventory() {
-    _apiService.sendMissingInventory(widget.items, _receivers);
+  Future<bool> sendMissingInventory() async {
+    bool success = false;
+    _receivers.add(_email);
+    success = await _apiService.sendMissingInventory(widget.items, _receivers);
+    return success;
   }
 }
