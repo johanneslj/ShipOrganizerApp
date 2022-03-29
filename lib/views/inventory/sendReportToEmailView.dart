@@ -94,7 +94,14 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
               ),
             ),
             ElevatedButton(
-                onPressed: () => {},
+                onPressed: () => {
+                  if(_receivers.isNotEmpty) {
+                    sendMissingInventory()
+                  } else {
+                ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseEnterEmails))),
+                  }
+                },
                 child: Text(AppLocalizations.of(context)!.sendMissingInventory))
           ],
         ),

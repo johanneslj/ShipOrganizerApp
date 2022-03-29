@@ -84,10 +84,11 @@
   "activeDepartment": "Aktivt departement",
   "desiredStock": "Ønsket beholdning",
   "setPassword": "Sett passord",
-  "recipients": "Mottakere",
+  "recipients": "Mottakere:",
   "enterAdditionalRecipient": "Skriv inn flere mottakere",
   "sendMissingInventory": "Send manglende beholdning",
   "add": "Legg til",
+  "pleaseEnterEmails": "Trenger minst 1 e-post",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",

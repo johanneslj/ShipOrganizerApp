@@ -84,10 +84,11 @@
   "activeDepartment": "Active department",
   "desiredStock": "Desired stock",
   "setPassword": "Set password",
-  "recipients": "Recipients",
+  "recipients": "Recipients:",
   "enterAdditionalRecipient": "Enter additional recipient",
   "sendMissingInventory": "Send missing inventory",
   "add": "Add",
+  "pleaseEnterEmails": "Please enter at least 1 email",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",
