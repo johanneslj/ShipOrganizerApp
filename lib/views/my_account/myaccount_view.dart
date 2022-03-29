@@ -53,7 +53,7 @@ class _MyAccount extends State<MyAccount> {
     FlutterSecureStorage storage = const FlutterSecureStorage();
     bool mobile =
         (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
-    int tabletcrossAxisCount = getCrossAxisCount(context);
+    int tabletCrossAxisCount = getCrossAxisCount(context);
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -115,7 +115,7 @@ class _MyAccount extends State<MyAccount> {
         body: _isLoading
             ? circularProgress()
             : Center(
-              child: Padding(
+                child: Padding(
                 padding: const EdgeInsets.only(
                     left: 30, right: 30, top: 60, bottom: 10),
                 child: Column(children: [
@@ -127,19 +127,19 @@ class _MyAccount extends State<MyAccount> {
                   ),
                   mobile
                       ? Expanded(
-                    child: Column(children: getMenuItems(admin, context)),
-                  )
-                      : GridView.count(
-                    crossAxisCount: tabletcrossAxisCount,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(10.0),
-                    children: getGridTiles(admin, context),
-                  )
+                          child: Column(children: getMenuItems(admin, context)),
+                        )
+                      : Expanded(
+                          child: GridView.count(
+                            crossAxisCount: tabletCrossAxisCount,
+                            crossAxisSpacing: 5.0,
+                            mainAxisSpacing: 5.0,
+                            padding: const EdgeInsets.all(2.0),
+                            children: getGridTiles(admin, context),
+                          ),
+                        )
                 ]),
-              ))
-        );
+              )));
   }
 
   /// Gets the right menu items base on admin rights
@@ -188,55 +188,62 @@ class _MyAccount extends State<MyAccount> {
 
     return departmentCardList;
   }
+
   /// Gets the right menu items base on admin rights
   /// Creates Gridview tiles for display
   List<Widget> getGridTiles(bool admin, BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
-    departmentCardList.add(gridWidget("/selectDepartment",AppLocalizations.of(context)!.changeDepartment));
-    departmentCardList.add(gridWidget("/changePassword",AppLocalizations.of(context)!.changePassword));
-    departmentCardList.add(gridWidget("/recommendedInventory",AppLocalizations.of(context)!.preferredInventory));
-    departmentCardList.add(gridWidget("/sendBill",AppLocalizations.of(context)!.billing));
-    if(admin) {
-      departmentCardList.add(gridWidget(
+    departmentCardList.add(gridTileWidget(
+        "/selectDepartment", AppLocalizations.of(context)!.changeDepartment));
+    departmentCardList.add(gridTileWidget(
+        "/changePassword", AppLocalizations.of(context)!.changePassword));
+    departmentCardList.add(gridTileWidget("/recommendedInventory",
+        AppLocalizations.of(context)!.preferredInventory));
+    departmentCardList
+        .add(gridTileWidget("/sendBill", AppLocalizations.of(context)!.billing));
+    if (admin) {
+      departmentCardList.add(gridTileWidget(
           "/createUser", AppLocalizations.of(context)!.registerNewUser));
-      departmentCardList.add(gridWidget(
+      departmentCardList.add(gridTileWidget(
           "/administerUsers", AppLocalizations.of(context)!.administerUsers));
-      departmentCardList.add(gridWidget(
-          "/administerProducts", AppLocalizations.of(context)!.administerProducts));
+      departmentCardList.add(gridTileWidget("/administerProducts",
+          AppLocalizations.of(context)!.administerProducts));
     }
     return departmentCardList;
   }
 
   /// Custom Gridview tile
-  Widget gridWidget (route,routeName) {
+  Widget gridTileWidget(route, routeName) {
     return GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, route);
         },
         child: Container(
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            color: Theme.of(context).colorScheme.onPrimary,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 2.0,
-              )
-            ]),
-        child:Center(child:Text(routeName))));
+            margin: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.onPrimary,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 5.0,
+                  )
+                ]),
+            child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(child: Text(routeName)
+                ))));
   }
 
   /// Checks if device is in landscape or portrait mode
   /// to see if grid should have crossAxisCount 4 or 3
-  int getCrossAxisCount(context){
-    if(MediaQuery.of(context).orientation == Orientation.landscape){
+  int getCrossAxisCount(context) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return 4;
-    }
-    else{
+    } else {
       return 3;
     }
-   }
+  }
 
   /// Gets Users rights from api service
   Future<void> getUserRights() async {
