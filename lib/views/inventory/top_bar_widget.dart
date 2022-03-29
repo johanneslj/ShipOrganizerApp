@@ -19,6 +19,7 @@ class TopBar extends StatefulWidget {
       this.searchIcon,
       this.clearIcon,
       this.filterIcon,
+      required this.isMobile,
       required this.recommended,
       this.scanIcon})
       : super(key: key);
@@ -56,6 +57,8 @@ class TopBar extends StatefulWidget {
 
   final bool recommended;
 
+  final bool isMobile;
+
   @override
   State<StatefulWidget> createState() => _TopBarState();
 }
@@ -63,6 +66,8 @@ class TopBar extends StatefulWidget {
 class _TopBarState extends State<TopBar> {
   late bool recommend = widget.recommended;
   bool hasMultipleDepartments = false;
+
+  late bool isMobile = widget.isMobile;
 
   /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
   void Function()? get _onMenuPressed =>
@@ -99,91 +104,128 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.fromLTRB(0, MediaQuery.of(context).viewPadding.top, 0, 0),
-      color: Theme.of(context).colorScheme.primary,
-      child: Row(
-        children: [
-          recommend
-              ? IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: widget.menuIcon ??
-                      Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        size: 32.0,
-                      ),
-                )
-              : IconButton(
-                  onPressed: _onMenuPressed,
-                  icon: widget.menuIcon ??
-                      Icon(
-                        Icons.menu,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        size: 32.0,
-                      ),
-                ),
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: TextField(
-                controller: widget.controller,
-                onEditingComplete: _onSearch,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                  hintText: AppLocalizations.of(context)!.search + "...",
-                  suffixIcon: IconButton(
-                      onPressed: _onClear ?? widget.controller?.clear,
-                      icon: widget.clearIcon ??
-                          Icon(Icons.clear,
-                              color: Theme.of(context).colorScheme.primary)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          hasMultipleDepartments
-              ? Row(
-                  children: [
-                    IconButton(
+        padding: EdgeInsets.fromLTRB(
+            0, MediaQuery.of(context).viewPadding.top, 0, 0),
+        color: Theme.of(context).colorScheme.primary,
+        child: isMobile
+            ? Row(
+                children: [
+                  recommend
+                      ? IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: widget.menuIcon ??
+                              Icon(
+                                Icons.arrow_back,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                size: 32.0,
+                              ))
+                      : IconButton(
+                          onPressed: _onMenuPressed,
+                          icon: widget.menuIcon ??
+                              Icon(
+                                Icons.menu,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                size: 32.0,
+                              )),
+                  Flexible(
+                      child: Container(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child: TextField(
+                            controller: widget.controller,
+                            onEditingComplete: _onSearch,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                              hintText:
+                                  AppLocalizations.of(context)!.search + "...",
+                              suffixIcon: IconButton(
+                                  onPressed:
+                                      _onClear ?? widget.controller?.clear,
+                                  icon: widget.clearIcon ??
+                                      Icon(Icons.clear,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary)),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(32.0),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            ),
+                          ))),
+                  IconButton(
                       onPressed: _onScan,
                       icon: widget.scanIcon ??
                           Icon(
                             Icons.camera_alt_sharp,
                             color: Theme.of(context).colorScheme.onPrimary,
                             size: 32.0,
-                          ),
-                    ),
-                    IconButton(
+                          )),
+                  IconButton(
                       onPressed: _filter,
                       icon: widget.filterIcon ??
                           Icon(Icons.filter_alt_sharp,
                               color: Theme.of(context).colorScheme.onPrimary,
-                              size: 32.0),
+                              size: 32.0))
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: Text(
+                        "Ship Organizer",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
                     ),
-                  ],
-                )
-              : Row(
-                  children: [
-                    IconButton(
+                  ),
+                  Expanded(
+                      flex: 4,
+                      child: Container(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child: TextField(
+                            controller: widget.controller,
+                            onEditingComplete: _onSearch,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                              hintText:
+                                  AppLocalizations.of(context)!.search + "...",
+                              suffixIcon: IconButton(
+                                  onPressed:
+                                      _onClear ?? widget.controller?.clear,
+                                  icon: widget.clearIcon ??
+                                      Icon(Icons.clear,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary)),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(32.0),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            ),
+                          ))),
+                  IconButton(
                       onPressed: _onScan,
                       icon: widget.scanIcon ??
                           Icon(
                             Icons.camera_alt_sharp,
                             color: Theme.of(context).colorScheme.onPrimary,
                             size: 32.0,
-                          ),
-                    ),
-                  ],
-                ),
-        ],
-      ),
-    );
+                          )),
+                  IconButton(
+                      onPressed: _filter,
+                      icon: widget.filterIcon ??
+                          Icon(Icons.filter_alt_sharp,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 32.0))
+                ],
+              ));
   }
 }

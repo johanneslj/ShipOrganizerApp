@@ -83,6 +83,7 @@
   "camera": "Camera",
   "activeDepartment": "Active department",
   "desiredStock": "Desired stock",
+  "setPassword": "Set password",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",

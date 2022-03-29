@@ -83,6 +83,7 @@
   "camera": "Kamera",
   "activeDepartment": "Aktivt departement",
   "desiredStock": "Ønsket beholdning",
+  "setPassword": "Sett passord",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",

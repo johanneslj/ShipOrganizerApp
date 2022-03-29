@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/config/device_screen_type.dart';
+import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:location/location.dart';
@@ -59,6 +61,7 @@ class Inventory extends StatelessWidget {
 
   /// Returns the correct ListTile depending on whether it is for the recommended inventory or not.
   ListTile getListTile(BuildContext context, int index) {
+    bool tablet = (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Tablet);
     if (isRecommended) {
       // Sets cursor in amount TextField to end of text on first tap.
       if (_controllers[index].text.isNotEmpty) {
@@ -67,7 +70,7 @@ class Inventory extends StatelessWidget {
       }
 
       return ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].productName,
             style: Theme.of(context).textTheme.headline5,
@@ -90,7 +93,6 @@ class Inventory extends StatelessWidget {
                           LengthLimitingTextInputFormatter(10)
                         ],
                         onEditingComplete: () => {
-                          // TODO Implement with API.
                           if (_controllers[index].text.isNotEmpty)
                             {items[index].stock = int.parse(_controllers[index].text)},
                           FocusManager.instance.primaryFocus?.unfocus()
@@ -114,7 +116,7 @@ class Inventory extends StatelessWidget {
               )));
     } else {
       return ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: InkWell(
               child: Text(
                     items[index].productName,

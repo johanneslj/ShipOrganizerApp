@@ -17,7 +17,7 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.195.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -226,10 +226,11 @@ class ApiService {
   Future<Map<LatLng, List<Report>>> getAllMarkers() async {
     String? token = await _getToken();
     Map<LatLng, List<Report>> mapMarkers;
+    String department = await getActiveDepartment();
     try {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.get(
-        baseUrl + "reports/all-reports",
+        baseUrl + "reports/all-reports=$department",
       );
       mapMarkers = _createReportsFromData(response);
     } catch (e) {
@@ -247,9 +248,10 @@ class ApiService {
   Future<Map<LatLng, List<Report>>> getAllMarkersWithName(String name) async {
     String? token = await _getToken();
     Map<LatLng, List<Report>> mapMarkers;
+    String department = await getActiveDepartment();
     try {
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(baseUrl + "reports/reports-with-name=$name");
+      var response = await dio.get(baseUrl + "reports/reports-with-name=$name-dep=$department");
       mapMarkers = _createReportsFromData(response);
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.failedToGetMarkers);
@@ -620,6 +622,7 @@ class ApiService {
   }
 
   List<Item> _getItemsFromJson(List<dynamic> storageItems) {
+
     List<Item> items = [];
     for (var product in storageItems) {
       String name = "";

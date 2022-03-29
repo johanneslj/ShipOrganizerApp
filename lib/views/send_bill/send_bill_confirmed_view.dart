@@ -45,7 +45,7 @@ class _confimedBill extends State<ConfimedBill> {
     return Scaffold(
         body: _isLoading ? circularProgress() :
         GridView.builder(
-      itemCount: confirmedOrders.length,
+            itemCount: confirmedOrders.length,
             itemBuilder: (BuildContext context, int index) {
               return Center(
                   child: Column(

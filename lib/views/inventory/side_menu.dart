@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/config/device_screen_type.dart';
+import 'package:ship_organizer_app/config/ui_utils.dart';
 
 /// Creates a side menu for use as a [Drawer] in a [Scaffold] for the ship organizer app.
 ///
@@ -8,6 +10,8 @@ class SideMenu extends StatelessWidget {
   const SideMenu({
     Key? key,
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,7 @@ class SideMenu extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top),
+                if(getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile)
                 Center(
                     heightFactor: 2,
                     child: Text(
