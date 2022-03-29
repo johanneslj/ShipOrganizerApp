@@ -39,7 +39,8 @@ class _MapViewState extends State<MapView> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -131,26 +132,28 @@ class _MapViewState extends State<MapView> {
   /// are present at the location
   Future<void> addMarkers() async {
     if (widget.itemToShow != null) {
-      markerLocations = await apiService.getAllMarkersWithName(widget.itemToShow!);
+      markerLocations =
+          await apiService.getAllMarkersWithName(widget.itemToShow!);
     } else {
       markerLocations = await apiService.getAllMarkers();
     }
 
     List<List<Report>> sortedList = markerLocations.values.toList()
-      ..sort((a, b) => getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
-    if(sortedList.length > 1) {
-      max = getAmountOfItemsAtMarker(sortedList.last);
-      min = getAmountOfItemsAtMarker(sortedList.first);
-    }
+      ..sort((a, b) =>
+          getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
+    max = getAmountOfItemsAtMarker(sortedList.last);
+    min = getAmountOfItemsAtMarker(sortedList.first);
 
     markerLocations.forEach((latLng, item) {
-      String markerIdVal = latLng.toString().replaceAll("LatLng(", "").replaceAll(")", "");
+      String markerIdVal =
+          latLng.toString().replaceAll("LatLng(", "").replaceAll(")", "");
       final MarkerId markerId = MarkerId(markerIdVal);
 
       final Marker marker = Marker(
         markerId: markerId,
         position: latLng,
-        icon: BitmapDescriptor.defaultMarkerWithHue(calculateHue(item, max, min)),
+        icon:
+            BitmapDescriptor.defaultMarkerWithHue(calculateHue(item, max, min)),
         infoWindow: InfoWindow(
             title: markerIdVal.toString(),
             snippet: getAmountOfItemsAtMarker(item).toString() +
@@ -240,7 +243,9 @@ class _MapViewState extends State<MapView> {
           children: [
             SizedBox(
               child: Text(
-                descriptiveItem.name! + " x" + descriptiveItem.quantity.toString(),
+                descriptiveItem.name! +
+                    " x" +
+                    descriptiveItem.quantity.toString(),
                 style: Theme.of(context).textTheme.headline6,
                 overflow: TextOverflow.fade,
               ),
@@ -260,11 +265,14 @@ class _MapViewState extends State<MapView> {
             ),
             Row(
               children: [
-                Text(descriptiveItem.userName!, style: Theme.of(context).textTheme.subtitle2),
+                Text(descriptiveItem.userName!,
+                    style: Theme.of(context).textTheme.subtitle2),
                 Text(
                     descriptiveItem.registrationDate.toString().split(":")[0] +
                         ":" +
-                        descriptiveItem.registrationDate.toString().split(":")[1],
+                        descriptiveItem.registrationDate
+                            .toString()
+                            .split(":")[1],
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
