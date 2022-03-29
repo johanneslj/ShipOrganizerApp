@@ -155,20 +155,44 @@ class _TopBarState extends State<TopBar> {
                               ),
                             ),
                           ))),
-                  IconButton(
-                      onPressed: _onScan,
-                      icon: widget.scanIcon ??
-                          Icon(
-                            Icons.camera_alt_sharp,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 32.0,
-                          )),
-                  IconButton(
-                      onPressed: _filter,
-                      icon: widget.filterIcon ??
-                          Icon(Icons.filter_alt_sharp,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              size: 32.0))
+                  hasMultipleDepartments
+                      ? Row(
+                          children: [
+                            IconButton(
+                              onPressed: _onScan,
+                              icon: widget.scanIcon ??
+                                  Icon(
+                                    Icons.camera_alt_sharp,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: 32.0,
+                                  ),
+                            ),
+                            IconButton(
+                              onPressed: _filter,
+                              icon: widget.filterIcon ??
+                                  Icon(Icons.filter_alt_sharp,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      size: 32.0),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            IconButton(
+                              onPressed: _onScan,
+                              icon: widget.scanIcon ??
+                                  Icon(
+                                    Icons.camera_alt_sharp,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: 32.0,
+                                  ),
+                            ),
+                          ],
+                        )
                 ],
               )
             : Row(
@@ -211,20 +235,44 @@ class _TopBarState extends State<TopBar> {
                               ),
                             ),
                           ))),
-                  IconButton(
-                      onPressed: _onScan,
-                      icon: widget.scanIcon ??
-                          Icon(
-                            Icons.camera_alt_sharp,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 32.0,
-                          )),
-                  IconButton(
-                      onPressed: _filter,
-                      icon: widget.filterIcon ??
-                          Icon(Icons.filter_alt_sharp,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              size: 32.0))
+                  hasMultipleDepartments
+                      ? Row(
+                          children: [
+                            IconButton(
+                              onPressed: _onScan,
+                              icon: widget.scanIcon ??
+                                  Icon(
+                                    Icons.camera_alt_sharp,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: 32.0,
+                                  ),
+                            ),
+                            IconButton(
+                              onPressed: _filter,
+                              icon: widget.filterIcon ??
+                                  Icon(Icons.filter_alt_sharp,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      size: 32.0),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            IconButton(
+                              onPressed: _onScan,
+                              icon: widget.scanIcon ??
+                                  Icon(
+                                    Icons.camera_alt_sharp,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: 32.0,
+                                  ),
+                            ),
+                          ],
+                        ),
                 ],
               ));
   }
