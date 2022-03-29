@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/config/device_screen_type.dart';
+import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
@@ -13,7 +15,8 @@ import 'package:ship_organizer_app/views/inventory/item.dart';
 class AdministerUsersView extends StatefulWidget {
   final bool isAdministeringUsers;
 
-  const AdministerUsersView({Key? key, required this.isAdministeringUsers}) : super(key: key);
+  const AdministerUsersView({Key? key, required this.isAdministeringUsers})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AdministerUsersViewState();
@@ -26,14 +29,17 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
+    bool mobile =
+        (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
     _apiService.setContext(context);
     if (tableRows.isEmpty) {
-      createUserRow();
+      createUserRow(mobile);
     }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -52,19 +58,21 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                     child: Table(
                         border: const TableBorder(
-                            horizontalInside: BorderSide(width: 1, style: BorderStyle.solid)),
+                            horizontalInside:
+                                BorderSide(width: 1, style: BorderStyle.solid)),
                         columnWidths: widget.isAdministeringUsers
                             ? const <int, TableColumnWidth>{
                                 0: FlexColumnWidth(0.4),
                                 1: FlexColumnWidth(),
-                                2: FixedColumnWidth(65),
+                                2: FixedColumnWidth(75),
                               }
                             : const <int, TableColumnWidth>{
                                 0: FlexColumnWidth(1.05),
                                 1: FlexColumnWidth(),
-                                2: FixedColumnWidth(65),
+                                2: FixedColumnWidth(75),
                               },
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
                         children: tableRows),
                   )
                 ],
@@ -74,7 +82,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
   }
 
   /// creates an additional row in the table for each user
-  Future<void> createUserRow() async {
+  Future<void> createUserRow(bool mobile) async {
     setState(() {
       _isLoading = true;
     });
@@ -90,8 +98,17 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
             )
           : TableRow(
               children: [
-                Text(AppLocalizations.of(context)!.productName),
-                Text(AppLocalizations.of(context)!.productNumber),
+                !mobile
+                    ? Container(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        child: Text(AppLocalizations.of(context)!.productName))
+                    : Text(AppLocalizations.of(context)!.productName),
+                !mobile
+                    ? Container(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        child:
+                            Text(AppLocalizations.of(context)!.productNumber))
+                    : Text(AppLocalizations.of(context)!.productNumber),
                 const Text("")
               ],
             ),
@@ -101,11 +118,25 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       for (User user in users) {
         rows.add(TableRow(
           children: [
-            Text(
-              user.getName(),
-              style: Theme.of(context).textTheme.caption,
-            ),
-            Text(
+            !mobile
+                ? Container(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Text(
+                      user.getName(),
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ))
+                : Text(
+                    user.getName(),
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+            !mobile
+                ? Container(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Text(
+                  user.getName(),
+                  style: Theme.of(context).textTheme.bodyText2,
+                ))
+                : Text(
               user.getEmail(),
               style: Theme.of(context).textTheme.caption,
             ),
@@ -114,8 +145,8 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                CreateUser(isCreateUser: false, userToEdit: user)),
+                            builder: (context) => CreateUser(
+                                isCreateUser: false, userToEdit: user)),
                       )
                     },
                 child: Text(AppLocalizations.of(context)!.edit))
@@ -127,11 +158,25 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       for (Item item in items) {
         rows.add(TableRow(
           children: [
-            Text(
+            !mobile
+                ? Container(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Text(
+                  item.productName,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ))
+                : Text(
               item.productName,
               style: Theme.of(context).textTheme.caption,
             ),
-            Text(
+            !mobile
+                ? Container(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Text(
+                  item.productNumber!,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ))
+                : Text(
               item.productNumber!,
               style: Theme.of(context).textTheme.caption,
             ),
@@ -140,7 +185,8 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NewItem(isCreateNew: false, itemToEdit: item)),
+                            builder: (context) =>
+                                NewItem(isCreateNew: false, itemToEdit: item)),
                       )
                     },
                 child: Text(AppLocalizations.of(context)!.edit))

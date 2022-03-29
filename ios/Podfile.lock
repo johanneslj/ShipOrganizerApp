@@ -70,7 +70,7 @@ SPEC CHECKSUMS:
   flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
-  google_maps_flutter: fe98b02bbb6717c7297c7747b84c4ead2bc5fc3b
+  google_maps_flutter: c59fc576c0d0c7f4dc4bd63832c862d22d5a7c6d
   GoogleMaps: c213fc2334b7374144cede914da779b99be0ab74
   image_picker: 541dcbb3b9cf32d87eacbd957845d8651d6c62c3
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
