@@ -346,7 +346,7 @@ class ApiService {
       } else {
         updatedAllItems = await _getItemsFromStorage(localStorage);
       }
-    } on Exception catch (e) {
+    } on Exception {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
     return updatedAllItems;
