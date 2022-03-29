@@ -344,7 +344,7 @@ class ApiService {
       } else {
         updatedAllItems = await _getItemsFromStorage(localStorage);
       }
-    } on Exception catch (e) {
+    } on Exception {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
     return updatedAllItems;
@@ -384,7 +384,7 @@ class ApiService {
       "datetime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
     };
     if (connectionCode == 200) {
-      await dio.post(baseUrl + "api/product/setNewStock", data: data);
+      await dio.post(baseUrl + "api/product/set-new-stock", data: data);
     } else {
       Map<String, dynamic> queueItem = {"type": "UPDATE_STOCK", "status": "PENDING", "data": data};
       OfflineEnqueueService().addToQueue(queueItem);
