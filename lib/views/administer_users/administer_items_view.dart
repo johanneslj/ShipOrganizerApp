@@ -64,12 +64,12 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                             ? const <int, TableColumnWidth>{
                                 0: FlexColumnWidth(0.4),
                                 1: FlexColumnWidth(),
-                                2: FixedColumnWidth(65),
+                                2: FixedColumnWidth(75),
                               }
                             : const <int, TableColumnWidth>{
                                 0: FlexColumnWidth(1.05),
                                 1: FlexColumnWidth(),
-                                2: FixedColumnWidth(65),
+                                2: FixedColumnWidth(75),
                               },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
