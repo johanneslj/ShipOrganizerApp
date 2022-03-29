@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 
 /// Creates a widget that is used as a top bar for the inventory views in the ship organizer app.
 ///
@@ -64,6 +65,8 @@ class TopBar extends StatefulWidget {
 
 class _TopBarState extends State<TopBar> {
   late bool recommend = widget.recommended;
+  bool hasMultipleDepartments = false;
+
   late bool isMobile = widget.isMobile;
 
   /// If no function is specified, menu button tries to open [Drawer] in [Scaffold]
@@ -82,6 +85,21 @@ class _TopBarState extends State<TopBar> {
   void Function()? get _onScan => widget.onScan;
 
   void Function()? get _onClear => widget.onClear;
+
+  @override
+  void initState() {
+    getDepartments();
+  }
+
+  Future<void> getDepartments() async {
+    ApiService _apiService = ApiService.getInstance();
+    List<String> departments = await _apiService.getDepartments();
+    if (departments.length > 1) {
+      setState(() {
+        hasMultipleDepartments = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,96 +4,91 @@ import 'dart:convert';
 
 class OfflineEnqueueService {
 
+  OfflineEnqueueService._internal();
+  bool _serviceRunning = false;
+  bool _isOffline = false;
+  final ApiService _apiService = ApiService.getInstance();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  static List<Map<String, dynamic>> _queue = [];
   static final OfflineEnqueueService _service = OfflineEnqueueService._internal();
 
   factory OfflineEnqueueService() {
     return _service;
   }
 
-  OfflineEnqueueService._internal();
-
-  bool _serviceRunning = false;
-
-  ApiService apiService = ApiService.getInstance();
-
-  bool _isOffline = false;
-
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
-  static List<Map<String, dynamic>> _queue = [];
-
   startService() async {
-    // Check if server is UP
-    await apiService
-        .testConnection()
-        .then((value) => value != 200 ? _isOffline = true : _isOffline = false);
-
-    // Service is already running
-    if (_serviceRunning) return;
-    // Should be online to process the queue
-    if (_isOffline) return;
-
+    if (await _isOfflineOrServiceAlreadyRunning()) {
+      return;
+    }
     _serviceRunning = true;
-
-    await _storage
-        .read(key: "OFFLINE_QUEUE")
-        .then((string) => string != null ? _queue = _queueFromString(string) : []);
-
-    // Search all the pending items in the queue
-    List<Map<String, dynamic>> pendingItems =
-        _queue.where((item) => item["status"] == "PENDING").toList();
-
-    // If the queue doesn't have any items the service is stopped
+    await _updateQueueFromStorage();
+    List<Map<String, dynamic>> pendingItems = _getPendingItems();
     if (pendingItems.isEmpty){
       _serviceRunning = false;
       return;
     }
-
-    for (Map<String, dynamic> item in pendingItems) {
-      try {
-        // Mark enqueue item with the status PROCESSING
-        item["status"] = "PROCESSING";
-
-        // Process enqueue item
-        await _processItem(item);
-
-        // Mark enqueue item with the status DONE
-        item["status"] = "DONE";
-
-      } catch (ex) {
-         item["status"] = "ERROR:" + ex.toString();
-      }
-    }
-    _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
-    _serviceRunning = false;
+    await _processItems(pendingItems);
+    _storeQueueAndStopService();
   }
 
   addToQueue(Map<String, dynamic> model) async {
     _queue.add(model);
     _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
-    // startService();
+  }
+
+  void _storeQueueAndStopService() {
+    _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
+    _serviceRunning = false;
+  }
+
+  Future<List<dynamic>> _updateQueueFromStorage() {
+    return _storage
+      .read(key: "OFFLINE_QUEUE")
+      .then((string) => string != null ? _queue = _queueFromString(string) : []);
+  }
+
+  Future<bool> _isOfflineOrServiceAlreadyRunning() async {
+    await _apiService
+        .testConnection()
+        .then((value) => value != 200 ? _isOffline = true : _isOffline = false);
+    if (_isOffline || _serviceRunning) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _processItems(List<Map<String, dynamic>> pendingItems) async {
+    for (Map<String, dynamic> item in pendingItems) {
+      try {
+        item["status"] = "PROCESSING";
+        await _processItem(item);
+        item["status"] = "DONE";
+      } catch (ex) {
+         item["status"] = "ERROR: " + ex.toString();
+      }
+    }
   }
 
   _processItem(Map<String, dynamic> model) async {
     switch (model["type"]) {
       case "UPDATE_STOCK":
-        updateStockOffline(model);
+        _updateStockOffline(model);
         break;
-      // More implementations can be added here.
     }
   }
 
-  void updateStockOffline(Map<String, dynamic> model) {
+  void _updateStockOffline(Map<String, dynamic> model) {
     Map<String, dynamic> data = model["data"];
-
-    String productNumber = data["productNumber"];
-    String username = data["username"];
-    int amount = data["quantity"];
-    double latitude = data["latitude"];
-    double longitude = data["longitude"];
-
-    apiService.updateStock(productNumber, username, amount, latitude, longitude);
+    _apiService.updateStock(
+        data["productNumber"],
+        data["username"],
+        data["quantity"],
+        data["latitude"],
+        data["longitude"]);
   }
+
+  List<Map<String, dynamic>> _getPendingItems() =>
+      _queue.where((item) => item["status"] == "PENDING").toList();
 
   List<Map<String,dynamic>> _queueFromString(String string) {
     return List<Map<String, dynamic>>.from(json.decode(string));

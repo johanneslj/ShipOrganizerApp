@@ -51,7 +51,7 @@ class Inventory extends StatelessWidget {
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        _controllers.add(TextEditingController(text: items[index].amount.toString()));
+        _controllers.add(TextEditingController(text: items[index].stock.toString()));
         return getListTile(context, index);
       },
       separatorBuilder: (BuildContext context, int index) =>
@@ -72,7 +72,7 @@ class Inventory extends StatelessWidget {
       return ListTile(
           contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
-            items[index].name,
+            items[index].productName,
             style: Theme.of(context).textTheme.headline5,
             overflow: TextOverflow.clip,
           ),
@@ -94,7 +94,7 @@ class Inventory extends StatelessWidget {
                         ],
                         onEditingComplete: () => {
                           if (_controllers[index].text.isNotEmpty)
-                            {items[index].amount = int.parse(_controllers[index].text)},
+                            {items[index].stock = int.parse(_controllers[index].text)},
                           FocusManager.instance.primaryFocus?.unfocus()
                         },
                         textAlign: TextAlign.center,
@@ -119,7 +119,7 @@ class Inventory extends StatelessWidget {
           contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: InkWell(
               child: Text(
-                    items[index].name,
+                    items[index].productName,
                     style: Theme.of(context).textTheme.headline5,
                     overflow: TextOverflow.clip,
                   ),
@@ -128,7 +128,7 @@ class Inventory extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => (MapView(
-                                  itemToShow: items[index].name,
+                                  itemToShow: items[index].productName,
                                 ))))
                   }),
           trailing: SizedBox(
@@ -140,7 +140,7 @@ class Inventory extends StatelessWidget {
                       onPressed: () => _onRemove(context, items[index]),
                       icon: const Icon(Icons.remove, size: 36.0)),
                   Text(
-                    items[index].amount.toString(),
+                    items[index].stock.toString(),
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   IconButton(
@@ -160,7 +160,7 @@ class Inventory extends StatelessWidget {
         }).then((amount) async => {
           // TODO Implement with API. Add to call queue.
           if (amount is int) {
-            item.amount = item.amount + amount,
+            item.stock = item.stock + amount,
             await updateStock(item.productNumber,amount, context),}
         });
   }
@@ -174,7 +174,7 @@ class Inventory extends StatelessWidget {
         }).then((amount) async =>  {
           // TODO Implement with API. Add to call queue.
           if (amount is int) {
-            item.amount = item.amount - amount,
+            item.stock = item.stock - amount,
             await updateStock(item.productNumber,-amount, context)
           }
         });

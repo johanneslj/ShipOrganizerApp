@@ -41,6 +41,7 @@ dependencies:
   dio: ^4.0.4
   flutter_secure_storage: ^5.0.2
   fluttertoast: ^8.0.8
+  flutter_launcher_icons: ^0.7.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,6 +61,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/maoyi-letter-white.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -84,6 +89,7 @@ flutter:
     - assets/MaoyiLogo.png
     - assets/MaoyiLogo1.png
     - assets/maoyi-logo-white.png
+    - assets/maoyi-letter-white.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

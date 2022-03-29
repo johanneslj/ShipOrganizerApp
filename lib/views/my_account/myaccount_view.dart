@@ -25,6 +25,7 @@ class _MyAccount extends State<MyAccount> {
   late bool admin = false;
   late String fullName = "";
   bool _isLoading = false;
+  bool hasMultipleDepartments = false;
 
   @override
   void initState() {
@@ -36,6 +37,10 @@ class _MyAccount extends State<MyAccount> {
     setState(() {
       _isLoading = true;
     });
+    List<String> departments = await apiService.getDepartments();
+    if (departments.length > 1) {
+      hasMultipleDepartments = true;
+    }
     await getUserRights();
     await getUserFullName();
     setState(() {
@@ -141,11 +146,13 @@ class _MyAccount extends State<MyAccount> {
   /// Reuses DepartmentCard for display
   List<Widget> getMenuItems(bool admin, BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
-    departmentCardList.add(DepartmentCard(
-      departmentName: AppLocalizations.of(context)!.changeDepartment,
-      destination: "/selectDepartment",
-      arguments: "false",
-    ));
+    if (hasMultipleDepartments) {
+      departmentCardList.add(DepartmentCard(
+        departmentName: AppLocalizations.of(context)!.changeDepartment,
+        destination: "/selectDepartment",
+        arguments: "false",
+      ));
+    }
     departmentCardList.add(DepartmentCard(
       departmentName: AppLocalizations.of(context)!.changePassword,
       destination: "/changePassword",

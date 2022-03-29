@@ -13,7 +13,8 @@ class NewItem extends StatefulWidget {
   bool isCreateNew;
   Item? itemToEdit;
 
-  NewItem({Key? key, required this.isCreateNew, this.itemToEdit}) : super(key: key);
+  NewItem({Key? key, required this.isCreateNew, this.itemToEdit})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _newItem();
@@ -29,6 +30,7 @@ class _newItem extends State<NewItem> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productNumberController = TextEditingController();
   TextEditingController stockController = TextEditingController();
+  TextEditingController desiredStockController = TextEditingController();
 
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -36,8 +38,8 @@ class _newItem extends State<NewItem> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes =
-          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -67,18 +69,22 @@ class _newItem extends State<NewItem> {
   @override
   Widget build(BuildContext context) {
     if (!widget.isCreateNew) {
-      productNameController.text = widget.itemToEdit!.name;
+      productNameController.text = widget.itemToEdit!.productName;
       productNumberController.text = widget.itemToEdit!.productNumber!;
-      stockController.text = widget.itemToEdit!.amount.toString();
+      stockController.text = widget.itemToEdit!.stock.toString();
+      desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
     }
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () =>
-              {FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => {
+            FocusScope.of(context).requestFocus(FocusNode()),
+            Navigator.of(context).pop()
+          },
         ),
         title: Text(
           widget.isCreateNew
@@ -91,9 +97,12 @@ class _newItem extends State<NewItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(AppLocalizations.of(context)!.activeDepartment + " : "+ department),
+              Text(AppLocalizations.of(context)!.activeDepartment +
+                  " : " +
+                  department),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+                padding: const EdgeInsets.only(
+                    left: 30, right: 30, top: 20, bottom: 10),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -107,13 +116,16 @@ class _newItem extends State<NewItem> {
                           controller: productNameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.enterValidText;
+                              return AppLocalizations.of(context)!
+                                  .enterValidText;
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.productName,
-                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                              hintText:
+                                  AppLocalizations.of(context)!.productName,
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context).disabledColor)),
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.productNumber),
@@ -124,13 +136,35 @@ class _newItem extends State<NewItem> {
                           controller: productNumberController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.enterValidText;
+                              return AppLocalizations.of(context)!
+                                  .enterValidText;
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.productNumber,
-                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                              hintText:
+                                  AppLocalizations.of(context)!.productNumber,
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context).disabledColor)),
+                        ),
+                      ),
+                      Text(AppLocalizations.of(context)!.desiredStock),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: TextFormField(
+                          controller: desiredStockController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!
+                                  .enterValidText;
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              hintText:
+                                  AppLocalizations.of(context)!.desiredStock,
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context).disabledColor)),
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.productStock),
@@ -141,13 +175,16 @@ class _newItem extends State<NewItem> {
                             controller: stockController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context)!.enterValidNumber;
+                                return AppLocalizations.of(context)!
+                                    .enterValidNumber;
                               }
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.productStock,
-                              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                              hintText:
+                                  AppLocalizations.of(context)!.productStock,
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context).disabledColor),
                             ),
                             keyboardType: TextInputType.number),
                       ),
@@ -157,11 +194,13 @@ class _newItem extends State<NewItem> {
                         controller: barcodeController,
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.barcode,
-                          hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                          hintStyle:
+                              TextStyle(color: Theme.of(context).disabledColor),
                           suffixIcon: Padding(
                             padding: const EdgeInsets.all(0.0),
                             child: IconButton(
-                              icon: const Icon(Icons.camera_alt_sharp, color: Colors.black),
+                              icon: const Icon(Icons.camera_alt_sharp,
+                                  color: Colors.black),
                               onPressed: () => {scanBarcodeNormal()},
                             ), // icon is 48px widget.
                           ),
@@ -178,22 +217,26 @@ class _newItem extends State<NewItem> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
                                     if (widget.isCreateNew) {
                                       addNewItem(
                                           productNameController.value.text,
                                           productNumberController.value.text,
+                                          desiredStockController.value.text,
                                           stockController.value.text,
                                           barcodeController.value.text);
                                     } else {
                                       editItem(
                                           productNameController.value.text,
                                           productNumberController.value.text,
-                                          stockController.value.text);
+                                          desiredStockController.value.text,
+                                          barcodeController.value.text);
                                     }
                                   }
                                 },
-                                child: Text(AppLocalizations.of(context)!.submit),
+                                child:
+                                    Text(AppLocalizations.of(context)!.submit),
                               ),
                             ),
                           )
@@ -221,17 +264,19 @@ class _newItem extends State<NewItem> {
   /// Stock cant be edited so it is not required to be passed here
   /// Product number cant be edited but is necessary to identify the product
   /// in the database
-  Future<void> editItem(String productName, String productNumber, String barcode) async {
-    bool success = await _apiService.editProduct(productName, productNumber, barcode);
+  Future<void> editItem(String productName, String productNumber,
+      String desiredStock, String barcode) async {
+    bool success = await _apiService.editProduct(
+        productName, productNumber, desiredStock, barcode);
     if (success) {
       Navigator.pop(context);
     }
   }
 
-  Future<void> addNewItem(
-      String productName, String productNumber, String stock, String barcode) async {
-    //TODO actually create a new product in the database
-    bool success = await _apiService.createNewProduct(productName, productNumber, stock, barcode);
+  Future<void> addNewItem(String productName, String productNumber,
+      String desiredStock, String stock, String barcode) async {
+    bool success = await _apiService.createNewProduct(
+        productName, productNumber, desiredStock, stock, barcode);
     if (success) {
       Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
     }

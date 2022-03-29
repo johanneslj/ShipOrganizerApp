@@ -1,16 +1,18 @@
 /// Represents an item in the inventory.
 class Item {
-  Item({required this.name, this.productNumber, this.ean13, required this.amount});
+  Item({required this.productName, this.productNumber, this.barcode, this.desiredStock,required this.stock});
 
-  final String name;
+  final String productName;
   final String? productNumber;
-  final String? ean13;
-  int amount;
+  final String? barcode;
+  int stock;
+  int? desiredStock;
 
   Map toJson() => {
-    'name': name,
+    'productName': productName,
     'productNumber': productNumber,
-    'ean13': ean13,
-    'amount': amount,
+    'barcode': barcode,
+    'desiredStock': desiredStock,
+    'stock': stock,
   };
 }

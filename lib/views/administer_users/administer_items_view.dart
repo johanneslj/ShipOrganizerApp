@@ -162,11 +162,11 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                 ? Container(
                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: Text(
-                  item.name,
+                  item.productName,
                   style: Theme.of(context).textTheme.bodyText2,
                 ))
                 : Text(
-              item.name,
+              item.productName,
               style: Theme.of(context).textTheme.caption,
             ),
             !mobile
@@ -194,6 +194,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         ));
       }
     }
+
     setState(() {
       _isLoading = false;
       tableRows = rows;
