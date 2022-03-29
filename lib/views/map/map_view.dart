@@ -30,8 +30,8 @@ class _MapViewState extends State<MapView> {
 
   Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  int min = 0;
-  int max = 0;
+  int min = 1;
+  int max = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -138,8 +138,10 @@ class _MapViewState extends State<MapView> {
 
     List<List<Report>> sortedList = markerLocations.values.toList()
       ..sort((a, b) => getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
-    max = getAmountOfItemsAtMarker(sortedList.last);
-    min = getAmountOfItemsAtMarker(sortedList.first);
+    if(sortedList.length > 1) {
+      max = getAmountOfItemsAtMarker(sortedList.last);
+      min = getAmountOfItemsAtMarker(sortedList.first);
+    }
 
     markerLocations.forEach((latLng, item) {
       String markerIdVal = latLng.toString().replaceAll("LatLng(", "").replaceAll(")", "");
