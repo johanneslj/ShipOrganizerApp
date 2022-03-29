@@ -277,10 +277,8 @@ class ApiService {
   Future<int> testConnection() async {
     int code = 101;
     await dio
-        .get(baseUrl + "actuator/health")
-        .then((value) =>
-            value.statusCode != null ? code = value.statusCode! : code = 101)
-        .onError((error, stackTrace) => code = 101);
+    .get(baseUrl + "connection")
+    .then((value) => value.statusCode != null ? code = value.statusCode! : null);
     return code;
   }
 

@@ -25,7 +25,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   int page = 1;
   bool _isButtonDisabled = true;
-  bool _hasEnteredEmail = false;
   bool isLoading = false;
 
   setLoading(bool state) => setState(() => isLoading = state);
@@ -42,16 +41,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         appBar: AppBar(
           centerTitle: true,
-          leading: _hasEnteredEmail
-              ? const Text("")
-              : IconButton(
-                  icon: Icon(Icons.arrow_back,
-                      color: Theme.of(context).colorScheme.onPrimary),
-                  onPressed: () => {
-                    FocusScope.of(context).requestFocus(FocusNode()),
-                    Navigator.of(context).pop()
-                  },
-                ),
+          iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
           title: Text(
             AppLocalizations.of(context)!.changePassword,
             style: Theme.of(context).textTheme.headline6,
@@ -215,7 +205,6 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                               }
                           })
                 },
-              _hasEnteredEmail = true,
               setLoading(false),
             };
   }
