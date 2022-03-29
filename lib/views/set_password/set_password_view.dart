@@ -20,9 +20,10 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   ApiService apiService = ApiService.getInstance();
 
-  final RegExp emailRegex =
-      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
+  final RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final RegExp passwordRegex =
+      RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
 
   int page = 1;
 
@@ -37,18 +38,36 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        body: Center(
-            child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: page == 1
-                        ? enterEmailPage()
-                        : page == 2
-                            ? enterCodePage()
-                            : page == 3
-                                ? enterNewPasswordPage()
-                                : errorPage()))));
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () => {
+            FocusScope.of(context).requestFocus(FocusNode()),
+            Navigator.of(context).pop()
+          },
+        ),
+        title: Text(
+          AppLocalizations.of(context)!.changePassword,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: page == 1
+                ? enterEmailPage()
+                : page == 2
+                    ? enterCodePage()
+                    : page == 3
+                        ? enterNewPasswordPage()
+                        : errorPage(),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Returns widget where user can enter e-mail address.
@@ -59,16 +78,20 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Column(children: [
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
         // Enter email to get verification code
-        Text(AppLocalizations.of(context)!.email, style: Theme.of(context).textTheme.headline6),
+        Text(AppLocalizations.of(context)!.email,
+            style: Theme.of(context).textTheme.headline5),
         TextFormField(
           validator: (value) => value!.isNotEmpty && emailRegex.hasMatch(value)
               ? null
               : AppLocalizations.of(context)!.enterValidEmail,
           // Username text field
           controller: emailController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
+          decoration:
+              InputDecoration(hintText: AppLocalizations.of(context)!.email),
         ),
 
         // Send code button
@@ -86,17 +109,23 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                             if (emailController.text.isEmpty ||
                                 !emailRegex.hasMatch(emailController.text))
                               {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.enterValidEmail)))
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .enterValidEmail)))
                               }
                             else
                               {
                                 setLoading(true),
-                                if (await apiService
-                                    .sendVerificationCode(emailController.value.text))
+                                if (await apiService.sendVerificationCode(
+                                    emailController.value.text))
                                   {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text(AppLocalizations.of(context)!.sentCode))),
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)!
+                                                    .sentCode))),
                                     setState(() {
                                       page = 2;
                                     })
@@ -124,7 +153,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         TextFormField(
           // Username text field
           controller: verificationCodeController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.verificationCode),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.verificationCode),
         ),
 
         // Submit code button
@@ -151,9 +181,11 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                                   }
                                 else
                                   {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!.somethingWentWrong))),
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)!
+                                                    .somethingWentWrong))),
                                   },
                                 setLoading(false),
                               },
@@ -184,7 +216,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             }
           },
           controller: passwordController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.newPassword),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.newPassword),
           obscureText: true,
         ),
 
@@ -207,7 +240,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           }),
           // Username text field
           controller: confirmPasswordController,
-          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.confirmPassword),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.confirmPassword),
           obscureText: true,
         ),
 
@@ -225,9 +259,11 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                             // Gives feedback to user with a snack bar if trying to confirm invalid password.
                             if (_isButtonDisabled)
                               {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text(
-                                        AppLocalizations.of(context)!.enterValidPasswordShort)))
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .enterValidPasswordShort)))
                               }
                             else
                               {
@@ -238,7 +274,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                                     verificationCodeController.value.text,
                                     passwordController.value.text))
                                   {
-                                    Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false),
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, "/", (r) => false),
                                   }
                               },
                             setLoading(false),
