@@ -7,6 +7,7 @@ import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/config/theme_config.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
+import 'package:ship_organizer_app/views/inventory/sendReportToEmailView.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'inventory_widget.dart';
@@ -32,7 +33,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   List<Item> displayedItems = [];
   late bool _isLoading = true;
 
-
   // TODO Implement with API
   Department selectedDepartment = Department(departmentName: "");
 
@@ -41,6 +41,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     super.initState();
     dataLoadFunction();
   }
+
   dataLoadFunction() async {
     setState(() {
       _isLoading = true; // your loader has started to load
@@ -52,6 +53,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
       _isLoading = false; // your loder will stop to finish after the data fetch
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -60,8 +62,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
       appBar: PreferredSize(
           preferredSize:
               // Creates top padding for the top bar so that it starts below status/notification bar.
-              Size(
-                  MediaQuery.of(context).size.width, MediaQuery.of(context).viewPadding.top + 32.0),
+              Size(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).viewPadding.top + 32.0),
           child: TopBar(
             onSearch: onSearch,
             onClear: onClear,
@@ -72,23 +74,28 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
             onScan: scanBarcodeNormal,
           )),
       drawer: const SideMenu(),
-      body: _isLoading ? circularProgress()  : GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: RefreshIndicator(onRefresh: () => getItems(),
-          child: Inventory(items: displayedItems,isRecommended: true),
-        color: colorScheme.onPrimary,
-        backgroundColor: colorScheme.primary),
-      ),
+      body: _isLoading
+          ? circularProgress()
+          : GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: RefreshIndicator(
+                  onRefresh: () => getItems(),
+                  child: Inventory(items: displayedItems, isRecommended: true),
+                  color: colorScheme.onPrimary,
+                  backgroundColor: colorScheme.primary),
+            ),
       floatingActionButton: FloatingActionButton(
-        foregroundColor: Theme.of(context).colorScheme.primaryVariant,
-        onPressed: onOrderStockUp,
-        child: Icon(Icons.send_sharp, color: Theme.of(context).colorScheme.surface)
-      ),
+          foregroundColor: Theme.of(context).colorScheme.primaryVariant,
+          onPressed: onOrderStockUp,
+          child: Icon(Icons.send_sharp,
+              color: Theme.of(context).colorScheme.surface)),
     );
   }
 
   void onOrderStockUp() {
-
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SendReportToEmail(items: displayedItems,)));
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -134,7 +141,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   /// Gets the departments as a [List] of [PopupMenuItem] to be used in the select department pop up menu.
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
-
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
 
@@ -158,21 +164,24 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     }
     return popMenuItems;
   }
+
   Future<void> getItems() async {
     List<Item> displayed = [];
-    displayed = await apiService.getRecommendedItems(selectedDepartment.departmentName);
-    setState((){
+    displayed =
+        await apiService.getRecommendedItems(selectedDepartment.departmentName);
+    setState(() {
       displayedItems = displayed;
     });
   }
+
   ///Method to scan the barcode
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes =
-      await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
