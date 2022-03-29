@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
-import 'package:ship_organizer_app/main.dart';
-import 'package:ship_organizer_app/views/login/login_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// This view is used for letting the user set a new password.
@@ -17,19 +16,17 @@ class SetPasswordView extends StatefulWidget {
 
 class _SetPasswordViewState extends State<SetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   ApiService apiService = ApiService.getInstance();
-
-  final RegExp emailRegex = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  final RegExp passwordRegex =
-      RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
+  final RegExp emailRegex =
+      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final RegExp passwordRegex = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
 
   int page = 1;
-
   bool _isButtonDisabled = true;
 
-  bool _hasEnteredEmail = false;
+  bool isLoading = false;
+  setLoading(bool state) => setState(() => isLoading = state);
 
   TextEditingController emailController = TextEditingController();
   TextEditingController verificationCodeController = TextEditingController();
@@ -40,37 +37,19 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: _hasEnteredEmail ? const Text("") : IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => {
-            FocusScope.of(context).requestFocus(FocusNode()),
-            Navigator.of(context).pop()
-          },
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.changePassword,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: page == 1
-                ? enterEmailPage()
-                : page == 2
-                    ? enterCodePage()
-                    : page == 3
-                        ? enterNewPasswordPage()
-                        : errorPage(),
-          ),
-        ),
-      ),
-    );
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        appBar: AppBar(iconTheme: IconThemeData(color: Theme.of(context).colorScheme.surface)),
+        body: Center(
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: page == 1
+                        ? enterEmailPage()
+                        : page == 2
+                            ? enterCodePage()
+                            : page == 3
+                                ? enterNewPasswordPage()
+                                : errorPage()))));
   }
 
   /// Returns widget where user can enter e-mail address.
@@ -79,73 +58,25 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   /// so that the verification code entry page is displayed.
   Widget enterEmailPage() {
     return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Enter email to get verification code
-        Text(AppLocalizations.of(context)!.email,
-            style: Theme.of(context).textTheme.headline5),
-        TextFormField(
-          validator: (value) => value!.isNotEmpty && emailRegex.hasMatch(value)
-              ? null
-              : AppLocalizations.of(context)!.enterValidEmail,
-          // Username text field
-          controller: emailController,
-          decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.email,
-              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-        ),
-
-        // Send code button
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ButtonTheme(
-                  disabledColor: Colors.grey,
-                  minWidth: 250.0,
-                  height: 100.0,
-                  child: ElevatedButton(
-                      onPressed: isLoading
-                          ? null
-                          : () async => {
-                                // Prompts user to enter valid email before trying to send code.
-                                if (emailController.text.isEmpty ||
-                                    !emailRegex.hasMatch(emailController.text))
-                                  {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)!
-                                                    .enterValidEmail)))
-                                  }
-                                else
-                                  {
-                                    setLoading(true),
-                                    if (await apiService.sendVerificationCode(
-                                        emailController.value.text))
-                                      {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .sentCode))),
-                                        _hasEnteredEmail = true,
-                                        setState(() {
-                                          page = 2;
-                                        })
-                                      }
-                                  },
-                                setLoading(false),
-                              },
-                      child: Text(AppLocalizations.of(context)!.sendCode)))
-            ],
-          ),
-        )
-      ]),
-    );
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: FutureBuilder<bool>(
+            future: _autoFillEmailIfExists(),
+            builder: (context, hasUsername) {
+              return Column(children: [
+                Text(AppLocalizations.of(context)!.email,
+                    style: Theme.of(context).textTheme.headline6),
+                TextFormField(
+                  validator: (value) => _emailValidator(value, context),
+                  controller: emailController,
+                  decoration: InputDecoration(hintText: AppLocalizations.of(context)!.email),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: _submitEmailButton(context),
+                )
+              ]);
+            }));
   }
 
   /// Returns widget where user can enter the verification code received by e-mail.
@@ -156,49 +87,16 @@ class _SetPasswordViewState extends State<SetPasswordView> {
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
-        // Enter verification code
         Text(AppLocalizations.of(context)!.verificationCode,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
-          // Username text field
           controller: verificationCodeController,
-          decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.verificationCode),
+          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.verificationCode),
         ),
-
-        // Submit code button
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Column(children: [
-              ButtonTheme(
-                  disabledColor: Colors.grey,
-                  minWidth: 250.0,
-                  height: 100.0,
-                  child: ElevatedButton(
-                      onPressed: isLoading
-                          ? null
-                          : () async => {
-                                // TODO Verify code with API
-                                setLoading(true),
-                                if (await apiService.verifyVerificationCode(
-                                    emailController.value.text,
-                                    verificationCodeController.value.text))
-                                  {
-                                    setState(() {
-                                      page = 3;
-                                    })
-                                  }
-                                else
-                                  {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)!
-                                                    .somethingWentWrong))),
-                                  },
-                                setLoading(false),
-                              },
-                      child: Text(AppLocalizations.of(context)!.verifyCode))),
+              _getVerifyCodeButton(),
             ]))
       ]),
     );
@@ -216,88 +114,170 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         Text(AppLocalizations.of(context)!.newPassword,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
-          validator: (value) {
-            if (!passwordRegex.hasMatch(value!)) {
-              _isButtonDisabled = true;
-              return AppLocalizations.of(context)!.enterValidPassword;
-            } else {
-              return null;
-            }
-          },
+          validator: (value) => _getPasswordValidator(value),
           controller: passwordController,
-          decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.newPassword),
+          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.newPassword),
           obscureText: true,
         ),
-
-        // Confirm new password
         Text(AppLocalizations.of(context)!.confirmPassword,
             style: Theme.of(context).textTheme.headline6),
         TextFormField(
-          validator: ((value) {
-            // Displays error message if passwords do not match.
-            // If all password entry is correct, button is enabled.
-            if (value.toString() != passwordController.text) {
-              _isButtonDisabled = true;
-              return AppLocalizations.of(context)!.passwordsMustMatch;
-            } else if (passwordRegex.hasMatch(passwordController.text)) {
-              _isButtonDisabled = false;
-              return null;
-            } else {
-              return null;
-            }
-          }),
-          // Username text field
+          validator: (value) => _getConfirmPasswordValidator(value),
           controller: confirmPasswordController,
           decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.confirmPassword),
+              hintText: AppLocalizations.of(context)!.confirmPassword, errorMaxLines: 3),
           obscureText: true,
         ),
-
-        // Submit password button
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: ButtonTheme(
-              disabledColor: Colors.grey,
-              minWidth: 250.0,
-              height: 100.0,
-              child: ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () async => {
-                            // Gives feedback to user with a snack bar if trying to confirm invalid password.
-                            if (_isButtonDisabled)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .enterValidPasswordShort)))
-                              }
-                            else
-                              {
-                                // TODO Change password with API
-                                setLoading(true),
-                                if (await apiService.setNewPassword(
-                                    emailController.value.text,
-                                    verificationCodeController.value.text,
-                                    passwordController.value.text))
-                                  {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, "/", (r) => false),
-                                  }
-                              },
-                            setLoading(false),
-                          },
-                  child: Text(AppLocalizations.of(context)!.confirm))),
+          child: _getConfirmPasswordButton(),
         )
       ]),
     );
   }
 
-  bool isLoading = false;
+  Future<bool> _autoFillEmailIfExists() async {
+    bool hasKey = false;
+    if (await _storage.containsKey(key: "username")) {
+      hasKey = true;
+      _storage
+          .read(key: "username")
+          .then((value) => value != null ? emailController.text = value : null);
+    }
+    return hasKey;
+  }
 
-  setLoading(bool state) => setState(() => isLoading = state);
+  String? _emailValidator(String? value, BuildContext context) {
+    return value!.isNotEmpty && emailRegex.hasMatch(value)
+        ? null
+        : AppLocalizations.of(context)!.enterValidEmail;
+  }
+
+  ButtonTheme _submitEmailButton(BuildContext context) {
+    return ButtonTheme(
+        disabledColor: Colors.grey,
+        minWidth: 250.0,
+        height: 100.0,
+        child: ElevatedButton(
+            onPressed: _onSubmitEmailPressed(context),
+            child: Text(AppLocalizations.of(context)!.sendCode)));
+  }
+
+  Set Function()? _onSubmitEmailPressed(BuildContext context) {
+    return isLoading
+        ? null
+        : () => {
+              if (emailController.text.isEmpty || !emailRegex.hasMatch(emailController.text))
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(AppLocalizations.of(context)!.enterValidEmail)))
+                }
+              else
+                {
+                  setLoading(true),
+                  apiService.sendVerificationCode(emailController.value.text).then((isSent) => {
+                        if (isSent)
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(AppLocalizations.of(context)!.sentCode))),
+                            setState(() {
+                              page = 2;
+                            })
+                          }
+                      })
+                },
+              setLoading(false),
+            };
+  }
+
+  ButtonTheme _getVerifyCodeButton() {
+    return ButtonTheme(
+                disabledColor: Colors.grey,
+                minWidth: 250.0,
+                height: 100.0,
+                child: ElevatedButton(
+                    onPressed: _onVerifyCodePressed(),
+                    child: Text(AppLocalizations.of(context)!.verifyCode)));
+  }
+
+  Set Function()? _onVerifyCodePressed() {
+    return isLoading
+        ? null
+        : () => {
+              setLoading(true),
+              apiService
+                  .verifyVerificationCode(
+                      emailController.value.text, verificationCodeController.value.text)
+                  .then((isValid) => {
+                        if (isValid)
+                          {
+                            setState(() {
+                              page = 3;
+                            })
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(AppLocalizations.of(context)!.somethingWentWrong))),
+                          }
+                      }),
+              setLoading(false),
+            };
+  }
+
+  String? _getPasswordValidator(String? value) {
+    if (!passwordRegex.hasMatch(value!)) {
+      _isButtonDisabled = true;
+      return AppLocalizations.of(context)!.enterValidPassword;
+    } else {
+      return null;
+    }
+  }
+
+  String? _getConfirmPasswordValidator(String? value) {
+    if (value.toString() != passwordController.text) {
+      _isButtonDisabled = true;
+      return AppLocalizations.of(context)!.passwordsMustMatch;
+    } else if (passwordRegex.hasMatch(passwordController.text)) {
+      _isButtonDisabled = false;
+      return null;
+    } else {
+      return null;
+    }
+  }
+
+  ButtonTheme _getConfirmPasswordButton() {
+    return ButtonTheme(
+            disabledColor: Colors.grey,
+            minWidth: 250.0,
+            height: 100.0,
+            child: ElevatedButton(
+                onPressed: _onConfirmPasswordPressed(),
+                child: Text(AppLocalizations.of(context)!.confirm)));
+  }
+
+  Set Function()? _onConfirmPasswordPressed() {
+    return isLoading
+                    ? null
+                    : () => {
+                          if (_isButtonDisabled)
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      AppLocalizations.of(context)!.enterValidPasswordShort)))
+                            }
+                          else
+                            {
+                              setLoading(true),
+                              apiService.setNewPassword(
+                                  emailController.value.text,
+                                  verificationCodeController.value.text,
+                                  passwordController.value.text)
+                              .then((success) => Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false))
+                            },
+                          setLoading(false),
+                        };
+  }
 
   /// Just in case :)
   Widget errorPage() {

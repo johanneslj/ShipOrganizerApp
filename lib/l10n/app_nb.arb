@@ -11,7 +11,7 @@
   "createUser": "Lag Bruker",
   "email": "E-post",
   "enterValidEmail": "Du må skrive en gyldig e-post",
-  "enterValidPassword": "Ikke gyldig passord. Passordet må inneholde minst 8 karakterer, 1 siffer, 1 stor, og 1 liten bokstav.",
+  "enterValidPassword": "Ikke gyldig passord. \nPassordet må inneholde minst 8 karakterer, \n1 siffer, 1 stor, og 1 liten bokstav.",
   "enterValidPasswordShort": "Ikke gyldig passord.",
   "errorHappened": "Noe galt har hendt... Vennligst lukk appen og prøv på nytt.",
   "forgotPassword": "Glemt passord?",
