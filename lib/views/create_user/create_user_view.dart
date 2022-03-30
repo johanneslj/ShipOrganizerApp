@@ -26,7 +26,7 @@ class _CreateUserState extends State<CreateUser> {
   ApiService apiService = ApiService.getInstance();
 
   //TODO Get departments from backend
-  List<String> departments = <String>["Bridge", "Deck"];
+  List<String> departments = <String>[];
 
   String email = "";
   String fullName = "";
@@ -36,6 +36,17 @@ class _CreateUserState extends State<CreateUser> {
 
   List<String> _selectedDepartments = <String>[];
 
+  @override
+  void initState(){
+    getDepartments();
+  }
+
+  void getDepartments() async {
+     List<String> _departments = await apiService.getDepartments();
+    setState(() {
+      departments = _departments;
+    });
+  }
 // This function is triggered when a checkbox is checked or unchecked
   void _itemChange(String itemValue, bool isSelected) {
     setState(() {
