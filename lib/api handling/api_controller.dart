@@ -780,7 +780,7 @@ class ApiService {
               stock = value;
             }
             break;
-          case "desiredStock":
+          case "desired_Stock":
             if (value.runtimeType == String) {
               desiredStock = int.parse(value);
             } else {
