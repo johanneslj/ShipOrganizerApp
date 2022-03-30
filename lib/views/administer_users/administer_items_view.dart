@@ -52,31 +52,28 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       body: _isLoading
           ? circularProgress()
           : SingleChildScrollView(
-              child: Column(
+              child: Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: Table(
-                        border: const TableBorder(
-                            horizontalInside:
-                                BorderSide(width: 1, style: BorderStyle.solid)),
-                        columnWidths: widget.isAdministeringUsers
-                            ? const <int, TableColumnWidth>{
-                                0: FlexColumnWidth(0.4),
-                                1: FlexColumnWidth(),
-                                2: FixedColumnWidth(75),
-                              }
-                            : const <int, TableColumnWidth>{
-                                0: FlexColumnWidth(1.05),
-                                1: FlexColumnWidth(),
-                                2: FixedColumnWidth(75),
-                              },
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: tableRows),
-                  )
+                  Table(
+                      border: const TableBorder(
+                          horizontalInside:
+                          BorderSide(width: 0.2, style: BorderStyle.solid)),
+                      columnWidths: widget.isAdministeringUsers
+                          ? const <int, TableColumnWidth>{
+                        0: FlexColumnWidth(0.4),
+                        1: FlexColumnWidth(),
+                        2: FixedColumnWidth(75),
+                      }
+                          : const <int, TableColumnWidth>{
+                        0: FlexColumnWidth(1.05),
+                        1: FlexColumnWidth(),
+                        2: FixedColumnWidth(75),
+                      },
+                      defaultVerticalAlignment:
+                      TableCellVerticalAlignment.middle,
+                      children: tableRows),
                 ],
-              ),
+              ), ),
             ),
     );
   }
@@ -91,7 +88,10 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       widget.isAdministeringUsers
           ? TableRow(
               children: [
-                Text(AppLocalizations.of(context)!.name),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Text(AppLocalizations.of(context)!.name),
+                ),
                 Text(AppLocalizations.of(context)!.email),
                 const Text("")
               ],
@@ -100,9 +100,11 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
               children: [
                 !mobile
                     ? Container(
-                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        padding: const EdgeInsets.fromLTRB(10, 15, 0, 15),
                         child: Text(AppLocalizations.of(context)!.productName))
-                    : Text(AppLocalizations.of(context)!.productName),
+                    : Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Text(AppLocalizations.of(context)!.productName)),
                 !mobile
                     ? Container(
                         padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -116,8 +118,29 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
     if (widget.isAdministeringUsers) {
       List<User> users = await _apiService.getAllUsers();
       for (User user in users) {
+        int i = users.indexOf(user);
         rows.add(TableRow(
+          decoration: i % 2 == 0
+              ? BoxDecoration(color: Colors.grey[100])
+              : const BoxDecoration(color: Colors.white),
           children: [
+            !mobile
+                ? Container(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Text(
+                        user.getName(),
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Text(
+                      user.getName(),
+                      style: Theme.of(context).textTheme.caption,
+                    )),
             !mobile
                 ? Container(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -126,20 +149,9 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
                       style: Theme.of(context).textTheme.bodyText2,
                     ))
                 : Text(
-                    user.getName(),
+                    user.getEmail(),
                     style: Theme.of(context).textTheme.caption,
                   ),
-            !mobile
-                ? Container(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: Text(
-                  user.getName(),
-                  style: Theme.of(context).textTheme.bodyText2,
-                ))
-                : Text(
-              user.getEmail(),
-              style: Theme.of(context).textTheme.caption,
-            ),
             TextButton(
                 onPressed: () => {
                       Navigator.push(
@@ -154,32 +166,41 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         ));
       }
     } else {
-      List<Item> items = await _apiService.getItems(await _apiService.getActiveDepartment());
+      List<Item> items =
+          await _apiService.getItems(await _apiService.getActiveDepartment());
       for (Item item in items) {
+        int i = items.indexOf(item);
         rows.add(TableRow(
+          decoration: i % 2 == 0
+              ? BoxDecoration(color: Colors.grey[100])
+              : const BoxDecoration(color: Colors.white),
           children: [
             !mobile
                 ? Container(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: Text(
-                  item.productName,
-                  style: Theme.of(context).textTheme.bodyText2,
-                ))
-                : Text(
-              item.productName,
-              style: Theme.of(context).textTheme.caption,
-            ),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Text(
+                          item.productName,
+                          style: Theme.of(context).textTheme.bodyText2,
+                        )))
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Text(
+                      item.productName,
+                      style: Theme.of(context).textTheme.caption,
+                    )),
             !mobile
                 ? Container(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: Text(
-                  item.productNumber!,
-                  style: Theme.of(context).textTheme.bodyText2,
-                ))
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Text(
+                      item.productNumber!,
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ))
                 : Text(
-              item.productNumber!,
-              style: Theme.of(context).textTheme.caption,
-            ),
+                    item.productNumber!,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
             TextButton(
                 onPressed: () => {
                       Navigator.push(
