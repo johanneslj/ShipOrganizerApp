@@ -76,11 +76,11 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
                   color: colorScheme.onPrimary,
                   backgroundColor: colorScheme.primary),
             ),
-      /*floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
           foregroundColor: Theme.of(context).colorScheme.primaryVariant,
           onPressed: onOrderStockUp,
           child: Icon(Icons.send_sharp,
-              color: Theme.of(context).colorScheme.surface)),*/
+              color: Theme.of(context).colorScheme.surface)),
     );
   }
 
