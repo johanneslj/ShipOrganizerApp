@@ -560,6 +560,28 @@ class ApiService {
     return success;
   }
 
+  /// Deletes a product using the product number
+  /// Returns true if successful else it returns false
+  Future<bool> deleteProduct(String productNumber) async {
+    bool success = false;
+
+    try {
+      await _setBearerForAuthHeader();
+
+      var data = {
+        "productNumber": productNumber
+      };
+      var response = await dio.post(baseUrl + "api/product/delete-product", data: data);
+      if (response.statusCode == 200) {
+        success = true;
+      }
+    } catch (e) {
+      _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    }
+
+    return success;
+  }
+
   Future<List<Item>> getAllItems() async {
     List<Item> items = [];
     try {
