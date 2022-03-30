@@ -8,7 +8,7 @@
   "companyName": "Maoyi",
   "confirm": "Bekreft",
   "confirmPassword": "Bekreft passord",
-  "createUser": "Lag Bruker",
+  "createUser": "Lag bruker",
   "email": "E-post",
   "enterValidEmail": "Du må skrive en gyldig e-post",
   "enterValidPassword": "Ikke gyldig passord. \nPassordet må inneholde minst 8 karakterer, \n1 siffer, 1 stor, og 1 liten bokstav.",
