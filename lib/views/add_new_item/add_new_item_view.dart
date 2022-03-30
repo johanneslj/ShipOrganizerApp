@@ -282,7 +282,7 @@ class _NewItemState extends State<NewItem> {
                                       deleteProduct();
                                     },
                                     child: Text(
-                                        AppLocalizations.of(context)!.delete),
+                                        AppLocalizations.of(context)!.deleteProduct),
                                   ),
                                 ),
                               )
