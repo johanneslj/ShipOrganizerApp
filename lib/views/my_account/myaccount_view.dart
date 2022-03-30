@@ -194,29 +194,29 @@ class _MyAccount extends State<MyAccount> {
   List<Widget> getGridTiles(bool admin, BuildContext context) {
     List<Widget> departmentCardList = <Widget>[];
     departmentCardList.add(gridTileWidget(
-        "/selectDepartment", AppLocalizations.of(context)!.changeDepartment));
+        "/selectDepartment", AppLocalizations.of(context)!.changeDepartment,"false"));
     departmentCardList.add(gridTileWidget(
-        "/changePassword", AppLocalizations.of(context)!.changePassword));
+        "/changePassword", AppLocalizations.of(context)!.changePassword,"false"));
     departmentCardList.add(gridTileWidget("/recommendedInventory",
-        AppLocalizations.of(context)!.preferredInventory));
+        AppLocalizations.of(context)!.preferredInventory,"false"));
     departmentCardList
-        .add(gridTileWidget("/sendBill", AppLocalizations.of(context)!.billing));
+        .add(gridTileWidget("/sendBill", AppLocalizations.of(context)!.billing,admin.toString()));
     if (admin) {
       departmentCardList.add(gridTileWidget(
-          "/createUser", AppLocalizations.of(context)!.registerNewUser));
+          "/createUser", AppLocalizations.of(context)!.registerNewUser,"false"));
       departmentCardList.add(gridTileWidget(
-          "/administerUsers", AppLocalizations.of(context)!.administerUsers));
+          "/administerUsers", AppLocalizations.of(context)!.administerUsers,"false"));
       departmentCardList.add(gridTileWidget("/administerProducts",
-          AppLocalizations.of(context)!.administerProducts));
+          AppLocalizations.of(context)!.administerProducts,"false"));
     }
     return departmentCardList;
   }
 
   /// Custom Gridview tile
-  Widget gridTileWidget(route, routeName) {
+  Widget gridTileWidget(route, routeName,arguments) {
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, route);
+          Navigator.pushNamed(context, route,arguments:arguments);
         },
         child: Container(
             margin: const EdgeInsets.all(5),

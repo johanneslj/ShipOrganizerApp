@@ -6,6 +6,7 @@ import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:location/location.dart';
+
 import 'item.dart';
 
 /// Widget that displays the input items as a ListView.
@@ -39,7 +40,7 @@ class Inventory extends StatelessWidget {
   final bool isRecommended;
 
   /// Controllers used for TextFields in recommended tiles.
-  final List<TextEditingController> _controllers = [];
+  late List<TextEditingController> _controllers = [];
 
   final Location _location = Location();
 
@@ -48,14 +49,15 @@ class Inventory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     apiService.setContext(context);
-    return ListView.separated(
+    _controllers = List.generate(items.length, (i) => TextEditingController());
+    return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        _controllers.add(TextEditingController(text: items[index].stock.toString()));
+        _controllers[index] = (TextEditingController(text: items[index].stock.toString()));
         return getListTile(context, index);
       },
-      separatorBuilder: (BuildContext context, int index) =>
-          Divider(color: Theme.of(context).colorScheme.primary),
+/*     separatorBuilder: (BuildContext context, int index) =>
+          Divider(color: Theme.of(context).colorScheme.primary),*/
     );
   }
 
@@ -64,10 +66,10 @@ class Inventory extends StatelessWidget {
     bool tablet = (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Tablet);
     if (isRecommended) {
       // Sets cursor in amount TextField to end of text on first tap.
-      if (_controllers[index].text.isNotEmpty) {
+      /*if (_controllers[index].text.isNotEmpty) {
         _controllers[index].selection =
             TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
-      }
+      }*/
 
       return ListTile(
           contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -82,7 +84,7 @@ class Inventory extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                    scrollDirection: Axis.vertical,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints.expand(width: 96, height: 48),
                       child: TextField(

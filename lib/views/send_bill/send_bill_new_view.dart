@@ -19,21 +19,39 @@ class NewBill extends StatefulWidget {
 }
 
 class _newBill extends State<NewBill> {
-  String selectedValue = "Bridge";
+  String selectedValue = "";
   bool admin = false;
   late File? _image;
 
   ApiService apiService = ApiService.getInstance();
+  late bool _isLoading = false;
 
   late List<DropdownMenuItem<String>> dropdownItems = [];
 
   @override
   void initState() {
-    getdropdownItems();
+    dataLoadFunction();
     _image = null;
     super.initState();
   }
 
+  dataLoadFunction() async {
+    setState(() {
+      _isLoading = true; // your loader has started to load
+    });
+    await setSelectedValue();
+    await getdropdownItems();
+    setState(() {
+      _isLoading = false; // your loder will stop to finish after the data fetch
+    });
+  }
+
+  Future<void> setSelectedValue() async{
+    String? hei = await apiService.storage.read(key: "activeDepartment");
+    setState(() {
+      selectedValue = hei!;
+    });
+  }
   _imgFromCamera() async {
     final image = (await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 50));
     if (image == null) return;
@@ -54,7 +72,7 @@ class _newBill extends State<NewBill> {
   @override
   Widget build(BuildContext context) {
     apiService.setContext(context);
-    return Scaffold(
+    return _isLoading ? circularProgress() : Scaffold(
         body: Column(
       children: [
         Padding(
@@ -121,7 +139,7 @@ class _newBill extends State<NewBill> {
   ///Creates the menu items based on the department list
   Future<void> getdropdownItems() async {
     List<DropdownMenuItem<String>> menuItems = <DropdownMenuItem<String>>[];
-    List<String> departments = await getDepartments();
+    List<String> departments = await apiService.getDepartments();
     for (String department in departments) {
       DropdownMenuItem<String> departmentCard = DropdownMenuItem(
         child: Text(department),
@@ -132,16 +150,6 @@ class _newBill extends State<NewBill> {
     setState(() {
       dropdownItems = menuItems;
     });
-  }
-
-  //Gets the departments from the backend server
-  Future<List<String>> getDepartments() async {
-    String? allValues = await apiService.storage.read(key: "departments");
-    List<String> departments = [];
-    if (allValues != null) {
-      departments.add(allValues.replaceAll("[", "").replaceAll("]", "").toString());
-    }
-    return departments;
   }
 
   //Creates the picker for the user to choose between the gallery and the camera
@@ -190,5 +198,16 @@ class _newBill extends State<NewBill> {
 
     //Send this to backend server
     log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
+  }
+
+  /// Creates a container with a CircularProgressIndicator
+  Container circularProgress() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 10.0),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    );
   }
 }

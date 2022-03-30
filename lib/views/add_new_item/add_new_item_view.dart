@@ -47,7 +47,6 @@ class _NewItemState extends State<NewItem> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
     setState(() {
       barcodeController.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
     });

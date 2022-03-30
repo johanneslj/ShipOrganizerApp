@@ -76,11 +76,11 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
                   color: colorScheme.onPrimary,
                   backgroundColor: colorScheme.primary),
             ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
           foregroundColor: Theme.of(context).colorScheme.primaryVariant,
           onPressed: onOrderStockUp,
           child: Icon(Icons.send_sharp,
-              color: Theme.of(context).colorScheme.surface)),
+              color: Theme.of(context).colorScheme.surface)),*/
     );
   }
 
@@ -103,10 +103,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.productName.contains(query)) {
+      if (item.productName.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
       } else if (item.productNumber != null) {
-        if (item.productNumber!.contains(query)) {
+        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
           result.add(item);
         }
       } else if (item.barcode != null) {
@@ -159,7 +159,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     displayed =
         await apiService.getRecommendedItems(selectedDepartment.departmentName);
     setState(() {
-      displayedItems = displayed;
+      items = displayed;
+      displayedItems = items;
     });
   }
 
