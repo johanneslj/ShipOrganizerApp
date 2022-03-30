@@ -17,8 +17,9 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  // String baseUrl = "http://10.22.186.180:8080/";
-  String baseUrl = "http://10.22.195.237:8080/"; // Johannes IP
+  String baseUrl = "http://10.22.186.180:8080/"; //Hans
+
+  //String baseUrl = "http://10.22.195.237:8080/"; // Johannes IP
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -106,7 +107,7 @@ class ApiService {
       await storage
           .read(key: "departments")
           .then((value) => departments = _decodeListFromString(value!));
-      }
+    }
     return departments;
   }
 
@@ -304,9 +305,8 @@ class ApiService {
   ///Test connection to api server
   Future<int> testConnection() async {
     int code = 101;
-    await dio
-    .get(baseUrl + "connection")
-    .then((value) => value.statusCode != null ? code = value.statusCode! : null);
+    await dio.get(baseUrl + "connection").then(
+        (value) => value.statusCode != null ? code = value.statusCode! : null);
     return code;
   }
 
@@ -355,6 +355,26 @@ class ApiService {
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
+    return success;
+  }
+
+  Future<bool> deleteProduct(String productNumber) async {
+    bool success = false;
+
+    try {
+      await _setBearerForAuthHeader();
+
+      var data = {
+        "productNumber": productNumber
+      };
+      var response = await dio.post(baseUrl + "api/product/delete-product", data: data);
+      if (response.statusCode == 200) {
+        success = true;
+      }
+    } catch (e) {
+      _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    }
+
     return success;
   }
 
