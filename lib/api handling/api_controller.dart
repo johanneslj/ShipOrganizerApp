@@ -86,12 +86,19 @@ class ApiService {
   /// Gets the list of departments a user has access to from the API
   /// Returns a list of available departments
   Future<List<String>> getDepartments() async {
-    List<String> storedDepartments = await _getStoredDepartments();
+   /* List<String> storedDepartments = await _getStoredDepartments();
     if (storedDepartments.isNotEmpty) {
       return storedDepartments;
-    }
+    }*/
     await _setBearerForAuthHeader();
-    var response = await dio.get(baseUrl + "api/user/departments");
+    Response response;
+    String? admin = await storage.read(key: "userRights");
+    if(admin!.contains("ADMIN")){
+      response = await dio.get(baseUrl + "api/department/get-all");
+    }
+    else{
+      response = await dio.get(baseUrl + "api/user/departments");
+    }
     List<String> departments = _getDepartmentsFromResponse(response);
     storage.write(key: "departments", value: departments.toString());
     if (departments.length == 1) {
