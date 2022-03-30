@@ -112,10 +112,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
-      if (item.productName.contains(query)) {
+      if (item.productName.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
       } else if (item.productNumber != null) {
-        if (item.productNumber!.contains(query)) {
+        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
           result.add(item);
         }
       } else if (item.barcode != null) {
@@ -170,7 +170,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     displayed =
         await apiService.getRecommendedItems(selectedDepartment.departmentName);
     setState(() {
-      displayedItems = displayed;
+      items = displayed;
+      displayedItems = items;
     });
   }
 
