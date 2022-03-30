@@ -112,17 +112,16 @@ class _confimedBill extends State<ConfimedBill> {
   }
 
   Future<void> getConfirmedOrder() async {
-    List<Order> userOrders = await apiService.getUserConfirmedOrders();
-    List<Order> adminOrders = await apiService.getAdminConfirmedOrders();
+    List<Order> orders;
+    if(widget.admin){
+      orders = await apiService.getAdminConfirmedOrders();
+    }
+    else{
+      orders = await apiService.getUserConfirmedOrders();
+    }
 
     setState(() {
-      if(widget.admin){
-        confirmedOrders = adminOrders;
-      }
-      else {
-        confirmedOrders = userOrders;
-      }
-
+        confirmedOrders = orders;
     });
   }
   /// Creates a container with a CircularProgressIndicator

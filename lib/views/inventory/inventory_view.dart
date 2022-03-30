@@ -234,37 +234,6 @@ class _InventoryViewState extends State<InventoryView> {
         ),
       );
     }
-    /*for (String department in departments) {
-      popMenuItems.add(
-        PopupMenuItem(
-          child: Row(
-            children: <Widget>[
-              Radio(
-                groupValue: selectedRadioButton,
-                value: ,
-                onChanged: (int? value) {
-                  if(department ==  selectedDepartment.departmentName){
-                    changeSelectedRadioButton(value!);
-                  }
-                  },
-              ),
-              Text(department),
-            ],
-          ),
-          onTap: () async {
-            setState(() {
-              _isLoading = true;
-            });
-            selectedDepartment.departmentName = department;
-            await apiService.storage.write(key:"items",value:"");
-            await getItems();
-            setState(() {
-              _isLoading = false;
-            });
-          },
-        ),
-      );
-    }*/
     return popMenuItems;
   }
 
