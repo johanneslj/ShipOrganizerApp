@@ -38,8 +38,8 @@ class _InventoryViewState extends State<InventoryView> {
 
   @override
   void initState() {
-    dataLoadFunction();
     super.initState();
+    dataLoadFunction();
   }
 
   dataLoadFunction() async {
@@ -59,31 +59,8 @@ class _InventoryViewState extends State<InventoryView> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    bool mobile =
-        (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
     apiService.setContext(context);
     return createView(context, colorScheme);
-
-      Scaffold(
-      appBar: PreferredSize(
-          preferredSize:
-              // Creates top padding for the top bar so that it starts below status/notification bar.
-              mobile
-                  ? Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).viewPadding.top + 32.0)
-                  : Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).viewPadding.top + 60.0),
-          child: TopBar(
-            onSearch: onSearch,
-            onClear: onClear,
-            filter: showSelectDepartmentMenu,
-            controller: _controller,
-            recommended: false,
-            isMobile: false,
-            onScan: scanBarcodeNormal,
-          )),
-      body: _isLoading ? circularProgress() : createView(context, colorScheme),
-    );
   }
 
 
