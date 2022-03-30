@@ -68,51 +68,50 @@ class _MapViewState extends State<MapView> {
             : Positioned(
                 top: 1,
                 right: 1,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 75,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      child: Text(
-                        AppLocalizations.of(context)!.amount,
-                      ),
-                    ),
-                    Container(
-                        height: 150.0,
-                        width: 75.0,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                                child: Column(
-                              children: [
-                                Text(max.toString(),
-                                    style: Theme.of(context).textTheme.caption,
-                                    overflow: TextOverflow.ellipsis),
-                                Text(((max + min) / 2).toString(),
-                                    style: Theme.of(context).textTheme.caption,
-                                    overflow: TextOverflow.ellipsis),
-                                Text(
-                                  min.toString(),
-                                  style: Theme.of(context).textTheme.caption,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            )),
-                            RotatedBox(
-                              quarterTurns: 3,
-                              child: Image.asset(
-                                "assets/hue.jpeg",
-                              ),
-                            ),
-                          ],
-                        )),
-                  ],
-                )),
+                child: _getMarkerLegend(context)),
       ]),
     );
+  }
+
+  Column _getMarkerLegend(BuildContext context) {
+    return Column(
+                children: [
+                  Container(
+                      height: 150.0,
+                      width: 75.0,
+                      color: const Color(0x8fffffff),
+                      child: Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                              child: Column(
+                                children: [
+                                  Text(max.toString(),
+                                      style: Theme.of(context).textTheme.caption,
+                                      overflow: TextOverflow.ellipsis),
+                                  Text(((max + min) / 2).toString(),
+                                      style: Theme.of(context).textTheme.caption,
+                                      overflow: TextOverflow.ellipsis),
+                                  Text(
+                                    min.toString(),
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              )),
+                          RotatedBox(
+                            quarterTurns: 0,
+                            child: Image.asset(
+                              "assets/hue.png",
+                            ),
+                          ),
+                        ],
+                      ),)
+                ),
+                ],
+              );
   }
 
   /// Happens when the map is first created.

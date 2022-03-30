@@ -83,7 +83,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/FishingBoatSilhouette.jpg
-    - assets/hue.jpeg
+    - assets/hue.png
     - assets/EnglishLanguageFlag.png
     - assets/NorwegianLanguageFlag.png
     - assets/MaoyiLogo.png
