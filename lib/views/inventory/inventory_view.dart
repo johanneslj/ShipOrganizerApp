@@ -77,8 +77,8 @@ class _InventoryViewState extends State<InventoryView> {
               onSearch: onSearch,
               onClear: onClear,
               filter: showSelectDepartmentMenu,
-              controller: _controller,
-              recommended: false,
+              searchFieldController: _controller,
+              isRecommendedView: false,
               isMobile: true,
               onScan: scanBarcodeNormal,
             )),
@@ -106,8 +106,8 @@ class _InventoryViewState extends State<InventoryView> {
               onSearch: onSearch,
               onClear: onClear,
               filter: showSelectDepartmentMenu,
-              controller: _controller,
-              recommended: false,
+              searchFieldController: _controller,
+              isRecommendedView: false,
               isMobile: false,
               onScan: scanBarcodeNormal,
             )),
@@ -184,7 +184,7 @@ class _InventoryViewState extends State<InventoryView> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
     setState(() {
-      _controller.text = barcodeScanRes;
+      _controller.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
     });
   }
 
