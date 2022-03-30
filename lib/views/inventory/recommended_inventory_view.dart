@@ -28,12 +28,9 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
 
   ApiService apiService = ApiService.getInstance();
-
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
-
-  // TODO Implement with API
   Department selectedDepartment = Department(departmentName: "");
 
   @override
@@ -44,13 +41,12 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
-    // fetch you data over here
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
   }
 
@@ -84,11 +80,11 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
                   color: colorScheme.onPrimary,
                   backgroundColor: colorScheme.primary),
             ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
           foregroundColor: Theme.of(context).colorScheme.primaryVariant,
           onPressed: onOrderStockUp,
           child: Icon(Icons.send_sharp,
-              color: Theme.of(context).colorScheme.surface)),
+              color: Theme.of(context).colorScheme.surface)),*/
     );
   }
 
@@ -108,7 +104,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   /// Sets state for displayed items to the result of the search.
   void onSearch() {
-    // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
