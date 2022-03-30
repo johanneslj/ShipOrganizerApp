@@ -28,7 +28,9 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
 
   getEmail() async {
     _email = (await _apiService.storage.read(key: "username"))!;
-    setState(() {});
+    setState(() {
+      _receivers.add(_email);
+    });
   }
 
   @override
@@ -142,7 +144,6 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
 
   Future<bool> sendMissingInventory() async {
     bool success = false;
-    _receivers.add(_email);
     success = await _apiService.sendMissingInventory(widget.items, _receivers);
     return success;
   }
