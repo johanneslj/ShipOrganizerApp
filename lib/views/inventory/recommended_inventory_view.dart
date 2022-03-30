@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
-import 'package:ship_organizer_app/config/theme_config.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/sendReportToEmailView.dart';
@@ -26,14 +23,10 @@ class RecommendedInventoryView extends StatefulWidget {
 /// State of the inventory view.
 class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   final TextEditingController _controller = TextEditingController();
-
   ApiService apiService = ApiService.getInstance();
-
   List<Item> items = [];
   List<Item> displayedItems = [];
   late bool _isLoading = true;
-
-  // TODO Implement with API
   Department selectedDepartment = Department(departmentName: "");
 
   @override
@@ -44,13 +37,12 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
-    // fetch you data over here
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
   }
 
@@ -68,8 +60,8 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
             onSearch: onSearch,
             onClear: onClear,
             filter: showSelectDepartmentMenu,
-            controller: _controller,
-            recommended: true,
+            searchFieldController: _controller,
+            isRecommendedView: true,
             isMobile: true,
             onScan: scanBarcodeNormal,
           )),
@@ -108,7 +100,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
 
   /// Sets state for displayed items to the result of the search.
   void onSearch() {
-    // TODO Handle search functionality
     List<Item> result = [];
     String query = _controller.text;
     for (Item item in items) {
@@ -124,7 +115,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
         }
       }
     }
-
     setState(() {
       displayedItems = result;
     });
@@ -135,7 +125,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   void showSelectDepartmentMenu() async {
     showMenu(
         context: context,
-        position: RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
+        position: const RelativeRect.fromLTRB(16.0, 64.0, 0.0, 0.0),
         items: await getPopupMenuItems());
   }
 
@@ -143,7 +133,6 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   Future<List<PopupMenuItem>> getPopupMenuItems() async {
     List<String> departments = await apiService.getDepartments();
     List<PopupMenuItem> popMenuItems = [];
-
     for (String department in departments) {
       popMenuItems.add(
         PopupMenuItem(
@@ -178,19 +167,15 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
     setState(() {
-      _controller.text = barcodeScanRes;
+      _controller.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
     });
   }
 
