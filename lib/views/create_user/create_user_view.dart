@@ -26,7 +26,7 @@ class _CreateUserState extends State<CreateUser> {
   ApiService apiService = ApiService.getInstance();
 
   //TODO Get departments from backend
-  List<String> departments = <String>[];
+  List<String> departments = [];
 
   String email = "";
   String fullName = "";
@@ -38,6 +38,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   void initState(){
+    super.initState();
     getDepartments();
   }
 
@@ -60,6 +61,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
+    apiService.getDepartments().then((value) => departments = value);
     apiService.setContext(context);
     if (widget.isCreateUser) {
       return Scaffold(
@@ -274,16 +276,14 @@ class _CreateUserState extends State<CreateUser> {
                                     onPressed: isLoading
                                         ? null
                                         : () async {
-                                      FocusScope.of(context).requestFocus(FocusNode());
+                                            FocusScope.of(context).requestFocus(FocusNode());
                                             if (_formKey.currentState!.validate()) {
-                                              bool success = await apiService.editUser(
+                                              apiService.editUser(
                                                   widget.userToEdit?.email,
                                                   emailController.value.text,
                                                   fullNameController.value.text,
                                                   _selectedDepartments);
-                                              if (success) {
-                                                Navigator.pushNamed(context, "/home");
-                                              }
+                                              Navigator.pushNamed(context, "/home");
                                             }
                                           },
                                     child: Text(AppLocalizations.of(context)!.confirmEdit))),
