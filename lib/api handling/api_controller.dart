@@ -581,7 +581,7 @@ class ApiService {
 
     return success;
   }
-
+  //OLD
   Future<List<Item>> getAllItems() async {
     List<Item> items = [];
     try {
@@ -696,6 +696,7 @@ class ApiService {
         updatedItemList = apiItems;
         storage.write(key: "items", value: jsonEncode(updatedItemList));
       } else {
+
         updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
       }
       lastUpdatedDate = DateTime.now();
@@ -719,6 +720,9 @@ class ApiService {
               (element) => element.productNumber == updatedItem.productNumber);
       if (index >= 0) {
         items[index].stock = updatedItem.stock;
+        items[index].productName = updatedItem.productName;
+        items[index].barcode = updatedItem.barcode;
+        items[index].desiredStock = updatedItem.desiredStock;
       } else if (index == -1) {
         items.add(updatedItem);
       }
@@ -776,7 +780,7 @@ class ApiService {
               stock = value;
             }
             break;
-          case "desiredStock":
+          case "desired_Stock":
             if (value.runtimeType == String) {
               desiredStock = int.parse(value);
             } else {

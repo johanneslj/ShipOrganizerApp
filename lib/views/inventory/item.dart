@@ -2,9 +2,9 @@
 class Item {
   Item({required this.productName, this.productNumber, this.barcode, this.desiredStock,required this.stock});
 
-  final String productName;
-  final String? productNumber;
-  final String? barcode;
+  String productName;
+  String? productNumber;
+  String? barcode;
   int stock;
   int? desiredStock;
 
