@@ -92,6 +92,7 @@
   "emailWillBeSent": "Email will be sent to you and all other additional recipients",
   "update": "Update",
   "deleteProduct": "Delete product",
+  "emptyInventory": "Empty inventory",
 
   "failedToReadStorage": "Failed to read storage",
   "unableToSendCode": "Failed to send code",

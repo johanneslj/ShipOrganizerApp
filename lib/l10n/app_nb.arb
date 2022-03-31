@@ -92,6 +92,7 @@
   "emailWillBeSent": "Epost blir sendt til deg og de andre mottakerne",
   "update": "Oppdater",
   "deleteProduct": "Slett produkt",
+  "emptyInventory": "Tom beholdning",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "unableToSendCode": "Klarte ikke sende kode",
