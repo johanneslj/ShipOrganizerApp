@@ -61,7 +61,7 @@ class _NewItemState extends State<NewItem> {
       productNumberController.text = widget.itemToEdit!.productNumber!;
       stockController.text = widget.itemToEdit!.stock.toString();
       desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
-      barcodeController.text = widget.itemToEdit!.barcode.toString();
+      barcodeController.text = widget.itemToEdit!.barcode.toString().trim();
     }
   }
 
