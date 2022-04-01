@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/sendReportToEmailView.dart';
@@ -72,7 +73,12 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
               child: RefreshIndicator(
                   onRefresh: () => getItems(),
-                  child: Inventory(items: displayedItems, isRecommended: true),
+                  child: displayedItems.isEmpty
+                      ? Center(
+                          child: Text(
+                              AppLocalizations.of(context)!.emptyInventory),
+                        )
+                      : Inventory(items: displayedItems, isRecommended: true),
                   color: colorScheme.onPrimary,
                   backgroundColor: colorScheme.primary),
             ),
@@ -87,7 +93,10 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   void onOrderStockUp() {
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SendReportToEmail(items: displayedItems,)));
+        MaterialPageRoute(
+            builder: (context) => SendReportToEmail(
+                  items: displayedItems,
+                )));
   }
 
   /// Clears search bar and sets state for displayed items to all items.

@@ -92,8 +92,10 @@
   "emailWillBeSent": "Email will be sent to you and all other additional recipients",
   "update": "Update",
   "deleteProduct": "Delete product",
+  "emptyInventory": "Empty inventory",
 
   "failedToReadStorage": "Failed to read storage",
+  "deleteProductFailed": "Unable to delete product",
   "unableToSendCode": "Failed to send code",
   "couldntLogOut": "Failed to sign out",
   "notAllowedToCreateUser": "You are not allowed to create user",

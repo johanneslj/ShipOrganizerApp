@@ -29,6 +29,9 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     bool mobile =
         (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
     _apiService.setContext(context);
@@ -40,7 +43,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
               color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pushNamed("/home"),
         ),
         title: Text(
           widget.isAdministeringUsers

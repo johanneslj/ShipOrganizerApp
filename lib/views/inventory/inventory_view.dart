@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
@@ -63,16 +64,14 @@ class _InventoryViewState extends State<InventoryView> {
     return createView(context, colorScheme);
   }
 
-
   Widget createView(BuildContext context, colorScheme) {
     if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
-      return
-      Scaffold(
+      return Scaffold(
         appBar: PreferredSize(
             preferredSize:
-            // Creates top padding for the top bar so that it starts below status/notification bar.
+                // Creates top padding for the top bar so that it starts below status/notification bar.
                 Size(MediaQuery.of(context).size.width,
-                MediaQuery.of(context).viewPadding.top + 32.0),
+                    MediaQuery.of(context).viewPadding.top + 32.0),
             child: TopBar(
               onSearch: onSearch,
               onClear: onClear,
@@ -86,22 +85,27 @@ class _InventoryViewState extends State<InventoryView> {
         body: _isLoading
             ? circularProgress()
             : GestureDetector(
-          // Used to remove keyboard on tap outside.
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: RefreshIndicator(
-              onRefresh: () => getItems(),
-              child: Inventory(items: displayedItems, onConfirm: getItems),
-              color: colorScheme.onPrimary,
-              backgroundColor: colorScheme.primary),
-        ),
+                // Used to remove keyboard on tap outside.
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: RefreshIndicator(
+                    onRefresh: () => getItems(),
+                    child: displayedItems.isEmpty
+                        ? Center(
+                            child: Text(
+                                AppLocalizations.of(context)!.emptyInventory),
+                          )
+                        : Inventory(items: displayedItems, onConfirm: getItems),
+                    color: colorScheme.onPrimary,
+                    backgroundColor: colorScheme.primary),
+              ),
       );
     } else {
       return Scaffold(
         appBar: PreferredSize(
             preferredSize:
-            // Creates top padding for the top bar so that it starts below status/notification bar.
+                // Creates top padding for the top bar so that it starts below status/notification bar.
                 Size(MediaQuery.of(context).size.width,
-                MediaQuery.of(context).viewPadding.top + 60.0),
+                    MediaQuery.of(context).viewPadding.top + 60.0),
             child: TopBar(
               onSearch: onSearch,
               onClear: onClear,
@@ -114,26 +118,31 @@ class _InventoryViewState extends State<InventoryView> {
         body: _isLoading
             ? circularProgress()
             : Row(
-          children: [
-            const Expanded(
-              flex: 2,
-              child: SideMenu(),
-            ),
-            Expanded(
-                flex: 5,
-                child: GestureDetector(
-                  // Used to remove keyboard on tap outside.
-                  onTap: () =>
-                      FocusManager.instance.primaryFocus?.unfocus(),
-                  child: RefreshIndicator(
-                      onRefresh: () => getItems(),
-                      child: Inventory(
-                          items: displayedItems, onConfirm: getItems),
-                      color: colorScheme.onPrimary,
-                      backgroundColor: colorScheme.primary),
-                )),
-          ],
-        ),
+                children: [
+                  const Expanded(
+                    flex: 2,
+                    child: SideMenu(),
+                  ),
+                  Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        // Used to remove keyboard on tap outside.
+                        onTap: () =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        child: RefreshIndicator(
+                            onRefresh: () => getItems(),
+                            child: displayedItems.isEmpty
+                                ? Center(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .emptyInventory),
+                                  )
+                                : Inventory(
+                                    items: displayedItems, onConfirm: getItems),
+                            color: colorScheme.onPrimary,
+                            backgroundColor: colorScheme.primary),
+                      )),
+                ],
+              ),
       );
     }
   }

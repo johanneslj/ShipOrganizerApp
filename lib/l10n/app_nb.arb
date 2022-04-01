@@ -92,8 +92,10 @@
   "emailWillBeSent": "Epost blir sendt til deg og de andre mottakerne",
   "update": "Oppdater",
   "deleteProduct": "Slett produkt",
+  "emptyInventory": "Tom beholdning",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
+  "deleteProductFailed": "Klarte ikke slette produkt",
   "unableToSendCode": "Klarte ikke sende kode",
   "couldntLogOut": "Failed to sign out",
   "notAllowedToCreateUser": "Du kan ikke lage bruker",
