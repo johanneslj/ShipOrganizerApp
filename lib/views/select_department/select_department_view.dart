@@ -9,54 +9,58 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// bills they want to view
 class SelectDepartmentView extends StatefulWidget {
   bool? isInitial = false;
-  SelectDepartmentView({
-    Key? key, this.isInitial
-  }) : super(key: key);
+
+  SelectDepartmentView({Key? key, this.isInitial}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SelectDepartmentView();
 }
-  class _SelectDepartmentView extends State<SelectDepartmentView> {
 
+class _SelectDepartmentView extends State<SelectDepartmentView> {
   late ApiService apiService = ApiService.getInstance();
   late List<Widget> departments = [];
 
   @override
-  initState(){
-  getDepartments();
-  super.initState();
+  initState() {
+    getDepartments();
+    super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-      appBar: widget.isInitial! ? AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.changeDepartment,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ) : AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text(
-          AppLocalizations.of(context)!.selectDepartment,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
+      appBar: (widget.isInitial!)
+          ? AppBar(
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              title: Text(
+                AppLocalizations.of(context)!.selectDepartment,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            )
+          : AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    color: Theme.of(context).colorScheme.onPrimary),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.changeDepartment,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
       body: Center(
           child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+        padding:
+            const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 40),
-            child: Text(AppLocalizations.of(context)!.accessToMultipleDepartments,
-                textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1),
+            child: Text(
+                AppLocalizations.of(context)!.accessToMultipleDepartments,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyText1),
           ),
           Expanded(
             child: Column(
@@ -77,7 +81,7 @@ class SelectDepartmentView extends StatefulWidget {
       Widget departmentCard = DepartmentCard(
         departmentName: department,
         destination: "/home",
-        arguments : "department",
+        arguments: "department",
       );
       departmentCardList.add(departmentCard);
     }

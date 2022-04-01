@@ -296,7 +296,7 @@ class ApiService {
         .post(baseUrl + "api/user/check-valid-verification-code", data: data);
     print(response);
     return response.statusCode == 200;
-  } 
+  }
 
   //#region Region Login/Logout
 
@@ -560,10 +560,20 @@ class ApiService {
       var response =
           await dio.post(baseUrl + "api/product/delete-product", data: data);
       if (response.statusCode == 200) {
+        var localStorage = await storage.read(key: "items");
+        List<Item> items = await _getItemsFromStorage(localStorage);
+        int i = 0;
+        while (i < items.length) {
+          if (items[i].productNumber == productNumber) {
+            items.removeAt(items.indexOf(items[i]));
+          }
+          i += 1;
+        }
+        await storage.write(key: "items", value: jsonEncode(items));
         success = true;
       }
     } catch (e) {
-      _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+      _showErrorToast(AppLocalizations.of(buildContext)!.deleteProductFailed);
     }
 
     return success;

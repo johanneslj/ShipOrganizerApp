@@ -72,6 +72,7 @@ class _NewItemState extends State<NewItem> {
       productNumberController.text = widget.itemToEdit!.productNumber!;
       stockController.text = widget.itemToEdit!.stock.toString();
       desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
+      barcodeController.text = widget.itemToEdit!.barcode.toString();
     }
 
     return Scaffold(
@@ -278,7 +279,10 @@ class _NewItemState extends State<NewItem> {
                                         primary: Colors.red,
                                       ),
                                     onPressed: () async {
-                                      deleteProduct();
+                                      bool success = await deleteProduct();
+                                      if(success) {
+                                        Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+                                      }
                                     },
                                     child: Text(
                                         AppLocalizations.of(context)!.deleteProduct),
@@ -337,7 +341,8 @@ class _NewItemState extends State<NewItem> {
     }
   }
 
-  Future<void> deleteProduct() async {
-    _apiService.deleteProduct(productNumberController.value.text);
+  Future<bool> deleteProduct() async {
+    bool success = await _apiService.deleteProduct(productNumberController.value.text);
+    return success;
   }
 }
