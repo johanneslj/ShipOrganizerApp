@@ -269,22 +269,26 @@ class _NewItemState extends State<NewItem> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 30, left: 20),
+                                padding:
+                                    const EdgeInsets.only(top: 30, left: 20),
                                 child: ButtonTheme(
                                   minWidth: 250.0,
                                   height: 100.0,
                                   child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.red,
-                                      ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.red,
+                                    ),
                                     onPressed: () async {
                                       bool success = await deleteProduct();
-                                      if(success) {
-                                        Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+                                      if (success) {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            "/administerProducts",
+                                            (route) => false);
                                       }
                                     },
-                                    child: Text(
-                                        AppLocalizations.of(context)!.deleteProduct),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .deleteProduct),
                                   ),
                                 ),
                               )
@@ -327,7 +331,7 @@ class _NewItemState extends State<NewItem> {
     bool success = await _apiService.editProduct(
         productName, productNumber, desiredStock, barcode);
     if (success) {
-      Navigator.pushNamedAndRemoveUntil(context, "/administerProducts", (route) => false);
+      Navigator.pushNamed(context, "/administerProducts");
     }
   }
 
@@ -341,7 +345,8 @@ class _NewItemState extends State<NewItem> {
   }
 
   Future<bool> deleteProduct() async {
-    bool success = await _apiService.deleteProduct(productNumberController.value.text);
+    bool success =
+        await _apiService.deleteProduct(productNumberController.value.text);
     return success;
   }
 }
