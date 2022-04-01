@@ -65,7 +65,8 @@ class ApiService {
   }
 
   /// Stores token, full name of user and the username into the local storage
-  bool _storeUserDataFromResponseAndGetSuccess(Response<dynamic> response) {
+  bool _storeUserDataFromResponseAndGetSuccess(
+      Response<dynamic> response)  {
     if (response.data != null) {
       storage.write(key: "jwt", value: response.data["token"]);
       storage.write(key: "name", value: response.data["fullname"]);
@@ -342,6 +343,18 @@ class ApiService {
     return success;
   }
 
+  Future<bool> checkThatCorrectInfoIsWritten() async {
+    try {
+      if (await storage.containsKey(key: "userRights") ||
+          await storage.containsKey(key: "departments")) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return true;
+    }
+  }
+
   /// Signs a user out
   /// This removes everything stored in storage
   /// returns true if was able to delete everything
@@ -360,6 +373,7 @@ class ApiService {
   /// Gets the list of departments a user has access to from the API
   /// Returns a list of available departments
   Future<List<String>> getDepartments() async {
+    await getUserRights();
     List<String> storedDepartments = await _getStoredDepartments();
     if (storedDepartments.isNotEmpty) {
       return storedDepartments;
