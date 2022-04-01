@@ -299,7 +299,7 @@ class _CreateUserState extends State<CreateUser> {
                                         ? null
                                         : () async {
                                             bool success =
-                                                await deleteUser(emailController.value.text);
+                                                await deleteUser(widget.userToEdit?.email!);
                                             if (success) {
                                               Navigator.pushNamed(context, "/home");
                                             }
@@ -327,9 +327,9 @@ class _CreateUserState extends State<CreateUser> {
     return success;
   }
 
-  Future<bool> deleteUser(String email) async {
+  Future<bool> deleteUser(String? email) async {
     setLoading(true);
-    bool success = await apiService.deleteUser(email);
+    bool success = await apiService.deleteUser(email!);
     setLoading(false);
     return success;
   }

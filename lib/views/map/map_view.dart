@@ -143,6 +143,8 @@ class _MapViewState extends State<MapView> {
     if(sortedList.length  > 1) {
       max = getAmountOfItemsAtMarker(sortedList.last);
       min = getAmountOfItemsAtMarker(sortedList.first);
+    } else {
+      max = sortedList.length;
     }
 
     markerLocations.forEach((latLng, item) {
