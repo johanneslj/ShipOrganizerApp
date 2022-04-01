@@ -56,6 +56,13 @@ class _NewItemState extends State<NewItem> {
   void initState() {
     super.initState();
     getDepartment();
+    if (!widget.isCreateNew) {
+      productNameController.text = widget.itemToEdit!.productName;
+      productNumberController.text = widget.itemToEdit!.productNumber!;
+      stockController.text = widget.itemToEdit!.stock.toString();
+      desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
+      barcodeController.text = widget.itemToEdit!.barcode.toString();
+    }
   }
 
   getDepartment() async {
@@ -67,14 +74,6 @@ class _NewItemState extends State<NewItem> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isCreateNew) {
-      productNameController.text = widget.itemToEdit!.productName;
-      productNumberController.text = widget.itemToEdit!.productNumber!;
-      stockController.text = widget.itemToEdit!.stock.toString();
-      desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
-      barcodeController.text = widget.itemToEdit!.barcode.toString();
-    }
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -328,7 +327,7 @@ class _NewItemState extends State<NewItem> {
     bool success = await _apiService.editProduct(
         productName, productNumber, desiredStock, barcode);
     if (success) {
-      Navigator.pop(context);
+      Navigator.pushNamedAndRemoveUntil(context, "/administerProducts", (route) => false);
     }
   }
 

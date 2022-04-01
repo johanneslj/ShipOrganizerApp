@@ -540,6 +540,8 @@ class ApiService {
       var response =
           await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
+        var localStorage = await storage.read(key: "items");
+        _updateStoreAndGetItems(localStorage, await getActiveDepartment());
         success = true;
       }
     } catch (e) {
