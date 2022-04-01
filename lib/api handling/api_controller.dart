@@ -343,13 +343,13 @@ class ApiService {
   }
 
   /// Signs a user out
-  /// This removes the token from storage
-  /// returns true if was able to delete token
+  /// This removes everything stored in storage
+  /// returns true if was able to delete everything
   /// false otherwise
   Future<bool> signOut() async {
     bool success = false;
     try {
-      await storage.delete(key: "jwt");
+      await storage.deleteAll();
       success = true;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.couldntLogOut);
