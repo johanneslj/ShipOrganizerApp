@@ -37,14 +37,11 @@ class ApiService {
     buildContext = context;
   }
 
-
-
   ///Test connection to api server
   Future<int> testConnection() async {
     int code = 101;
-    await dio
-        .get(baseUrl + "connection")
-        .then((value) => value.statusCode != null ? code = value.statusCode! : null);
+    await dio.get(baseUrl + "connection").then(
+        (value) => value.statusCode != null ? code = value.statusCode! : null);
     return code;
   }
 
@@ -67,7 +64,6 @@ class ApiService {
     return list;
   }
 
-
   /// Stores token, full name of user and the username into the local storage
   bool _storeUserDataFromResponseAndGetSuccess(Response<dynamic> response) {
     if (response.data != null) {
@@ -79,7 +75,6 @@ class ApiService {
       return false;
     }
   }
-
 
   //#region Region User
 
@@ -284,7 +279,7 @@ class ApiService {
     List<User> users = [];
     var response = await dio.get(baseUrl + "api/user/all-users");
     List<Map<String, dynamic>> usersListMap =
-    List<Map<String, dynamic>>.from(response.data);
+        List<Map<String, dynamic>>.from(response.data);
     for (Map<String, dynamic> user in usersListMap) {
       User createdUser = User(
           name: user["name"], email: user["email"], departments: ["Bridge"]);
@@ -296,17 +291,14 @@ class ApiService {
   Future<bool> _verifyCodeAndGetSuccess(
       String email, String verificationCode) async {
     _setBearerForAuthHeader();
-    Response response = await dio.get(baseUrl +
-        "api/user/check-valid-verification-code?email=" +
-        email +
-        "&code=" +
-        verificationCode);
+    var data = {"email": email, "code": verificationCode};
+    Response response = await dio
+        .post(baseUrl + "api/user/check-valid-verification-code", data: data);
+    print(response);
     return response.statusCode == 200;
-  }
-
+  } 
 
   //#region Region Login/Logout
-
 
   /// Gets token from secure storage on the device
   Future<String?> _getToken() async {
@@ -375,10 +367,9 @@ class ApiService {
     await _setBearerForAuthHeader();
     Response response;
     String? admin = await storage.read(key: "userRights");
-    if(admin!.contains("ADMIN")){
+    if (admin!.contains("ADMIN")) {
       response = await dio.get(baseUrl + "api/department/get-all");
-    }
-    else{
+    } else {
       response = await dio.get(baseUrl + "api/user/departments");
     }
     List<String> departments = _getDepartmentsFromResponse(response);
@@ -454,7 +445,6 @@ class ApiService {
     return mapMarkers;
   }
 
-
   /// Uses the response from the API to create a Map with
   /// LatLng as keys with lists of reports as values
   ///
@@ -504,7 +494,6 @@ class ApiService {
     return reports;
   }
 
-
   //#endregion
 
   //#region Region Products
@@ -525,7 +514,7 @@ class ApiService {
         "dateTime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
       };
       var response =
-      await dio.post(baseUrl + "api/product/new-product", data: data);
+          await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -547,10 +536,9 @@ class ApiService {
         "barcode": barcode,
         "department": await getActiveDepartment(),
         "dateTime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
-
       };
       var response =
-      await dio.post(baseUrl + "api/product/edit-product", data: data);
+          await dio.post(baseUrl + "api/product/edit-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -568,10 +556,9 @@ class ApiService {
     try {
       await _setBearerForAuthHeader();
 
-      var data = {
-        "productNumber": productNumber
-      };
-      var response = await dio.post(baseUrl + "api/product/delete-product", data: data);
+      var data = {"productNumber": productNumber};
+      var response =
+          await dio.post(baseUrl + "api/product/delete-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -581,6 +568,7 @@ class ApiService {
 
     return success;
   }
+
   //OLD
   Future<List<Item>> getAllItems() async {
     List<Item> items = [];
@@ -607,7 +595,7 @@ class ApiService {
       _setBearerForAuthHeader();
       if (200 == await testConnection()) {
         updatedAllItems =
-        await _updateStoreAndGetItems(localStorage, department);
+            await _updateStoreAndGetItems(localStorage, department);
       } else {
         updatedAllItems = await _getItemsFromStorage(localStorage);
       }
@@ -646,7 +634,7 @@ class ApiService {
     var data = {"items": items, "receivers": emailAddresses};
     try {
       var response =
-      await dio.post(baseUrl + "api/product/create-pdf", data: data);
+          await dio.post(baseUrl + "api/product/create-pdf", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
@@ -682,7 +670,6 @@ class ApiService {
     }
   }
 
-
   Future<List<Item>> _updateStoreAndGetItems(
       String? localStorage, String department) async {
     List<Item> updatedItemList = [];
@@ -696,7 +683,6 @@ class ApiService {
         updatedItemList = apiItems;
         storage.write(key: "items", value: jsonEncode(updatedItemList));
       } else {
-
         updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
       }
       lastUpdatedDate = DateTime.now();
@@ -717,7 +703,7 @@ class ApiService {
   void _updateItemsFromApiToList(List<Item> updatedItems, List<Item> items) {
     for (Item updatedItem in updatedItems) {
       final index = items.indexWhere(
-              (element) => element.productNumber == updatedItem.productNumber);
+          (element) => element.productNumber == updatedItem.productNumber);
       if (index >= 0) {
         items[index].stock = updatedItem.stock;
         items[index].productName = updatedItem.productName;
@@ -739,15 +725,13 @@ class ApiService {
           data: {"department": department});
     } else {
       String formattedDate =
-      DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
+          DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
       response = await dio.post(
           baseUrl + "api/product/recently-updated-inventory",
           data: {"department": department, "DateTime": formattedDate});
     }
     return response;
   }
-
-
 
   List<Item> _getItemsFromResponse(Response<dynamic> response) {
     List<dynamic> products = List<dynamic>.from(response.data);
@@ -798,6 +782,7 @@ class ApiService {
     }
     return items;
   }
+
   Future<List<Item>> _getItemsFromStorage(String? localStorage) async {
     List<Item> storedItems = [];
     if (localStorage != null && localStorage.length > 3) {
@@ -806,7 +791,6 @@ class ApiService {
     }
     return storedItems;
   }
-
 
   //#endregion
 
@@ -920,9 +904,6 @@ class ApiService {
     return pendingOrders;
   }
 
-
-
-
   //#endregion
 
   //#region Region Department
@@ -942,22 +923,20 @@ class ApiService {
     await storage.write(key: "activeDepartment", value: department);
   }
 
-
   List<String> _getDepartmentsFromResponse(Response<dynamic> response) {
     List<String> departments = [];
     List<Map<String, dynamic>> departmentsList =
-    List<Map<String, dynamic>>.from(response.data);
+        List<Map<String, dynamic>>.from(response.data);
     for (var department in departmentsList) {
       departments.add(department["name"].toString());
     }
     return departments;
   }
-  //#endregion
 
+  //#endregion
 
   void _showErrorToast(String errorMessage) {
     ScaffoldMessenger.of(buildContext)
         .showSnackBar(SnackBar(content: Text(errorMessage)));
   }
-
 }

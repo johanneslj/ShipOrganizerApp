@@ -8,8 +8,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// In this view the user can choose which department's inventory and
 /// bills they want to view
 class SelectDepartmentView extends StatefulWidget {
+  bool? isInitial = false;
   SelectDepartmentView({
-    Key? key,
+    Key? key, this.isInitial
   }) : super(key: key);
 
   @override
@@ -31,13 +32,20 @@ class SelectDepartmentView extends StatefulWidget {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.isInitial! ? AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           AppLocalizations.of(context)!.changeDepartment,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ) : AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context)!.selectDepartment,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),

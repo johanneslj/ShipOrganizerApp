@@ -118,7 +118,8 @@ class _MainAppState extends State<MainApp> {
       initialRoute: widget.isLoggedIn ? '/home' : '/',
       routes: {
         '/': (context) => const LoginView(),
-        '/selectDepartment': (context) => SelectDepartmentView(),
+        '/selectDepartment': (context) => SelectDepartmentView(isInitial: false,),
+        '/selectInitialDepartment': (context)=> SelectDepartmentView(isInitial: true,),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => CreateUser(
               isCreateUser: true,
@@ -134,7 +135,7 @@ class _MainAppState extends State<MainApp> {
         '/inventory': (context) => const InventoryView(),
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
         '/map': (context) => const MapView(),
-        '/newProduct': (context) => NewItem(
+        '/newProduct': (context) => const NewItem(
               isCreateNew: true,
             ),
         '/home': (context) => const MyHomePage(

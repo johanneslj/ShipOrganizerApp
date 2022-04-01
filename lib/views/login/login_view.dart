@@ -148,6 +148,7 @@ class _LoginViewState extends State<LoginView> {
                                       child: Text(AppLocalizations.of(context)!.signIn))),
                               TextButton(
                                 onPressed: () {
+                                  FocusScope.of(context).requestFocus(FocusNode());
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
