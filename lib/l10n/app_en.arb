@@ -104,6 +104,6 @@
   "failedToConfirmCode": "Failed to confirm verification code",
   "couldNotChangePassword": "Could not change password",
   "notAuthorizedToDeleteUser": "Not authorized to delete user",
-  "failedToGetMarkers": "Failed to get markers"
-
+  "failedToGetMarkers": "Failed to get markers",
+  "offline": "OFFLINE"
 }

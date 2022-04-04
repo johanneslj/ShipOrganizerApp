@@ -104,7 +104,7 @@
   "failedToConfirmCode": "Fikk ikke bekreftet verifiserings koden",
   "couldNotChangePassword": "Kunne ikke endre passord",
   "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",
-  "failedToGetMarkers": "Klarte ikke hente merkører"
-
+  "failedToGetMarkers": "Klarte ikke hente merkører",
+  "offline": "OFFLINE"
 
 }

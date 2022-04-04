@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,6 +9,7 @@ import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
+import 'package:ship_organizer_app/widgets/offline_banner.dart';
 import 'inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'item.dart';
@@ -34,6 +36,7 @@ class _InventoryViewState extends State<InventoryView> {
   List<Item> displayedItems = [];
   late bool _isLoading = true;
   late int selectedRadioButton = 0;
+  bool isOffline = false;
 
   Department selectedDepartment = Department(departmentName: "");
 
@@ -61,60 +64,43 @@ class _InventoryViewState extends State<InventoryView> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     apiService.setContext(context);
+    _setUpConnectivitySubscription();
     return createView(context, colorScheme);
+  }
+
+  void _setUpConnectivitySubscription() {
+    Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isOffline = true;
+        });
+      } else {
+        setState(() {
+          isOffline = false;
+        });
+      }
+
+      if (isOffline) {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+        ScaffoldMessenger.of(context).showMaterialBanner(OfflineBanner.getBanner(context));
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+      }
+    });
   }
 
   Widget createView(BuildContext context, colorScheme) {
     if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
       return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 32.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              searchFieldController: _controller,
-              isRecommendedView: false,
-              isMobile: true,
-              onScan: scanBarcodeNormal,
-            )),
+        appBar: _getTopBar(context, true, 32.0),
         drawer: const SideMenu(),
         body: _isLoading
             ? circularProgress()
-            : GestureDetector(
-                // Used to remove keyboard on tap outside.
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: RefreshIndicator(
-                    onRefresh: () => getItems(),
-                    child: displayedItems.isEmpty
-                        ? Center(
-                            child: Text(
-                                AppLocalizations.of(context)!.emptyInventory),
-                          )
-                        : Inventory(items: displayedItems, onConfirm: getItems),
-                    color: colorScheme.onPrimary,
-                    backgroundColor: colorScheme.primary),
-              ),
+            : _getInventoryGestureDetector(context, colorScheme),
       );
     } else {
       return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 60.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              searchFieldController: _controller,
-              isRecommendedView: false,
-              isMobile: false,
-              onScan: scanBarcodeNormal,
-            )),
+        appBar: _getTopBar(context, false, 60.0),
         body: _isLoading
             ? circularProgress()
             : Row(
@@ -123,28 +109,50 @@ class _InventoryViewState extends State<InventoryView> {
                     flex: 2,
                     child: SideMenu(),
                   ),
-                  Expanded(
-                      flex: 5,
-                      child: GestureDetector(
-                        // Used to remove keyboard on tap outside.
-                        onTap: () =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        child: RefreshIndicator(
-                            onRefresh: () => getItems(),
-                            child: displayedItems.isEmpty
-                                ? Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .emptyInventory),
-                                  )
-                                : Inventory(
-                                    items: displayedItems, onConfirm: getItems),
-                            color: colorScheme.onPrimary,
-                            backgroundColor: colorScheme.primary),
-                      )),
+                  Expanded(flex: 5, child: _getInventoryGestureDetector(context, colorScheme)),
                 ],
               ),
       );
     }
+  }
+
+  GestureDetector _getInventoryGestureDetector(BuildContext context, colorScheme) {
+    return GestureDetector(
+      // Used to remove keyboard on tap outside.
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Column(children: [
+        FutureBuilder(builder: (context, snapshot) {
+          isOffline
+        }),
+        RefreshIndicator(
+            onRefresh: () => getItems(),
+            child: displayedItems.isEmpty
+                ? Center(
+              child: Text(AppLocalizations.of(context)!.emptyInventory),
+            )
+                : Inventory(items: displayedItems, onConfirm: getItems),
+            color: colorScheme.onPrimary,
+            backgroundColor: colorScheme.primary),
+      ])
+
+    );
+  }
+
+  PreferredSize _getTopBar(BuildContext context, bool isMobile, double extraTopPadding) {
+    return PreferredSize(
+        preferredSize:
+            // Creates top padding for the top bar so that it starts below status/notification bar.
+            Size(MediaQuery.of(context).size.width,
+                MediaQuery.of(context).viewPadding.top + extraTopPadding),
+        child: TopBar(
+          onSearch: onSearch,
+          onClear: onClear,
+          filter: showSelectDepartmentMenu,
+          searchFieldController: _controller,
+          isRecommendedView: false,
+          isMobile: isMobile,
+          onScan: scanBarcodeNormal,
+        ));
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -183,8 +191,8 @@ class _InventoryViewState extends State<InventoryView> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes =
+          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
