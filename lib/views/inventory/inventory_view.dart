@@ -8,6 +8,7 @@ import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
+import 'package:ship_organizer_app/widgets/offline_banner.dart';
 import 'inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'item.dart';
@@ -34,6 +35,7 @@ class _InventoryViewState extends State<InventoryView> {
   List<Item> displayedItems = [];
   late bool _isLoading = true;
   late int selectedRadioButton = 0;
+  bool isOffline = false;
 
   Department selectedDepartment = Department(departmentName: "");
 
@@ -61,7 +63,29 @@ class _InventoryViewState extends State<InventoryView> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     apiService.setContext(context);
+    _setUpConnectivitySubscription();
     return createView(context, colorScheme);
+  }
+
+  void _setUpConnectivitySubscription() {
+    Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isOffline = true;
+        });
+      } else {
+        setState(() {
+          isOffline = false;
+        });
+      }
+
+      if (isOffline) {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+        ScaffoldMessenger.of(context).showMaterialBanner(OfflineBanner.getBanner(context));
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+      }
+    });
   }
 
   Widget createView(BuildContext context, colorScheme) {
@@ -188,8 +212,8 @@ class _InventoryViewState extends State<InventoryView> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes =
+          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
