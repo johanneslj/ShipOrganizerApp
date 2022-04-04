@@ -59,10 +59,13 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
               child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 child: Column(
                   children: getListOfReceivers(),
                 ),
-                color: Colors.white,
               ),
             ),
             Padding(
@@ -79,7 +82,7 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: TextFormField(
                         controller: emailController,
-                        validator: (val) => val!.isEmpty || !val.contains("@")
+                        validator: (val) => val!.isNotEmpty && !val.contains("@")
                             ? AppLocalizations.of(context)!.enterValidEmail
                             : null,
                         decoration: InputDecoration(
@@ -92,6 +95,7 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
                                           _receivers
                                               .add(emailController.value.text);
                                           emailController.text = "";
+
                                         }),
                                       },
                                   },
