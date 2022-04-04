@@ -54,6 +54,7 @@ class _CreateUserState extends State<CreateUser> {
 // This function is triggered when a checkbox is checked or unchecked
   void _itemChange(String itemValue, bool isSelected) {
     setState(() {
+      FocusScope.of(context).requestFocus(FocusNode());
       if (isSelected) {
         _selectedDepartments.add(itemValue);
       } else {
@@ -223,6 +224,9 @@ class _CreateUserState extends State<CreateUser> {
                                                             .value.text,
                                                         _selectedDepartments);
                                                 if (success) {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          FocusNode());
                                                   Navigator.pushNamed(
                                                       context, "/home");
                                                 } else {
@@ -407,6 +411,8 @@ class _CreateUserState extends State<CreateUser> {
                                                     fullNameController
                                                         .value.text,
                                                     _selectedDepartments);
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
                                                 Navigator.pushNamed(
                                                     context, "/home");
                                               }
@@ -427,6 +433,8 @@ class _CreateUserState extends State<CreateUser> {
                                               bool success = await deleteUser(
                                                   widget.userToEdit?.email!);
                                               if (success) {
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
                                                 Navigator.pushNamed(
                                                     context, "/home");
                                               }

@@ -17,7 +17,8 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.195.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
+  //String baseUrl = "http://10.22.195.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
