@@ -39,7 +39,7 @@ class _CreateUserState extends State<CreateUser> {
   List<String> _selectedDepartments = <String>[];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getDepartments();
   }
@@ -70,9 +70,12 @@ class _CreateUserState extends State<CreateUser> {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () =>
-                {FocusScope.of(context).requestFocus(FocusNode()), Navigator.of(context).pop()},
+            icon: Icon(Icons.arrow_back,
+                color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () => {
+              FocusScope.of(context).requestFocus(FocusNode()),
+              Navigator.of(context).pop()
+            },
           ),
           title: Text(
             AppLocalizations.of(context)!.createUser,
@@ -253,7 +256,8 @@ class _CreateUserState extends State<CreateUser> {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onPrimary),
+            icon: Icon(Icons.arrow_back,
+                color: Theme.of(context).colorScheme.onPrimary),
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
@@ -261,123 +265,184 @@ class _CreateUserState extends State<CreateUser> {
             style: Theme.of(context).textTheme.headline6,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-            child: Column(children: [
-              Form(
-                  key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(AppLocalizations.of(context)!.email,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary, fontSize: 20)),
-                        TextFormField(
-                          validator: (val) => val!.isEmpty || !val.contains("@")
-                              ? AppLocalizations.of(context)!.enterValidEmail
-                              : null,
-                          controller: emailController,
-                          decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.email,
-                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
-                        ),
-                      ],
+        body: LoadingOverlay(
+          inAsyncCall: isLoading,
+          progressIndicator: SizedBox(
+            height: 200.0,
+            width: 200.0,
+            child: Center(
+              child: Column(
+                children: const [
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.blue,
+                      strokeWidth: 10.0,
                     ),
-                    const SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  SizedBox(height: 15.0),
+                ],
+              ),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: Column(
+                children: [
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text((AppLocalizations.of(context)!.fullName),
-                            style: TextStyle(
-                                fontSize: 20, color: Theme.of(context).colorScheme.primary)),
-                        TextFormField(
-                          // Full Name text field
-                          controller: fullNameController,
-                          decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.fullName,
-                              hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppLocalizations.of(context)!.email,
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 20)),
+                            TextFormField(
+                              validator: (val) =>
+                                  val!.isEmpty || !val.contains("@")
+                                      ? AppLocalizations.of(context)!
+                                          .enterValidEmail
+                                      : null,
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.email,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text((AppLocalizations.of(context)!.fullName),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                            TextFormField(
+                              // Full Name text field
+                              controller: fullNameController,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      AppLocalizations.of(context)!.fullName,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
+                            ),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                // Checkbox list where an admin can select what departments a new user
+                                // will have access to
+                                child: Column(
+                                  children: [
+                                    Text(AppLocalizations.of(context)!
+                                        .selectDepartment),
+                                    ListBody(
+                                      children: departments
+                                          .map((item) => Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
+                                              child: CheckboxListTile(
+                                                selected: _selectedDepartments
+                                                    .contains(item),
+                                                value: _selectedDepartments
+                                                    .contains(item),
+                                                activeColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                checkColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                                title: Text(
+                                                  item,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText2,
+                                                ),
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                onChanged: (isChecked) =>
+                                                    _itemChange(
+                                                        item, isChecked!),
+                                              )))
+                                          .toList(),
+                                    ),
+                                  ],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                )),
+                          ],
                         ),
                         Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            // Checkbox list where an admin can select what departments a new user
-                            // will have access to
-                            child: Column(
-                              children: [
-                                Text(AppLocalizations.of(context)!.selectDepartment),
-                                ListBody(
-                                  children: departments
-                                      .map((item) => Theme(
-                                          data: ThemeData(
-                                              unselectedWidgetColor:
-                                                  Theme.of(context).colorScheme.primary),
-                                          child: CheckboxListTile(
-                                            selected: _selectedDepartments.contains(item),
-                                            value: _selectedDepartments.contains(item),
-                                            activeColor: Theme.of(context).colorScheme.primary,
-                                            checkColor: Theme.of(context).colorScheme.onPrimary,
-                                            title: Text(
-                                              item,
-                                              style: Theme.of(context).textTheme.bodyText2,
-                                            ),
-                                            controlAffinity: ListTileControlAffinity.leading,
-                                            onChanged: (isChecked) => _itemChange(item, isChecked!),
-                                          )))
-                                      .toList(),
-                                ),
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            )),
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Column(
+                            children: [
+                              ButtonTheme(
+                                  disabledColor: Colors.grey,
+                                  minWidth: 250.0,
+                                  height: 100.0,
+                                  child: ElevatedButton(
+                                      onPressed: isLoading
+                                          ? null
+                                          : () async {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                apiService.editUser(
+                                                    widget.userToEdit?.email,
+                                                    emailController.value.text,
+                                                    fullNameController
+                                                        .value.text,
+                                                    _selectedDepartments);
+                                                Navigator.pushNamed(
+                                                    context, "/home");
+                                              }
+                                            },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .confirmEdit))),
+                              const SizedBox(height: 20),
+                              ButtonTheme(
+                                  minWidth: 250.0,
+                                  height: 100.0,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                      ),
+                                      onPressed: isLoading
+                                          ? null
+                                          : () async {
+                                              bool success = await deleteUser(
+                                                  widget.userToEdit?.email!);
+                                              if (success) {
+                                                Navigator.pushNamed(
+                                                    context, "/home");
+                                              }
+                                            },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .deleteUser))),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                        )
                       ],
                     ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Column(
-                          children: [
-                            ButtonTheme(
-                                disabledColor: Colors.grey,
-                                minWidth: 250.0,
-                                height: 100.0,
-                                child: ElevatedButton(
-                                    onPressed: isLoading
-                                        ? null
-                                        : () async {
-                                            FocusScope.of(context).requestFocus(FocusNode());
-                                            if (_formKey.currentState!.validate()) {
-                                              apiService.editUser(
-                                                  widget.userToEdit?.email,
-                                                  emailController.value.text,
-                                                  fullNameController.value.text,
-                                                  _selectedDepartments);
-                                              Navigator.pushNamed(context, "/home");
-                                            }
-                                          },
-                                    child: Text(AppLocalizations.of(context)!.confirmEdit))),
-                            const SizedBox(height: 20),
-                            ButtonTheme(
-                                minWidth: 250.0,
-                                height: 100.0,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.red,
-                                    ),
-                                    onPressed: isLoading
-                                        ? null
-                                        : () async {
-                                            bool success =
-                                                await deleteUser(widget.userToEdit?.email!);
-                                            if (success) {
-                                              Navigator.pushNamed(context, "/home");
-                                            }
-                                          },
-                                    child: Text(AppLocalizations.of(context)!.deleteUser))),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        ))
-                  ])),
-            ]),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       );
@@ -388,7 +453,8 @@ class _CreateUserState extends State<CreateUser> {
 
   setLoading(bool state) => setState(() => isLoading = state);
 
-  Future<bool> registerUser(String email, String fullName, List<String> departments) async {
+  Future<bool> registerUser(
+      String email, String fullName, List<String> departments) async {
     setLoading(true);
     bool success = await apiService.registerUser(email, fullName, departments);
     setLoading(false);
