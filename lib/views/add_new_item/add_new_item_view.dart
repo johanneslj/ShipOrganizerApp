@@ -56,6 +56,13 @@ class _NewItemState extends State<NewItem> {
   void initState() {
     super.initState();
     getDepartment();
+    if (!widget.isCreateNew) {
+      productNameController.text = widget.itemToEdit!.productName;
+      productNumberController.text = widget.itemToEdit!.productNumber!;
+      stockController.text = widget.itemToEdit!.stock.toString();
+      desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
+      barcodeController.text = widget.itemToEdit!.barcode.toString().trim();
+    }
   }
 
   getDepartment() async {
@@ -67,13 +74,6 @@ class _NewItemState extends State<NewItem> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isCreateNew) {
-      productNameController.text = widget.itemToEdit!.productName;
-      productNumberController.text = widget.itemToEdit!.productNumber!;
-      stockController.text = widget.itemToEdit!.stock.toString();
-      desiredStockController.text = widget.itemToEdit!.desiredStock.toString();
-    }
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -269,19 +269,26 @@ class _NewItemState extends State<NewItem> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 30, left: 20),
+                                padding:
+                                    const EdgeInsets.only(top: 30, left: 20),
                                 child: ButtonTheme(
                                   minWidth: 250.0,
                                   height: 100.0,
                                   child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.red,
-                                      ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.red,
+                                    ),
                                     onPressed: () async {
-                                      deleteProduct();
+                                      bool success = await deleteProduct();
+                                      if (success) {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            "/administerProducts",
+                                            (route) => false);
+                                      }
                                     },
-                                    child: Text(
-                                        AppLocalizations.of(context)!.deleteProduct),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .deleteProduct),
                                   ),
                                 ),
                               )
@@ -324,7 +331,7 @@ class _NewItemState extends State<NewItem> {
     bool success = await _apiService.editProduct(
         productName, productNumber, desiredStock, barcode);
     if (success) {
-      Navigator.pop(context);
+      Navigator.pushNamed(context, "/administerProducts");
     }
   }
 
@@ -337,7 +344,9 @@ class _NewItemState extends State<NewItem> {
     }
   }
 
-  Future<void> deleteProduct() async {
-    _apiService.deleteProduct(productNumberController.value.text);
+  Future<bool> deleteProduct() async {
+    bool success =
+        await _apiService.deleteProduct(productNumberController.value.text);
+    return success;
   }
 }

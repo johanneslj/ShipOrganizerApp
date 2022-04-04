@@ -118,7 +118,8 @@ class _MainAppState extends State<MainApp> {
       initialRoute: widget.isLoggedIn ? '/home' : '/',
       routes: {
         '/': (context) => const LoginView(),
-        '/selectDepartment': (context) => SelectDepartmentView(),
+        '/selectDepartment': (context) => SelectDepartmentView(isInitial: false,),
+        '/selectInitialDepartment': (context)=> SelectDepartmentView(isInitial: true,),
         '/changePassword': (context) => const SetPasswordView(),
         '/createUser': (context) => CreateUser(isCreateUser: true),
         '/inventoryList': (context) => const InventoryView(),

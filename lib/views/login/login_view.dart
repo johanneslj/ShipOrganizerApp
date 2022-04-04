@@ -148,6 +148,7 @@ class _LoginViewState extends State<LoginView> {
                                       child: Text(AppLocalizations.of(context)!.signIn))),
                               TextButton(
                                 onPressed: () {
+                                  FocusScope.of(context).requestFocus(FocusNode());
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -190,7 +191,7 @@ class _LoginViewState extends State<LoginView> {
   Future<void> checkDepartments(BuildContext context) async {
     List<String> departments = await apiService.getDepartments();
     if (departments.length > 1) {
-      Navigator.pushNamed(context, "/selectDepartment");
+      Navigator.pushNamed(context, "/selectInitialDepartment");
     } else {
       Navigator.pushNamed(context, "/home");
     }

@@ -38,26 +38,31 @@ class _SetPasswordViewState extends State<SetPasswordView> {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        appBar: AppBar(
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-          title: Text(
-            AppLocalizations.of(context)!.changePassword,
-            style: Theme.of(context).textTheme.headline6,
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      appBar: AppBar(
+        centerTitle: true,
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+        title: Text(
+          AppLocalizations.of(context)!.changePassword,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: page == 1
+                ? enterEmailPage()
+                : page == 2
+                    ? enterCodePage()
+                    : page == 3
+                        ? enterNewPasswordPage()
+                        : errorPage(),
           ),
         ),
-        body: Center(
-            child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: page == 1
-                        ? enterEmailPage()
-                        : page == 2
-                            ? enterCodePage()
-                            : page == 3
-                                ? enterNewPasswordPage()
-                                : errorPage()))));
+      ),
+    );
   }
 
   /// Returns widget where user can enter e-mail address.
@@ -78,6 +83,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   validator: (value) => _emailValidator(value, context),
                   controller: emailController,
                   decoration: InputDecoration(
+                      hintStyle:
+                          TextStyle(color: Theme.of(context).disabledColor),
                       hintText: AppLocalizations.of(context)!.email),
                 ),
                 Padding(
@@ -101,6 +108,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         TextFormField(
           controller: verificationCodeController,
           decoration: InputDecoration(
+              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
               hintText: AppLocalizations.of(context)!.verificationCode),
         ),
         Padding(
@@ -127,6 +135,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           validator: (value) => _getPasswordValidator(value),
           controller: passwordController,
           decoration: InputDecoration(
+              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
               hintText: AppLocalizations.of(context)!.newPassword),
           obscureText: true,
         ),
@@ -136,6 +145,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           validator: (value) => _getConfirmPasswordValidator(value),
           controller: confirmPasswordController,
           decoration: InputDecoration(
+              hintStyle: TextStyle(color: Theme.of(context).disabledColor),
               hintText: AppLocalizations.of(context)!.confirmPassword,
               errorMaxLines: 3),
           obscureText: true,
@@ -171,42 +181,33 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         minWidth: 250.0,
         height: 100.0,
         child: ElevatedButton(
-            onPressed: _onSubmitEmailPressed(context),
+            onPressed: isLoading ? null : _onSubmitEmailPressed(context),
             child: Text(AppLocalizations.of(context)!.sendCode)));
   }
 
-  Set Function()? _onSubmitEmailPressed(BuildContext context) {
+  Future<Null> Function()? _onSubmitEmailPressed(BuildContext context) {
     return isLoading
         ? null
-        : () => {
-              if (emailController.text.isEmpty ||
-                  !emailRegex.hasMatch(emailController.text))
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text(AppLocalizations.of(context)!.enterValidEmail)))
-                }
-              else
-                {
-                  setLoading(true),
-                  apiService
-                      .sendVerificationCode(emailController.value.text)
-                      .then((isSent) => {
-                            if (isSent)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .sentCode))),
-                                setState(() {
-                                  page = 2;
-                                })
-                              }
-                          })
-                },
-              setLoading(false),
-            };
+        : () async {
+            if (emailController.text.isEmpty ||
+                !emailRegex.hasMatch(emailController.text)) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context)!.enterValidEmail)));
+            } else {
+              setLoading(true);
+              bool isSent = await apiService
+                  .sendVerificationCode(emailController.value.text);
+              if (isSent) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(AppLocalizations.of(context)!.sentCode)));
+                setState(() {
+                  page = 2;
+                });
+              }
+            }
+            setLoading(false);
+          };
   }
 
   ButtonTheme _getVerifyCodeButton() {
@@ -215,34 +216,29 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         minWidth: 250.0,
         height: 100.0,
         child: ElevatedButton(
-            onPressed: _onVerifyCodePressed(),
+            onPressed: isLoading ? null : _onVerifyCodePressed(),
             child: Text(AppLocalizations.of(context)!.verifyCode)));
   }
 
-  Set Function()? _onVerifyCodePressed() {
+  Future<Null> Function()? _onVerifyCodePressed() {
     return isLoading
         ? null
-        : () => {
-              setLoading(true),
-              apiService
-                  .verifyVerificationCode(emailController.value.text,
-                      verificationCodeController.value.text)
-                  .then((isValid) => {
-                        if (isValid)
-                          {
-                            setState(() {
-                              page = 3;
-                            })
-                          }
-                        else
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .somethingWentWrong))),
-                          }
-                      }),
-              setLoading(false),
-            };
+        : () async {
+            setLoading(true);
+            bool isValid = await apiService.verifyVerificationCode(
+                emailController.value.text,
+                verificationCodeController.value.text);
+            if (isValid) {
+              setState(() {
+                page = 3;
+              });
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context)!.somethingWentWrong)));
+            }
+            setLoading(false);
+          };
   }
 
   String? _getPasswordValidator(String? value) {
@@ -272,33 +268,30 @@ class _SetPasswordViewState extends State<SetPasswordView> {
         minWidth: 250.0,
         height: 100.0,
         child: ElevatedButton(
-            onPressed: _onConfirmPasswordPressed(),
+            onPressed: isLoading ? null : _onConfirmPasswordPressed(),
             child: Text(AppLocalizations.of(context)!.confirm)));
   }
 
-  Set Function()? _onConfirmPasswordPressed() {
+  Future<void> Function()? _onConfirmPasswordPressed() {
     return isLoading
         ? null
-        : () => {
-              if (_isButtonDisabled)
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(AppLocalizations.of(context)!
-                          .enterValidPasswordShort)))
-                }
-              else
-                {
-                  setLoading(true),
-                  apiService
-                      .setNewPassword(
-                          emailController.value.text,
-                          verificationCodeController.value.text,
-                          passwordController.value.text)
-                      .then((success) => Navigator.pushNamedAndRemoveUntil(
-                          context, "/", (r) => false))
-                },
-              setLoading(false),
-            };
+        : () async {
+            if (_isButtonDisabled) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      AppLocalizations.of(context)!.enterValidPasswordShort)));
+            } else {
+              setLoading(true);
+              bool success = await apiService.setNewPassword(
+                  emailController.value.text,
+                  verificationCodeController.value.text,
+                  passwordController.value.text);
+              if (success) {
+                Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+              }
+            }
+            setLoading(false);
+          };
   }
 
   /// Just in case :)

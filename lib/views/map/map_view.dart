@@ -140,8 +140,12 @@ class _MapViewState extends State<MapView> {
     List<List<Report>> sortedList = markerLocations.values.toList()
       ..sort((a, b) =>
           getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
-    max = getAmountOfItemsAtMarker(sortedList.last);
-    min = getAmountOfItemsAtMarker(sortedList.first);
+    if(sortedList.length  > 1) {
+      max = getAmountOfItemsAtMarker(sortedList.last);
+      min = getAmountOfItemsAtMarker(sortedList.first);
+    } else {
+      max = sortedList.length;
+    }
 
     markerLocations.forEach((latLng, item) {
       String markerIdVal =
