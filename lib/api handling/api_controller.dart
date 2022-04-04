@@ -17,7 +17,7 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.186.180:8080/";
+  String baseUrl = "http://10.22.193.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -181,8 +181,7 @@ class ApiService {
         "newEmail": email,
         "departments": departments
       };
-      Response response =
-          await dio.post(baseUrl + "api/user/edit-user", data: data);
+      Response response = await dio.post(baseUrl + "api/user/edit-user", data: data);
       success = response.statusCode == 220;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
@@ -282,7 +281,9 @@ class ApiService {
         List<Map<String, dynamic>>.from(response.data);
     for (Map<String, dynamic> user in usersListMap) {
       User createdUser = User(
-          name: user["name"], email: user["email"], departments: ["Bridge"]);
+          name: user["name"],
+          email: user["email"],
+          departments: List.of(user["departments"]).map((e) => e.toString()).toList());
       users.add(createdUser);
     }
     return users;
