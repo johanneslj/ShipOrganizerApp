@@ -93,6 +93,7 @@
   "update": "Oppdater",
   "deleteProduct": "Slett produkt",
   "emptyInventory": "Tom beholdning",
+  "invalidEmail": "Ugyldig epost",
 
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "deleteProductFailed": "Klarte ikke slette produkt",

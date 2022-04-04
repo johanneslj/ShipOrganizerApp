@@ -93,6 +93,7 @@
   "update": "Update",
   "deleteProduct": "Delete product",
   "emptyInventory": "Empty inventory",
+  "invalidEmail": "Invalid email",
 
   "failedToReadStorage": "Failed to read storage",
   "deleteProductFailed": "Unable to delete product",

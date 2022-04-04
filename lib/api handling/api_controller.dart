@@ -226,6 +226,9 @@ class ApiService {
       case 400:
         _showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
         break;
+      case 422:
+        _showErrorToast(AppLocalizations.of(buildContext)!.invalidEmail);
+        break;
     }
   }
 
@@ -409,6 +412,7 @@ class ApiService {
   /// Forces a user to be logged out
   /// Is only called when the token is no longer valid
   void forceLogOut() {
+    storage.deleteAll();
     Navigator.pushNamedAndRemoveUntil(buildContext, "/", (route) => false);
   }
 
