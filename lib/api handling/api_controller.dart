@@ -17,7 +17,7 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.193.237:8080/";
+  String baseUrl = "http://10.22.195.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -40,8 +40,12 @@ class ApiService {
   ///Test connection to api server
   Future<int> testConnection() async {
     int code = 101;
-    await dio.get(baseUrl + "connection").then(
-        (value) => value.statusCode != null ? code = value.statusCode! : null);
+    try {
+      await dio.get(baseUrl + "connection").then(
+              (value) => value.statusCode != null ? code = value.statusCode! : null);
+    } on DioError catch (e) {
+      return 101;
+    }
     return code;
   }
 
@@ -699,8 +703,17 @@ class ApiService {
         "status": "PENDING",
         "data": data
       };
+      _updateLocalStorageStock(productNumber, amount);
       OfflineEnqueueService().addToQueue(queueItem);
     }
+  }
+
+  Future<void> _updateLocalStorageStock(String productNumber, int amount) async {
+    List<Item> storedItems = _getItemsFromJson(jsonDecode(await storage.read(key: "items") ?? "[]"));
+    storedItems[
+      storedItems.indexWhere((item) => item.productNumber == productNumber)
+    ].stock += amount;
+    storage.write(key: "items", value: jsonEncode(storedItems));
   }
 
   Future<List<Item>> _updateStoreAndGetItems(
