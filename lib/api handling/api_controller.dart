@@ -739,9 +739,6 @@ class ApiService {
       }
       lastUpdatedDate = DateTime.now();
     }
-    for (var element in updatedItemList) {
-      print(element.desiredStock.toString() + " : " + element.productName);
-    }
     return updatedItemList;
   }
 

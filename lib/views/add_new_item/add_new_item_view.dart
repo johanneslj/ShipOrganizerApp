@@ -177,6 +177,7 @@ class _NewItemState extends State<NewItem> {
                     ),
                     Text(AppLocalizations.of(context)!.barcode),
                     TextFormField(
+                      keyboardType: TextInputType.number,
                       onChanged: (query) => updateSearchQuery(query),
                       controller: barcodeController,
                       decoration: InputDecoration(
