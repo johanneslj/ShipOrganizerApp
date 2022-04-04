@@ -71,16 +71,21 @@ class _InventoryViewState extends State<InventoryView> {
             preferredSize:
                 // Creates top padding for the top bar so that it starts below status/notification bar.
                 Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 32.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              searchFieldController: _controller,
-              isRecommendedView: false,
-              isMobile: true,
-              onScan: scanBarcodeNormal,
-            )),
+                    MediaQuery.of(context).viewPadding.top + 70.0),
+            child: Column(children: [
+              TopBar(
+                onSearch: onSearch,
+                onClear: onClear,
+                filter: showSelectDepartmentMenu,
+                searchFieldController: _controller,
+                isRecommendedView: false,
+                isMobile: true,
+                onScan: scanBarcodeNormal,
+              ),
+              Container(
+                  color: Colors.red,
+                  child:Row(children: [Text("YOYOYOY")],) ),
+            ])),
         drawer: const SideMenu(),
         body: _isLoading
             ? circularProgress()
