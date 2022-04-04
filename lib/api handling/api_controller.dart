@@ -643,6 +643,7 @@ class ApiService {
     } on Exception {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
+    updatedAllItems.sort((itemA, itemB) => itemA.productName.compareTo(itemB.productName));
     return updatedAllItems;
   }
 
