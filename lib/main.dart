@@ -120,26 +120,16 @@ class _MainAppState extends State<MainApp> {
         '/': (context) => const LoginView(),
         '/selectDepartment': (context) => SelectDepartmentView(),
         '/changePassword': (context) => const SetPasswordView(),
-        '/createUser': (context) => CreateUser(
-              isCreateUser: true,
-            ),
+        '/createUser': (context) => CreateUser(isCreateUser: true),
         '/inventoryList': (context) => const InventoryView(),
-        '/administerUsers': (context) => const AdministerUsersView(
-              isAdministeringUsers: true,
-            ),
-        '/administerProducts': (context) => const AdministerUsersView(
-              isAdministeringUsers: false,
-            ),
+        '/administerUsers': (context) => const AdministerUsersView(isAdministeringUsers: true),
+        '/administerProducts': (context) => const AdministerUsersView(isAdministeringUsers: false),
         '/sendBill': (context) => const SendBill(),
         '/inventory': (context) => const InventoryView(),
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
         '/map': (context) => const MapView(),
-        '/newProduct': (context) => NewItem(
-              isCreateNew: true,
-            ),
-        '/home': (context) => const MyHomePage(
-              title: 'Home',
-            ),
+        '/newProduct': (context) => const NewItem(isCreateNew: true),
+        '/home': (context) => const MyHomePage(title: 'Home'),
       },
     );
   }
@@ -167,7 +157,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Widget _getViewContainer(int index) {
     List<Widget> mainViewsList = [const InventoryView(), const MyAccount()];
-
     return mainViewsList[index];
   }
 

@@ -287,7 +287,9 @@ class ApiService {
     List<Map<String, dynamic>>.from(response.data);
     for (Map<String, dynamic> user in usersListMap) {
       User createdUser = User(
-          name: user["name"], email: user["email"], departments: []);
+          name: user["name"],
+          email: user["email"],
+          departments: List.of(user["departments"]).map((e) => e.toString()).toList());
       users.add(createdUser);
     }
     return users;
