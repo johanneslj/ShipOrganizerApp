@@ -18,6 +18,7 @@ class ApiService {
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
   String baseUrl = "http://10.22.186.180:8080/";
+
   //String baseUrl = "http://10.22.195.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
@@ -42,8 +43,8 @@ class ApiService {
   Future<int> testConnection() async {
     int code = 101;
     try {
-      await dio.get(baseUrl + "connection").then(
-              (value) => value.statusCode != null ? code = value.statusCode! : null);
+      await dio.get(baseUrl + "connection").then((value) =>
+          value.statusCode != null ? code = value.statusCode! : null);
     } on DioError catch (e) {
       return 101;
     }
@@ -186,7 +187,8 @@ class ApiService {
         "newEmail": email,
         "departments": departments
       };
-      Response response = await dio.post(baseUrl + "api/user/edit-user", data: data);
+      Response response =
+          await dio.post(baseUrl + "api/user/edit-user", data: data);
       success = response.statusCode == 220;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
@@ -291,7 +293,8 @@ class ApiService {
       User createdUser = User(
           name: user["name"],
           email: user["email"],
-          departments: List.of(user["departments"]).map((e) => e.toString()).toList());
+          departments:
+              List.of(user["departments"]).map((e) => e.toString()).toList());
       users.add(createdUser);
     }
     return users;
@@ -709,11 +712,13 @@ class ApiService {
     }
   }
 
-  Future<void> _updateLocalStorageStock(String productNumber, int amount) async {
-    List<Item> storedItems = _getItemsFromJson(jsonDecode(await storage.read(key: "items") ?? "[]"));
-    storedItems[
-      storedItems.indexWhere((item) => item.productNumber == productNumber)
-    ].stock += amount;
+  Future<void> _updateLocalStorageStock(
+      String productNumber, int amount) async {
+    List<Item> storedItems =
+        _getItemsFromJson(jsonDecode(await storage.read(key: "items") ?? "[]"));
+    storedItems[storedItems
+            .indexWhere((item) => item.productNumber == productNumber)]
+        .stock += amount;
     storage.write(key: "items", value: jsonEncode(storedItems));
   }
 
@@ -733,6 +738,9 @@ class ApiService {
         updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
       }
       lastUpdatedDate = DateTime.now();
+    }
+    for (var element in updatedItemList) {
+      print(element.desiredStock.toString() + " : " + element.productName);
     }
     return updatedItemList;
   }
@@ -817,6 +825,7 @@ class ApiService {
             } else {
               desiredStock = value;
             }
+
             break;
         }
       });
