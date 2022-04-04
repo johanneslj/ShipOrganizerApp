@@ -65,8 +65,7 @@ class ApiService {
   }
 
   /// Stores token, full name of user and the username into the local storage
-  bool _storeUserDataFromResponseAndGetSuccess(
-      Response<dynamic> response)  {
+  bool _storeUserDataFromResponseAndGetSuccess(Response<dynamic> response) {
     if (response.data != null) {
       storage.write(key: "jwt", value: response.data["token"]);
       storage.write(key: "name", value: response.data["fullname"]);
@@ -373,7 +372,10 @@ class ApiService {
   /// Gets the list of departments a user has access to from the API
   /// Returns a list of available departments
   Future<List<String>> getDepartments() async {
-    await getUserRights();
+    if ((await storage.read(key: "userRights")) == null) {
+      await getUserRights();
+    }
+
     List<String> storedDepartments = await _getStoredDepartments();
     if (storedDepartments.isNotEmpty) {
       return storedDepartments;
