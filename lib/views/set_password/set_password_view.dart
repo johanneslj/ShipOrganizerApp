@@ -182,11 +182,12 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   Future<bool> _autoFillEmailIfExists() async {
     bool hasKey = false;
-    if (await _storage.containsKey(key: "username")) {
-      hasKey = true;
-      _storage
-          .read(key: "username")
-          .then((value) => value != null ? emailController.text = value : null);
+    if (emailController.text.isEmpty) {
+      if (await _storage.containsKey(key: "username")) {
+        hasKey = true;
+        _storage.read(key: "username").then(
+            (value) => value != null ? emailController.text = value : null);
+      }
     }
     return hasKey;
   }

@@ -51,17 +51,21 @@ class _MyAccount extends State<MyAccount> {
   }
 
   void _setUpConnectivitySubscription() {
-    Connectivity().onConnectivityChanged.listen((result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isOffline = true;
-        });
-      } else {
-        setState(() {
-          isOffline = false;
-        });
-      }
-    });
+    try {
+      Connectivity().onConnectivityChanged.listen((result) {
+        if (result == ConnectivityResult.none) {
+          setState(() {
+            isOffline = true;
+          });
+        } else {
+          setState(() {
+            isOffline = false;
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
