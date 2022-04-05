@@ -1,3 +1,5 @@
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -79,37 +81,51 @@ class _InventoryViewState extends State<InventoryView> {
         });
       }
 
-      if (isOffline) {
-        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-        ScaffoldMessenger.of(context).showMaterialBanner(OfflineBanner.getBanner(context));
-      } else {
-        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-      }
     });
   }
 
   Widget createView(BuildContext context, colorScheme) {
     if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
       return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 70.0),
-            child: Column(children: [
-              TopBar(
-                onSearch: onSearch,
-                onClear: onClear,
-                filter: showSelectDepartmentMenu,
-                searchFieldController: _controller,
-                isRecommendedView: false,
-                isMobile: true,
-                onScan: scanBarcodeNormal,
-              ),
-              Container(
-                  color: Colors.red,
-                  child:Row(children: [Text("YOYOYOY")],) ),
-            ])),
+        appBar: isOffline
+            ? PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 70.0),
+                child: Column(children: [
+                  TopBar(
+                    onSearch: onSearch,
+                    onClear: onClear,
+                    filter: showSelectDepartmentMenu,
+                    searchFieldController: _controller,
+                    isRecommendedView: false,
+                    isMobile: true,
+                    onScan: scanBarcodeNormal,
+                  ),
+                  Container(
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [const Icon(Icons.warning) ,Text(AppLocalizations.of(context)!.offline)],
+                      )),
+                ]))
+            : PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 37.0),
+                child: Column(children: [
+                  TopBar(
+                    onSearch: onSearch,
+                    onClear: onClear,
+                    filter: showSelectDepartmentMenu,
+                    searchFieldController: _controller,
+                    isRecommendedView: false,
+                    isMobile: true,
+                    onScan: scanBarcodeNormal,
+                  ),
+                ])),
         drawer: const SideMenu(),
         body: _isLoading
             ? circularProgress()
@@ -212,8 +228,8 @@ class _InventoryViewState extends State<InventoryView> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes =
-          await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

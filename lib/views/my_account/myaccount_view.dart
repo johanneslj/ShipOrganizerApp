@@ -159,7 +159,7 @@ class _MyAccount extends State<MyAccount> {
       arguments: "false",
     ));
     departmentCardList.add(DepartmentCard(
-      departmentName: AppLocalizations.of(context)!.preferredInventory,
+      departmentName: AppLocalizations.of(context)!.missingInventory,
       destination: "/recommendedInventory",
       arguments: "false",
     ));
@@ -198,7 +198,7 @@ class _MyAccount extends State<MyAccount> {
     departmentCardList.add(gridTileWidget(
         "/changePassword", AppLocalizations.of(context)!.changePassword,"false"));
     departmentCardList.add(gridTileWidget("/recommendedInventory",
-        AppLocalizations.of(context)!.preferredInventory,"false"));
+        AppLocalizations.of(context)!.missingInventory,"false"));
     departmentCardList
         .add(gridTileWidget("/sendBill", AppLocalizations.of(context)!.billing,admin.toString()));
     if (admin) {

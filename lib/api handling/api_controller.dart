@@ -825,6 +825,14 @@ class ApiService {
             }
 
             break;
+          case "desiredStock":
+            if (value.runtimeType == String) {
+              desiredStock = int.parse(value);
+            } else {
+              desiredStock = value;
+            }
+
+            break;
         }
       });
       items.add(Item(

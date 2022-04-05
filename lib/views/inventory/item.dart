@@ -12,7 +12,7 @@ class Item {
     'productName': productName,
     'productNumber': productNumber,
     'barcode': barcode,
-    'desired_Stock': desiredStock,
+    'desiredStock': desiredStock,
     'stock': stock,
   };
 }
