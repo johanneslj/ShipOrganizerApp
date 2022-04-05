@@ -101,7 +101,7 @@
   "couldntLogOut": "Failed to sign out",
   "deleteProductFailed": "Klarte ikke slette produkt",
   "failedToConfirmCode": "Fikk ikke bekreftet verifiserings koden",
-  "failedToGetMarkers": "Klarte ikke hente merkører",
+  "failedToGetMarkers": "Klarte ikke hente markører",
   "failedToReadStorage": "Klarte ikke lese fra lagring",
   "notAllowedToCreateUser": "Du kan ikke lage bruker",
   "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",

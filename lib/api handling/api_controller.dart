@@ -773,7 +773,7 @@ class ApiService {
     Response response;
     if (lastUpdatedDate.year == 1900 ||
         localStorage == null ||
-        localStorage.isEmpty) {
+        localStorage.isEmpty || localStorage == "[]") {
       response = await dio.post(baseUrl + "api/product/get-inventory",
           data: {"department": department});
     } else {
