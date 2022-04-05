@@ -70,7 +70,7 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   void _setUpConnectivitySubscription() {
-    try {
+    if (mounted) {
       Connectivity().onConnectivityChanged.listen((result) {
         if (result == ConnectivityResult.none) {
           setState(() {
@@ -82,8 +82,6 @@ class _InventoryViewState extends State<InventoryView> {
           });
         }
       });
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -110,7 +108,10 @@ class _InventoryViewState extends State<InventoryView> {
                       color: Colors.red,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [const Icon(Icons.warning) ,Text(AppLocalizations.of(context)!.offline)],
+                        children: [
+                          const Icon(Icons.warning),
+                          Text(AppLocalizations.of(context)!.offline)
+                        ],
                       )),
                 ]))
             : PreferredSize(

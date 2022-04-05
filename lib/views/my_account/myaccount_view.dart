@@ -51,7 +51,7 @@ class _MyAccount extends State<MyAccount> {
   }
 
   void _setUpConnectivitySubscription() {
-    try {
+    if (mounted) {
       Connectivity().onConnectivityChanged.listen((result) {
         if (result == ConnectivityResult.none) {
           setState(() {
@@ -63,8 +63,6 @@ class _MyAccount extends State<MyAccount> {
           });
         }
       });
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -77,154 +75,8 @@ class _MyAccount extends State<MyAccount> {
     int tabletCrossAxisCount = getCrossAxisCount(context);
     return Scaffold(
         appBar: isOffline
-            ? PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 60.0),
-                child: Column(
-                  children: [
-                    AppBar(
-                      actions: [
-                        PopupMenuButton(
-                            icon: Icon(Icons.language_sharp,
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            iconSize: 35,
-                            itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    onTap: () => {
-                                      if (storage.read(
-                                              key: "selectedLanguage") !=
-                                          null)
-                                        {
-                                          storage.delete(
-                                              key: "selectedLanguage"),
-                                          storage.write(
-                                              key: "selectedLanguage",
-                                              value: "nb"),
-                                        },
-                                      MainApp.setLocale(context, Locale("nb")),
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/NorwegianLanguageFlag.png",
-                                          width: 30,
-                                        ),
-                                        Text(AppLocalizations.of(context)!
-                                            .norwegian),
-                                      ],
-                                    ),
-                                    value: 1,
-                                  ),
-                                  PopupMenuItem(
-                                    onTap: () => {
-                                      if (storage.read(
-                                              key: "selectedLanguage") !=
-                                          null)
-                                        {
-                                          storage.delete(
-                                              key: "selectedLanguage"),
-                                          storage.write(
-                                              key: "selectedLanguage",
-                                              value: "en"),
-                                        },
-                                      MainApp.setLocale(context, Locale("en")),
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/EnglishLanguageFlag.png",
-                                          width: 30,
-                                        ),
-                                        Text(AppLocalizations.of(context)!
-                                            .english),
-                                      ],
-                                    ),
-                                    value: 2,
-                                  )
-                                ])
-                      ],
-                      automaticallyImplyLeading: false,
-                      title: Text(
-                        AppLocalizations.of(context)!.myAccount,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ),
-                    Container(
-                        color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.warning),
-                            Text(AppLocalizations.of(context)!.offline)
-                          ],
-                        ))
-                  ],
-                ),
-              )
-            : PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 30.0),
-                child: AppBar(
-                  actions: [
-                    PopupMenuButton(
-                        icon: Icon(Icons.language_sharp,
-                            color: Theme.of(context).colorScheme.onPrimary),
-                        iconSize: 35,
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                onTap: () => {
-                                  if (storage.read(key: "selectedLanguage") !=
-                                      null)
-                                    {
-                                      storage.delete(key: "selectedLanguage"),
-                                      storage.write(
-                                          key: "selectedLanguage", value: "nb"),
-                                    },
-                                  MainApp.setLocale(context, Locale("nb")),
-                                },
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/NorwegianLanguageFlag.png",
-                                      width: 30,
-                                    ),
-                                    Text(AppLocalizations.of(context)!
-                                        .norwegian),
-                                  ],
-                                ),
-                                value: 1,
-                              ),
-                              PopupMenuItem(
-                                onTap: () => {
-                                  if (storage.read(key: "selectedLanguage") !=
-                                      null)
-                                    {
-                                      storage.delete(key: "selectedLanguage"),
-                                      storage.write(
-                                          key: "selectedLanguage", value: "en"),
-                                    },
-                                  MainApp.setLocale(context, Locale("en")),
-                                },
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/EnglishLanguageFlag.png",
-                                      width: 30,
-                                    ),
-                                    Text(AppLocalizations.of(context)!.english),
-                                  ],
-                                ),
-                                value: 2,
-                              )
-                            ])
-                  ],
-                  automaticallyImplyLeading: false,
-                  title: Text(
-                    AppLocalizations.of(context)!.myAccount,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-              ),
+            ? _generateOfflineAppBar(context, storage)
+            : _generateOnlineAppBar(context, storage),
         body: _isLoading
             ? circularProgress()
             : Center(
@@ -253,6 +105,147 @@ class _MyAccount extends State<MyAccount> {
                         )
                 ]),
               )));
+  }
+
+  PreferredSize _generateOnlineAppBar(
+      BuildContext context, FlutterSecureStorage storage) {
+    return PreferredSize(
+      preferredSize: Size(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).viewPadding.top + 30.0),
+      child: AppBar(
+        actions: [
+          PopupMenuButton(
+              icon: Icon(Icons.language_sharp,
+                  color: Theme.of(context).colorScheme.onPrimary),
+              iconSize: 35,
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () => {
+                        if (storage.read(key: "selectedLanguage") != null)
+                          {
+                            storage.delete(key: "selectedLanguage"),
+                            storage.write(key: "selectedLanguage", value: "nb"),
+                          },
+                        MainApp.setLocale(context, Locale("nb")),
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/NorwegianLanguageFlag.png",
+                            width: 30,
+                          ),
+                          Text(AppLocalizations.of(context)!.norwegian),
+                        ],
+                      ),
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      onTap: () => {
+                        if (storage.read(key: "selectedLanguage") != null)
+                          {
+                            storage.delete(key: "selectedLanguage"),
+                            storage.write(key: "selectedLanguage", value: "en"),
+                          },
+                        MainApp.setLocale(context, Locale("en")),
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/EnglishLanguageFlag.png",
+                            width: 30,
+                          ),
+                          Text(AppLocalizations.of(context)!.english),
+                        ],
+                      ),
+                      value: 2,
+                    )
+                  ])
+        ],
+        automaticallyImplyLeading: false,
+        title: Text(
+          AppLocalizations.of(context)!.myAccount,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
+    );
+  }
+
+  PreferredSize _generateOfflineAppBar(
+      BuildContext context, FlutterSecureStorage storage) {
+    return PreferredSize(
+      preferredSize: Size(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).viewPadding.top + 60.0),
+      child: Column(
+        children: [
+          AppBar(
+            actions: [
+              PopupMenuButton(
+                  icon: Icon(Icons.language_sharp,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                  iconSize: 35,
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () => {
+                            if (storage.read(key: "selectedLanguage") != null)
+                              {
+                                storage.delete(key: "selectedLanguage"),
+                                storage.write(
+                                    key: "selectedLanguage", value: "nb"),
+                              },
+                            MainApp.setLocale(context, Locale("nb")),
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "assets/NorwegianLanguageFlag.png",
+                                width: 30,
+                              ),
+                              Text(AppLocalizations.of(context)!.norwegian),
+                            ],
+                          ),
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          onTap: () => {
+                            if (storage.read(key: "selectedLanguage") != null)
+                              {
+                                storage.delete(key: "selectedLanguage"),
+                                storage.write(
+                                    key: "selectedLanguage", value: "en"),
+                              },
+                            MainApp.setLocale(context, Locale("en")),
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "assets/EnglishLanguageFlag.png",
+                                width: 30,
+                              ),
+                              Text(AppLocalizations.of(context)!.english),
+                            ],
+                          ),
+                          value: 2,
+                        )
+                      ])
+            ],
+            automaticallyImplyLeading: false,
+            title: Text(
+              AppLocalizations.of(context)!.myAccount,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+          Container(
+              color: Colors.red,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.warning),
+                  Text(AppLocalizations.of(context)!.offline)
+                ],
+              ))
+        ],
+      ),
+    );
   }
 
   /// Gets the right menu items base on admin rights
