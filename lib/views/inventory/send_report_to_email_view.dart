@@ -55,10 +55,18 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(AppLocalizations.of(context)!.recipients),
+            Text(AppLocalizations.of(context)!.recipients, style: Theme.of(context).textTheme.headline5,),
             Padding(
-              padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-              child: Column(children: getListOfReceivers()),
+              padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  children: getListOfReceivers(),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
@@ -73,35 +81,44 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: TextFormField(
-                          controller: emailController,
-                          validator: (val) => val!.isEmpty || !val.contains("@")
-                              ? AppLocalizations.of(context)!.enterValidEmail
-                              : null),
+                        controller: emailController,
+                        validator: (val) => val!.isNotEmpty && !val.contains("@")
+                            ? AppLocalizations.of(context)!.enterValidEmail
+                            : null,
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.email,
+                          suffixIcon: IconButton(
+                              onPressed: () => {
+                                    if (_formKey.currentState!.validate())
+                                      {
+                                        setState(() {
+                                          _receivers
+                                              .add(emailController.value.text);
+                                          emailController.text = "";
+
+                                        }),
+                                      },
+                                  },
+                              icon: Icon(Icons.add,
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                        ),
+                      ),
                       width: 250,
                     ),
-                    ElevatedButton(
-                        onPressed: () => {
-                              if (_formKey.currentState!.validate())
-                                {
-                                  setState(() {
-                                    _receivers.add(emailController.value.text);
-                                    emailController.text = "";
-                                  }),
-                                },
-                            },
-                        child: Text(AppLocalizations.of(context)!.add))
                   ],
                 ),
               ),
             ),
             ElevatedButton(
-                onPressed: () async {
+                onPressed: isLoading ? null : () async {
                   if (_receivers.isNotEmpty) {
                     bool success = await sendMissingInventory();
                     if (success) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
                               AppLocalizations.of(context)!.emailWillBeSent)));
+                      Navigator.pushNamed(context, "/home");
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(AppLocalizations.of(context)!
@@ -124,9 +141,14 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
     List<Widget> emailAddresses = [];
     for (String email in _receivers) {
       emailAddresses.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(email),
+          ),
           IconButton(
-            icon: Icon(Icons.remove,
+            icon: Icon(Icons.delete,
                 color: Theme.of(context).colorScheme.primary),
             onPressed: () => {
               setState(() {
@@ -134,7 +156,6 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
               })
             },
           ),
-          Text(email)
         ],
       ));
     }
@@ -142,9 +163,15 @@ class _SendReportToEmailState extends State<SendReportToEmail> {
     return emailAddresses;
   }
 
+  bool isLoading = false;
+
+  setLoading(bool state) => setState(() => isLoading = state);
+
   Future<bool> sendMissingInventory() async {
+    setLoading(true);
     bool success = false;
     success = await _apiService.sendMissingInventory(widget.items, _receivers);
+    setLoading(false);
     return success;
   }
 }

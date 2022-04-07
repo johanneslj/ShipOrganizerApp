@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 
 /// This view is used for letting the user set a new password.
 ///
@@ -48,20 +49,41 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: page == 1
-                ? enterEmailPage()
-                : page == 2
-                    ? enterCodePage()
-                    : page == 3
-                        ? enterNewPasswordPage()
-                        : errorPage(),
+      body: LoadingOverlay(
+          inAsyncCall: isLoading,
+          progressIndicator: SizedBox(
+            height: 200.0,
+            width: 200.0,
+            child: Center(
+              child: Column(
+                children: const [
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.blue,
+                      strokeWidth: 10.0,
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: page == 1
+                    ? enterEmailPage()
+                    : page == 2
+                        ? enterCodePage()
+                        : page == 3
+                            ? enterNewPasswordPage()
+                            : errorPage(),
+              ),
+            ),
+          )),
     );
   }
 
@@ -160,11 +182,12 @@ class _SetPasswordViewState extends State<SetPasswordView> {
 
   Future<bool> _autoFillEmailIfExists() async {
     bool hasKey = false;
-    if (await _storage.containsKey(key: "username")) {
-      hasKey = true;
-      _storage
-          .read(key: "username")
-          .then((value) => value != null ? emailController.text = value : null);
+    if (emailController.text.isEmpty) {
+      if (await _storage.containsKey(key: "username")) {
+        hasKey = true;
+        _storage.read(key: "username").then(
+            (value) => value != null ? emailController.text = value : null);
+      }
     }
     return hasKey;
   }
@@ -287,7 +310,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   verificationCodeController.value.text,
                   passwordController.value.text);
               if (success) {
-                Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+                apiService.signOut();
               }
             }
             setLoading(false);

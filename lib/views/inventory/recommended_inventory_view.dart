@@ -5,7 +5,7 @@ import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:ship_organizer_app/entities/department.dart';
-import 'package:ship_organizer_app/views/inventory/sendReportToEmailView.dart';
+import 'package:ship_organizer_app/views/inventory/send_report_to_email_view.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
 import 'inventory_widget.dart';

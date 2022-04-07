@@ -1,3 +1,5 @@
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,6 +10,7 @@ import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
 import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
+import 'package:ship_organizer_app/widgets/offline_banner.dart';
 import 'inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'item.dart';
@@ -34,6 +37,7 @@ class _InventoryViewState extends State<InventoryView> {
   List<Item> displayedItems = [];
   late bool _isLoading = true;
   late int selectedRadioButton = 0;
+  bool isOffline = false;
 
   Department selectedDepartment = Department(departmentName: "");
 
@@ -41,6 +45,8 @@ class _InventoryViewState extends State<InventoryView> {
   void initState() {
     super.initState();
     dataLoadFunction();
+    _initialConnectionCheck();
+    _setUpConnectivitySubscription();
   }
 
   dataLoadFunction() async {
@@ -64,23 +70,81 @@ class _InventoryViewState extends State<InventoryView> {
     return createView(context, colorScheme);
   }
 
+  void _initialConnectionCheck() {
+    Connectivity().checkConnectivity().then((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isOffline = true;
+        });
+      } else {
+        setState(() {
+          isOffline = false;
+        });
+      }
+    });
+  }
+
+  void _setUpConnectivitySubscription() {
+    if (mounted) {
+      Connectivity().onConnectivityChanged.listen((result) {
+        if (result == ConnectivityResult.none) {
+          setState(() {
+            isOffline = true;
+          });
+        } else {
+          setState(() {
+            isOffline = false;
+          });
+        }
+      });
+    }
+  }
+
   Widget createView(BuildContext context, colorScheme) {
     if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
       return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 32.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              searchFieldController: _controller,
-              isRecommendedView: false,
-              isMobile: true,
-              onScan: scanBarcodeNormal,
-            )),
+        appBar: isOffline
+            ? PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 70.0),
+                child: Column(children: [
+                  TopBar(
+                    onSearch: onSearch,
+                    onClear: onClear,
+                    filter: showSelectDepartmentMenu,
+                    searchFieldController: _controller,
+                    isRecommendedView: false,
+                    isMobile: true,
+                    onScan: scanBarcodeNormal,
+                  ),
+                  Container(
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.warning),
+                          Text(AppLocalizations.of(context)!.offline)
+                        ],
+                      )),
+                ]))
+            : PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 37.0),
+                child: Column(children: [
+                  TopBar(
+                    onSearch: onSearch,
+                    onClear: onClear,
+                    filter: showSelectDepartmentMenu,
+                    searchFieldController: _controller,
+                    isRecommendedView: false,
+                    isMobile: true,
+                    onScan: scanBarcodeNormal,
+                  ),
+                ])),
         drawer: const SideMenu(),
         body: _isLoading
             ? circularProgress()

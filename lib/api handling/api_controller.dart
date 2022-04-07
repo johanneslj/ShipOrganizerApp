@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
@@ -17,7 +18,9 @@ class ApiService {
   late BuildContext buildContext;
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
-  String baseUrl = "http://10.22.195.237:8080/";
+  String baseUrl = "http://10.22.186.180:8080/";
+
+  //String baseUrl = "http://10.22.195.237:8080/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
   ApiService._internal();
@@ -41,8 +44,8 @@ class ApiService {
   Future<int> testConnection() async {
     int code = 101;
     try {
-      await dio.get(baseUrl + "connection").then(
-              (value) => value.statusCode != null ? code = value.statusCode! : null);
+      await dio.get(baseUrl + "connection").then((value) =>
+          value.statusCode != null ? code = value.statusCode! : null);
     } on DioError catch (e) {
       return 101;
     }
@@ -185,7 +188,8 @@ class ApiService {
         "newEmail": email,
         "departments": departments
       };
-      Response response = await dio.post(baseUrl + "api/user/edit-user", data: data);
+      Response response =
+          await dio.post(baseUrl + "api/user/edit-user", data: data);
       success = response.statusCode == 220;
     } catch (e) {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
@@ -228,6 +232,9 @@ class ApiService {
         break;
       case 400:
         _showErrorToast(AppLocalizations.of(buildContext)!.badRequest);
+        break;
+      case 422:
+        _showErrorToast(AppLocalizations.of(buildContext)!.invalidEmail);
         break;
     }
   }
@@ -287,7 +294,8 @@ class ApiService {
       User createdUser = User(
           name: user["name"],
           email: user["email"],
-          departments: List.of(user["departments"]).map((e) => e.toString()).toList());
+          departments:
+              List.of(user["departments"]).map((e) => e.toString()).toList());
       users.add(createdUser);
     }
     return users;
@@ -414,6 +422,7 @@ class ApiService {
   /// Forces a user to be logged out
   /// Is only called when the token is no longer valid
   void forceLogOut() {
+    storage.deleteAll();
     Navigator.pushNamedAndRemoveUntil(buildContext, "/", (route) => false);
   }
 
@@ -635,6 +644,7 @@ class ApiService {
     } on Exception {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
+    updatedAllItems.sort((itemA, itemB) => itemA.productName.toLowerCase().compareTo(itemB.productName.toLowerCase()));
     return updatedAllItems;
   }
 
@@ -704,11 +714,13 @@ class ApiService {
     }
   }
 
-  Future<void> _updateLocalStorageStock(String productNumber, int amount) async {
-    List<Item> storedItems = _getItemsFromJson(jsonDecode(await storage.read(key: "items") ?? "[]"));
-    storedItems[
-      storedItems.indexWhere((item) => item.productNumber == productNumber)
-    ].stock += amount;
+  Future<void> _updateLocalStorageStock(
+      String productNumber, int amount) async {
+    List<Item> storedItems =
+        _getItemsFromJson(jsonDecode(await storage.read(key: "items") ?? "[]"));
+    storedItems[storedItems
+            .indexWhere((item) => item.productNumber == productNumber)]
+        .stock += amount;
     storage.write(key: "items", value: jsonEncode(storedItems));
   }
 
@@ -719,13 +731,18 @@ class ApiService {
         localStorage, department);
     if (response.statusCode == 200) {
       List<Item> apiItems = _getItemsFromResponse(response);
-      if (localStorage == null ||
-          localStorage.isEmpty ||
-          localStorage == "[]") {
-        updatedItemList = apiItems;
-        storage.write(key: "items", value: jsonEncode(updatedItemList));
+      if(department == await getActiveDepartment()) {
+        if ((localStorage == null ||
+            localStorage.isEmpty ||
+            localStorage == "[]")) {
+          updatedItemList = apiItems;
+          storage.write(key: "items", value: jsonEncode(updatedItemList));
+        } else {
+          updatedItemList =
+          await _updateAndStoreItems(apiItems, updatedItemList);
+        }
       } else {
-        updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
+        updatedItemList = apiItems;
       }
       lastUpdatedDate = DateTime.now();
     }
@@ -762,7 +779,7 @@ class ApiService {
     Response response;
     if (lastUpdatedDate.year == 1900 ||
         localStorage == null ||
-        localStorage.isEmpty) {
+        localStorage.isEmpty || localStorage == "[]") {
       response = await dio.post(baseUrl + "api/product/get-inventory",
           data: {"department": department});
     } else {
@@ -812,6 +829,15 @@ class ApiService {
             } else {
               desiredStock = value;
             }
+
+            break;
+          case "desiredStock":
+            if (value.runtimeType == String) {
+              desiredStock = int.parse(value);
+            } else {
+              desiredStock = value;
+            }
+
             break;
         }
       });
