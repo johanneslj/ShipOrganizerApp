@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
@@ -643,7 +644,7 @@ class ApiService {
     } on Exception {
       _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
     }
-    updatedAllItems.sort((itemA, itemB) => itemA.productName.compareTo(itemB.productName));
+    updatedAllItems.sort((itemA, itemB) => itemA.productName.toLowerCase().compareTo(itemB.productName.toLowerCase()));
     return updatedAllItems;
   }
 
@@ -730,13 +731,18 @@ class ApiService {
         localStorage, department);
     if (response.statusCode == 200) {
       List<Item> apiItems = _getItemsFromResponse(response);
-      if (localStorage == null ||
-          localStorage.isEmpty ||
-          localStorage == "[]") {
-        updatedItemList = apiItems;
-        storage.write(key: "items", value: jsonEncode(updatedItemList));
+      if(department == await getActiveDepartment()) {
+        if ((localStorage == null ||
+            localStorage.isEmpty ||
+            localStorage == "[]")) {
+          updatedItemList = apiItems;
+          storage.write(key: "items", value: jsonEncode(updatedItemList));
+        } else {
+          updatedItemList =
+          await _updateAndStoreItems(apiItems, updatedItemList);
+        }
       } else {
-        updatedItemList = await _updateAndStoreItems(apiItems, updatedItemList);
+        updatedItemList = apiItems;
       }
       lastUpdatedDate = DateTime.now();
     }

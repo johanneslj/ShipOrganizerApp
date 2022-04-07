@@ -51,10 +51,7 @@ class _InventoryViewState extends State<InventoryView> {
     setState(() {
       _isLoading = true;
     });
-    if (selectedDepartment.departmentName.isEmpty) {
-      selectedDepartment.departmentName =
-          await apiService.getActiveDepartment();
-    }
+    selectedDepartment.departmentName = await apiService.getActiveDepartment();
     await getItems();
     displayedItems = items;
 

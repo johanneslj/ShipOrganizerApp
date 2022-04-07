@@ -310,7 +310,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   verificationCodeController.value.text,
                   passwordController.value.text);
               if (success) {
-                Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+                apiService.signOut();
               }
             }
             setLoading(false);
