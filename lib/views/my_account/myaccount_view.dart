@@ -32,6 +32,8 @@ class _MyAccount extends State<MyAccount> {
   @override
   void initState() {
     dataLoadFunction();
+    _initialConnectionCheck();
+    _setUpConnectivitySubscription();
     super.initState();
   }
 
@@ -47,6 +49,20 @@ class _MyAccount extends State<MyAccount> {
     await getUserFullName();
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  void _initialConnectionCheck() {
+    Connectivity().checkConnectivity().then((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isOffline = true;
+        });
+      } else {
+        setState(() {
+          isOffline = false;
+        });
+      }
     });
   }
 
@@ -68,7 +84,6 @@ class _MyAccount extends State<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
-    _setUpConnectivitySubscription();
     FlutterSecureStorage storage = const FlutterSecureStorage();
     bool mobile =
         (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);

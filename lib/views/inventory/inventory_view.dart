@@ -45,6 +45,8 @@ class _InventoryViewState extends State<InventoryView> {
   void initState() {
     super.initState();
     dataLoadFunction();
+    _initialConnectionCheck();
+    _setUpConnectivitySubscription();
   }
 
   dataLoadFunction() async {
@@ -65,8 +67,21 @@ class _InventoryViewState extends State<InventoryView> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     apiService.setContext(context);
-    _setUpConnectivitySubscription();
     return createView(context, colorScheme);
+  }
+
+  void _initialConnectionCheck() {
+    Connectivity().checkConnectivity().then((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isOffline = true;
+        });
+      } else {
+        setState(() {
+          isOffline = false;
+        });
+      }
+    });
   }
 
   void _setUpConnectivitySubscription() {
