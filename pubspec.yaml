@@ -86,6 +86,8 @@ flutter:
     - assets/hue.png
     - assets/EnglishLanguageFlag.png
     - assets/NorwegianLanguageFlag.png
+    - assets/EnglishLanguageFlagRound.png
+    - assets/NorwegianLanguageFlagRound.png
     - assets/MaoyiLogo.png
     - assets/MaoyiLogo1.png
     - assets/maoyi-logo-white.png
