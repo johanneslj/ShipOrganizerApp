@@ -7,16 +7,16 @@ import 'package:ship_organizer_app/entities/Order.dart';
 /// This class is responsible for the view where the admin can
 /// check the bills that are confirmed.
 /// And for the normal user, can here set the bills as confirmed.
-class ConfimedBill extends StatefulWidget {
+class ConfirmedBill extends StatefulWidget {
   final bool admin;
 
-  const ConfimedBill({Key? key, required this.admin}) : super(key: key);
+  const ConfirmedBill({Key? key, required this.admin}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _confimedBill();
+  State<StatefulWidget> createState() => _ConfirmedBill();
 }
 
-class _confimedBill extends State<ConfimedBill> {
+class _ConfirmedBill extends State<ConfirmedBill> {
   late List<Order> confirmedOrders = <Order>[];
   late bool _isLoading = false;
 

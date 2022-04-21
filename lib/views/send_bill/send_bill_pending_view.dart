@@ -74,7 +74,7 @@ class _pendingBill extends State<PendingBill> {
                                     radius: 50.0,
                                     //Photo by Tamas Tuzes-Katai on Unsplash
                                     backgroundImage:
-                                        const AssetImage('assets/FishingBoatSilhouette.jpg')),
+                                        NetworkImage("https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/" + pendingOrders[index].imagename)),
                                 Text(
                                   AppLocalizations.of(context)!.changeImageSize,
                                   style: const TextStyle(
