@@ -60,6 +60,7 @@ class _pendingBill extends State<PendingBill> {
                         child: GridView.builder(
                           itemCount: pendingOrders.length,
                           itemBuilder: (BuildContext context, int index) {
+                            NetworkImage image = NetworkImage(apiService.imagesBaseUrl + pendingOrders[index].imagename);
                             return Center(
                                 child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +69,12 @@ class _pendingBill extends State<PendingBill> {
                                     child: GestureDetector(
                                       onTap: () async {
                                         await showDialog(
-                                            context: context, builder: (_) => imageDialog());
+                                            context: context, builder: (_) => imageDialog(image));
                                       },
                                     ),
                                     radius: 50.0,
                                     //Photo by Tamas Tuzes-Katai on Unsplash
-                                    backgroundImage:
-                                        NetworkImage("https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/" + pendingOrders[index].imagename)),
+                                    backgroundImage: image),
                                 Text(
                                   AppLocalizations.of(context)!.changeImageSize,
                                   style: const TextStyle(
@@ -102,14 +102,14 @@ class _pendingBill extends State<PendingBill> {
                       )));
   }
 
-  Widget imageDialog() {
+  Widget imageDialog(NetworkImage image) {
     return Dialog(
       child: Container(
         width: 500,
         height: 600,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
+                image: image, fit: BoxFit.cover)),
       ),
     );
   }

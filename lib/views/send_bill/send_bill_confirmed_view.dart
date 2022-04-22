@@ -47,6 +47,7 @@ class _ConfirmedBill extends State<ConfirmedBill> {
         GridView.builder(
             itemCount: confirmedOrders.length,
             itemBuilder: (BuildContext context, int index) {
+              NetworkImage image = NetworkImage(apiService.imagesBaseUrl + confirmedOrders[index].imagename);
               return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -56,12 +57,11 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                             onTap: () async {
                               await showDialog(
                                   context: context,
-                                  builder: (_) => imageDialog());
+                                  builder: (_) => imageDialog(image));
                             },
                           ),
                           radius: 60.0,
-                          backgroundImage: const AssetImage(
-                              'assets/FishingBoatSilhouette.jpg')),
+                          backgroundImage: image),
                       Text(
                         AppLocalizations.of(context)!.changeImageSize,
                         style: const TextStyle(
@@ -91,14 +91,14 @@ class _ConfirmedBill extends State<ConfirmedBill> {
   }
 
   ///Creates widget for the popup image
-  Widget imageDialog() {
+  Widget imageDialog(NetworkImage image) {
     return Dialog(
       child: Container(
         width: 500,
         height: 600,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
+                image: image, fit: BoxFit.cover)),
       ),
     );
   }

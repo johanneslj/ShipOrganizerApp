@@ -930,7 +930,7 @@ class ApiService {
       String department = "";
       order.forEach((key, value) {
         switch (key) {
-          case "imagename":
+          case "imageName":
             imageName = value;
             break;
           case "departmentName":
