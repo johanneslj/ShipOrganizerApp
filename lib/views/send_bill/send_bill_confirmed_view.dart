@@ -7,16 +7,16 @@ import 'package:ship_organizer_app/entities/Order.dart';
 /// This class is responsible for the view where the admin can
 /// check the bills that are confirmed.
 /// And for the normal user, can here set the bills as confirmed.
-class ConfimedBill extends StatefulWidget {
+class ConfirmedBill extends StatefulWidget {
   final bool admin;
 
-  const ConfimedBill({Key? key, required this.admin}) : super(key: key);
+  const ConfirmedBill({Key? key, required this.admin}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _confimedBill();
+  State<StatefulWidget> createState() => _ConfirmedBill();
 }
 
-class _confimedBill extends State<ConfimedBill> {
+class _ConfirmedBill extends State<ConfirmedBill> {
   late List<Order> confirmedOrders = <Order>[];
   late bool _isLoading = false;
 
@@ -47,6 +47,7 @@ class _confimedBill extends State<ConfimedBill> {
         GridView.builder(
             itemCount: confirmedOrders.length,
             itemBuilder: (BuildContext context, int index) {
+              NetworkImage image = NetworkImage(apiService.imagesBaseUrl + confirmedOrders[index].imagename);
               return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -56,12 +57,11 @@ class _confimedBill extends State<ConfimedBill> {
                             onTap: () async {
                               await showDialog(
                                   context: context,
-                                  builder: (_) => imageDialog());
+                                  builder: (_) => imageDialog(image));
                             },
                           ),
                           radius: 60.0,
-                          backgroundImage: const AssetImage(
-                              'assets/FishingBoatSilhouette.jpg')),
+                          backgroundImage: image),
                       Text(
                         AppLocalizations.of(context)!.changeImageSize,
                         style: const TextStyle(
@@ -91,14 +91,14 @@ class _confimedBill extends State<ConfimedBill> {
   }
 
   ///Creates widget for the popup image
-  Widget imageDialog() {
+  Widget imageDialog(NetworkImage image) {
     return Dialog(
       child: Container(
         width: 500,
         height: 600,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'), fit: BoxFit.cover)),
+                image: image, fit: BoxFit.cover)),
       ),
     );
   }

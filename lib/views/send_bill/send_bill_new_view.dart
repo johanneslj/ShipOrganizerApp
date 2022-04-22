@@ -193,11 +193,12 @@ class _newBill extends State<NewBill> {
     final bytes = _image!.readAsBytesSync();
     String encoded = base64Encode(bytes);
     String fileName = p.basename(_image!.path);
-
-    await apiService.sendOrder(fileName, selectedValue);
+    if (_image != null) {
+      await apiService.sendOrder(_image!, selectedValue);
+    }
 
     //Send this to backend server
-    log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
+    //log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
   }
 
   /// Creates a container with a CircularProgressIndicator

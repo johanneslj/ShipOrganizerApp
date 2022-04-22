@@ -63,9 +63,9 @@ class _SendBill extends State<SendBill> {
                 ? [
                     const NewBill(),
                     const PendingBill(),
-                    ConfimedBill(admin: admin)
+                    ConfirmedBill(admin: admin)
                   ]
-                : [ConfimedBill(admin: admin)]),
+                : [ConfirmedBill(admin: admin)]),
       ),
     );
   }
