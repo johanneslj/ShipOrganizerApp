@@ -77,9 +77,6 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                           color: Colors.black,
                         ),
                       ),
-                      widget.admin ? const Text("") :
-                      ElevatedButton(onPressed: () => sendToServer(index),
-                      child: Text(AppLocalizations.of(context)!.confirm),)
                     ],
                   ));
             }, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -101,14 +98,6 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                 image: image, fit: BoxFit.cover)),
       ),
     );
-  }
-
-  /// Function to send notice to the server that the bill has been confirmed
-  Future<void> sendToServer(int index) async{
-    String imageName = confirmedOrders[index].imagename;
-    String departmentName = confirmedOrders[index].department;
-    await apiService.updateOrder(imageName, departmentName);
-    getConfirmedOrder();
   }
 
   Future<void> getConfirmedOrder() async {

@@ -49,7 +49,10 @@ class _pendingBill extends State<PendingBill> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Text(AppLocalizations.of(context)!.noPendingOrders)],
+                            children: [
+                              Text(
+                                  AppLocalizations.of(context)!.noPendingOrders)
+                            ],
                           ),
                         ],
                       )
@@ -60,7 +63,9 @@ class _pendingBill extends State<PendingBill> {
                         child: GridView.builder(
                           itemCount: pendingOrders.length,
                           itemBuilder: (BuildContext context, int index) {
-                            NetworkImage image = NetworkImage(apiService.imagesBaseUrl + pendingOrders[index].imagename);
+                            NetworkImage image = NetworkImage(
+                                apiService.imagesBaseUrl +
+                                    pendingOrders[index].imagename);
                             return Center(
                                 child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,11 +74,11 @@ class _pendingBill extends State<PendingBill> {
                                     child: GestureDetector(
                                       onTap: () async {
                                         await showDialog(
-                                            context: context, builder: (_) => imageDialog(image));
+                                            context: context,
+                                            builder: (_) => imageDialog(image));
                                       },
                                     ),
                                     radius: 50.0,
-                                    //Photo by Tamas Tuzes-Katai on Unsplash
                                     backgroundImage: image),
                                 Text(
                                   AppLocalizations.of(context)!.changeImageSize,
@@ -89,11 +94,25 @@ class _pendingBill extends State<PendingBill> {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    OutlinedButton(
+                                      onPressed: () => sendToServer(index, 1),
+                                      child: const Icon(Icons.check),
+                                    ),
+                                    OutlinedButton(
+                                      onPressed: () => sendToServer(index, 2),
+                                      child: const Icon(Icons.clear),
+                                    )
+                                  ],
                                 )
                               ],
                             ));
                           },
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 5.0,
                             mainAxisSpacing: 5.0,
@@ -102,14 +121,21 @@ class _pendingBill extends State<PendingBill> {
                       )));
   }
 
+  /// Function to send notice to the server that the bill has been confirmed
+  Future<void> sendToServer(int index, int status) async {
+    String imageName = pendingOrders[index].imagename;
+    String departmentName = pendingOrders[index].department;
+    await apiService.updateOrder(imageName, departmentName, status);
+    getPendingOrder();
+  }
+
   Widget imageDialog(NetworkImage image) {
     return Dialog(
       child: Container(
         width: 500,
         height: 600,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: image, fit: BoxFit.cover)),
+            image: DecorationImage(image: image, fit: BoxFit.cover)),
       ),
     );
   }

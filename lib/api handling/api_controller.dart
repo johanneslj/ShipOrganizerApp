@@ -22,7 +22,8 @@ class ApiService {
 
   //String baseUrl = "http://10.22.186.180:8080/";
 
-  String baseUrl = "http://10.22.195.237:8080/"; // Johannes
+  //String baseUrl = "http://10.22.195.237:8080/"; // Johannes
+  String baseUrl = "http://10.22.193.237:8080/"; // Simon
   String imagesBaseUrl = "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
   late DateTime lastUpdatedDate = DateTime(1900);
 
@@ -890,11 +891,11 @@ class ApiService {
   }
 
   /// Update order from pending to confirmed for a specific order
-  Future<void> updateOrder(String imageName, String department) async {
+  Future<void> updateOrder(String imageName, String department, int status) async {
     await _setBearerForAuthHeader();
     if (200 == await testConnection()) {
       await dio.post(baseUrl + "orders/update",
-          data: {"imageName": imageName, "department": department});
+          data: {"imageName": imageName, "department": department,"status": status});
     }
   }
 
