@@ -77,9 +77,14 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                           color: Colors.black,
                         ),
                       ),
-                      widget.admin ? const Text("") :
-                      ElevatedButton(onPressed: () => sendToServer(index),
-                      child: Text(AppLocalizations.of(context)!.confirm),)
+                      Text(
+                       getStatus(confirmedOrders[index].status,context),
+                        style: const TextStyle(
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
                   ));
             }, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,6 +93,17 @@ class _ConfirmedBill extends State<ConfirmedBill> {
           mainAxisSpacing: 5.0,
         )),
     );
+  }
+
+  String getStatus(int status,BuildContext context){
+    String result = "";
+    if(status==1){
+      result = AppLocalizations.of(context)!.confirmed;
+    }
+    else{
+      result = AppLocalizations.of(context)!.reject;
+    }
+    return result;
   }
 
   ///Creates widget for the popup image
@@ -103,23 +119,9 @@ class _ConfirmedBill extends State<ConfirmedBill> {
     );
   }
 
-  /// Function to send notice to the server that the bill has been confirmed
-  Future<void> sendToServer(int index) async{
-    String imageName = confirmedOrders[index].imagename;
-    String departmentName = confirmedOrders[index].department;
-    await apiService.updateOrder(imageName, departmentName);
-    getConfirmedOrder();
-  }
-
   Future<void> getConfirmedOrder() async {
     List<Order> orders;
-    if(widget.admin){
       orders = await apiService.getAdminConfirmedOrders();
-    }
-    else{
-      orders = await apiService.getUserConfirmedOrders();
-    }
-
     setState(() {
         confirmedOrders = orders;
     });

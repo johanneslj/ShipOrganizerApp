@@ -51,7 +51,7 @@ class _SendBill extends State<SendBill> {
                       Tab(child: Text(AppLocalizations.of(context)!.confirmed))
                     ])
                   : [
-                      Tab(child: Text(AppLocalizations.of(context)!.confirm)),
+                      Tab(child: Text(AppLocalizations.of(context)!.pending)),
                     ]),
           title: Text(
             AppLocalizations.of(context)!.billing,
@@ -62,10 +62,10 @@ class _SendBill extends State<SendBill> {
             children: admin
                 ? [
                     const NewBill(),
-                    const PendingBill(),
+                     PendingBill(admin: admin),
                     ConfirmedBill(admin: admin)
                   ]
-                : [ConfirmedBill(admin: admin)]),
+                : [ PendingBill(admin: admin)]),
       ),
     );
   }

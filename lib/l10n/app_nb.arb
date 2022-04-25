@@ -107,5 +107,7 @@
   "notAuthorizedToDeleteUser": "Har ikke lov til å slette bruker",
   "offline": "OFFLINE",
   "unableToSendCode": "Klarte ikke sende kode",
-  "userAlreadyExists": "Den eposten er allerede registrert"
+  "userAlreadyExists": "Den eposten er allerede registrert",
+  "reject": "Avis"
+
 }

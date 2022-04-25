@@ -13,12 +13,12 @@ PODS:
   - google_maps_flutter (0.0.1):
     - Flutter
     - GoogleMaps
-  - GoogleMaps (6.0.1):
-    - GoogleMaps/Maps (= 6.0.1)
-  - GoogleMaps/Base (6.0.1)
-  - GoogleMaps/Maps (6.0.1):
+  - GoogleMaps (6.1.1):
+    - GoogleMaps/Maps (= 6.1.1)
+  - GoogleMaps/Base (6.1.1)
+  - GoogleMaps/Maps (6.1.1):
     - GoogleMaps/Base
-  - image_picker (0.0.1):
+  - image_picker_ios (0.0.1):
     - Flutter
   - location (0.0.1):
     - Flutter
@@ -34,7 +34,7 @@ DEPENDENCIES:
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
-  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
@@ -57,8 +57,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
-  image_picker:
-    :path: ".symlinks/plugins/image_picker/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
   permission_handler:
@@ -71,8 +71,8 @@ SPEC CHECKSUMS:
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   google_maps_flutter: c59fc576c0d0c7f4dc4bd63832c862d22d5a7c6d
-  GoogleMaps: c213fc2334b7374144cede914da779b99be0ab74
-  image_picker: 541dcbb3b9cf32d87eacbd957845d8651d6c62c3
+  GoogleMaps: 94e6e0851beece6678af9f508f4918b7a7c61722
+  image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96

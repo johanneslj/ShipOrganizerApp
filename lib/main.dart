@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -21,7 +22,9 @@ import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connectivity/connectivity.dart';
 
+import 'config/device_screen_type.dart';
 import 'config/theme_config.dart';
+import 'config/ui_utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -159,11 +162,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Widget _getViewContainer(int index) {
     List<Widget> mainViewsList = [const InventoryView(), const MyAccount()];
+
     return mainViewsList[index];
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if(getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile){
+      _portraitModeOnly();
+    }
     return Scaffold(
       body: Consumer(
         builder: (context, watch, child) {
@@ -175,5 +183,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: const BottomNavigationBarWidget(),
     );
+  }
+
+
+  @override
+  void dispose() {
+    _enableRotation();
+  }
+
+  void _portraitModeOnly(){
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  void _enableRotation() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
   }
 }

@@ -107,5 +107,6 @@
   "notAuthorizedToDeleteUser": "Not authorized to delete user",
   "offline": "OFFLINE",
   "unableToSendCode": "Failed to send code",
-  "userAlreadyExists": "That email is already registered"
+  "userAlreadyExists": "That email is already registered",
+  "reject": "Reject"
 }
