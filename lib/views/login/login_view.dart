@@ -155,7 +155,7 @@ class _LoginViewState extends State<LoginView> {
                                           builder: (context) => (const SetPasswordView())));
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context)!.forgotPassword,
+                                  AppLocalizations.of(context)!.setPassword,
                                   style: const TextStyle(
                                     decoration: TextDecoration.underline,
                                   ),

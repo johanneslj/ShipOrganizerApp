@@ -51,7 +51,9 @@ class _TopBarState extends State<TopBar> {
   void Function()? get _onMenuPressed =>
       widget.onMenuPressed ??
       () {
-        Scaffold.of(context).hasDrawer ? Scaffold.of(context).openDrawer() : null;
+        Scaffold.of(context).hasDrawer
+            ? Scaffold.of(context).openDrawer()
+            : null;
       };
 
   void Function()? get _onSearch => widget.onSearch;
@@ -81,7 +83,8 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).viewPadding.top, 0, 0),
+        padding: EdgeInsets.fromLTRB(
+            0, MediaQuery.of(context).viewPadding.top, 0, 0),
         color: Theme.of(context).colorScheme.primary,
         child: isMobile ? buildMobileRow(context) : buildTabletRow(context));
   }
@@ -99,7 +102,9 @@ class _TopBarState extends State<TopBar> {
           ),
         ),
         Expanded(flex: 4, child: buildSearchFieldContainer(context)),
-        hasMultipleDepartments ? getCameraAndFilterRow(context) : getCameraRow(context),
+        hasMultipleDepartments
+            ? getCameraAndFilterRow(context)
+            : getCameraRow(context),
       ],
     );
   }
@@ -109,7 +114,10 @@ class _TopBarState extends State<TopBar> {
       children: [
         isRecommendedView
             ? IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => {
+                      FocusScope.of(context).requestFocus(FocusNode()),
+                      Navigator.of(context).pop()
+                    },
                 icon: widget.menuIcon ??
                     Icon(
                       Icons.arrow_back,
@@ -125,7 +133,9 @@ class _TopBarState extends State<TopBar> {
                       size: 32.0,
                     )),
         Flexible(child: buildSearchFieldContainer(context)),
-        hasMultipleDepartments ? getCameraAndFilterRow(context) : getCameraRow(context)
+        hasMultipleDepartments
+            ? getCameraAndFilterRow(context)
+            : getCameraRow(context)
       ],
     );
   }
@@ -142,7 +152,8 @@ class _TopBarState extends State<TopBar> {
             suffixIcon: IconButton(
                 onPressed: _onClear ?? widget.searchFieldController?.clear,
                 icon: widget.clearIcon ??
-                    Icon(Icons.clear, color: Theme.of(context).colorScheme.primary)),
+                    Icon(Icons.clear,
+                        color: Theme.of(context).colorScheme.primary)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(32.0),
               borderSide: const BorderSide(

@@ -311,6 +311,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
                   passwordController.value.text);
               if (success) {
                 apiService.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/", (route) => false);
               }
             }
             setLoading(false);

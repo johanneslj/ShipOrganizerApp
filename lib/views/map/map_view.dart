@@ -90,7 +90,7 @@ class _MapViewState extends State<MapView> {
                                   Text(max.toString(),
                                       style: Theme.of(context).textTheme.caption,
                                       overflow: TextOverflow.ellipsis),
-                                  Text(((max + min) / 2).toString(),
+                                  Text(((max + min) / 2).round().toString(),
                                       style: Theme.of(context).textTheme.caption,
                                       overflow: TextOverflow.ellipsis),
                                   Text(

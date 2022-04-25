@@ -88,6 +88,7 @@ class _MainAppState extends State<MainApp> {
     apiService.setContext(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       supportedLocales: const [Locale("en"), Locale("nb")],
       locale: selectedLanguage,
       localeListResolutionCallback: (locales, supportedLocales) {

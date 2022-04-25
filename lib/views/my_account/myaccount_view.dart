@@ -146,7 +146,7 @@ class _MyAccount extends State<MyAccount> {
                       child: Row(
                         children: [
                           Image.asset(
-                            "assets/NorwegianLanguageFlag.png",
+                            "assets/NorwegianLanguageFlagRound.png",
                             width: 30,
                           ),
                           Text(AppLocalizations.of(context)!.norwegian),
@@ -166,7 +166,7 @@ class _MyAccount extends State<MyAccount> {
                       child: Row(
                         children: [
                           Image.asset(
-                            "assets/EnglishLanguageFlag.png",
+                            "assets/EnglishLanguageFlagRound.png",
                             width: 30,
                           ),
                           Text(AppLocalizations.of(context)!.english),

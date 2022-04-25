@@ -11,7 +11,7 @@
         android:label="ship_organizer_app">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA2rWqHZfQcd-6V9c_bYpZeAkrfSzTCn7U" />
+            android:value="AIzaSyCyy2awXlSDt2Vdeu7Fv-ypg0tTlfzYgeM" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

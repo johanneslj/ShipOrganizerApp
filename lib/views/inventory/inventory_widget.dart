@@ -65,11 +65,10 @@ class Inventory extends StatelessWidget {
   ListTile getListTile(BuildContext context, int index) {
     bool tablet = (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Tablet);
     if (isRecommended) {
-      // Sets cursor in amount TextField to end of text on first tap.
-      /*if (_controllers[index].text.isNotEmpty) {
+      if (_controllers[index].text.isNotEmpty) {
         _controllers[index].selection =
             TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
-      }*/
+      }
 
       return ListTile(
           contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
