@@ -159,7 +159,6 @@ class Inventory extends StatelessWidget {
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: true);
         }).then((amount) async => {
-          // TODO Implement with API. Add to call queue.
           if (amount is int) {
             item.stock = item.stock + amount,
             await updateStock(item.productNumber,amount, context),}
@@ -173,7 +172,6 @@ class Inventory extends StatelessWidget {
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: false);
         }).then((amount) async =>  {
-          // TODO Implement with API. Add to call queue.
           if (amount is int) {
             item.stock = item.stock - amount,
             await updateStock(item.productNumber,-amount, context)
