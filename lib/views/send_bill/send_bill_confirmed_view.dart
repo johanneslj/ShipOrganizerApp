@@ -77,6 +77,14 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                           color: Colors.black,
                         ),
                       ),
+                      Text(
+                       getStatus(confirmedOrders[index].status,context),
+                        style: const TextStyle(
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
                   ));
             }, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -85,6 +93,17 @@ class _ConfirmedBill extends State<ConfirmedBill> {
           mainAxisSpacing: 5.0,
         )),
     );
+  }
+
+  String getStatus(int status,BuildContext context){
+    String result = "";
+    if(status==1){
+      result = AppLocalizations.of(context)!.confirmed;
+    }
+    else{
+      result = AppLocalizations.of(context)!.reject;
+    }
+    return result;
   }
 
   ///Creates widget for the popup image
@@ -102,13 +121,7 @@ class _ConfirmedBill extends State<ConfirmedBill> {
 
   Future<void> getConfirmedOrder() async {
     List<Order> orders;
-    if(widget.admin){
       orders = await apiService.getAdminConfirmedOrders();
-    }
-    else{
-      orders = await apiService.getUserConfirmedOrders();
-    }
-
     setState(() {
         confirmedOrders = orders;
     });

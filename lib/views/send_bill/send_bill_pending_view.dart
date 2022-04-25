@@ -7,7 +7,9 @@ import 'package:ship_organizer_app/entities/Order.dart';
 /// This class is responsible for the view where the admin can
 /// check the bills that are not confirmed.
 class PendingBill extends StatefulWidget {
-  const PendingBill({Key? key}) : super(key: key);
+  final bool admin;
+
+  const PendingBill({Key? key, required this.admin}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _pendingBill();
@@ -100,11 +102,13 @@ class _pendingBill extends State<PendingBill> {
                                   children: [
                                     OutlinedButton(
                                       onPressed: () => sendToServer(index, 1),
-                                      child: const Icon(Icons.check),
+                                      child: const Icon(Icons.check,
+                                          color: Colors.green),
                                     ),
                                     OutlinedButton(
                                       onPressed: () => sendToServer(index, 2),
-                                      child: const Icon(Icons.clear),
+                                      child: const Icon(Icons.clear,
+                                          color: Colors.red),
                                     )
                                   ],
                                 )
@@ -142,7 +146,12 @@ class _pendingBill extends State<PendingBill> {
 
   Future<void> getPendingOrder() async {
     List<Order> order = [];
-    order = await apiService.getPendingOrders();
+    if (widget.admin) {
+      order = await apiService.getPendingOrders();
+    } else {
+      order = await apiService.getUserPendingOrders();
+    }
+
     setState(() {
       pendingOrders = order;
     });
