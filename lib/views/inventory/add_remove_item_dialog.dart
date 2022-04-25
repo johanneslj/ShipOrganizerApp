@@ -41,9 +41,10 @@ class AddRemoveItemDialog extends Dialog {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: TextField(
                 keyboardType: TextInputType.number,
-                showCursor: false,
+                showCursor: true,
                 controller: _controller,
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 25),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               )),
           Row(
