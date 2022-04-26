@@ -60,6 +60,7 @@ class ApiService {
   Future<void> _setBearerForAuthHeader() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
+    dio.options.headers["Content-Type"] = "application/json";
   }
 
   List<String> _decodeListFromString(String string) {
@@ -940,11 +941,12 @@ class ApiService {
       String imageName, String department, int status) async {
     await _setBearerForAuthHeader();
     if (200 == await testConnection()) {
-      await dio.post(baseUrl + "orders/update", data: {
+      dynamic data = {
         "imageName": imageName,
         "department": department,
         "status": status
-      });
+      };
+      await dio.post(baseUrl + "orders/update", data: data);
     }
   }
 
