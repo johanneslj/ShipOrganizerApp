@@ -22,7 +22,7 @@ class ApiService {
 
   //String baseUrl = "http://10.22.186.180:8080/";
   //String baseUrl = "http://10.22.195.237:8080/"; // Johannes
-  String baseUrl = "http://10.22.193.237:8080/"; // Simon
+  String baseUrl = "http://68.183.9.200:6868/"; // Simon
   String imagesBaseUrl =
       "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
   late DateTime lastUpdatedDate = DateTime(1900);
