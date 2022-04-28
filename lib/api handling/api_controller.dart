@@ -416,7 +416,8 @@ class ApiService {
 
   Future<List<String>> _getStoredDepartments() async {
     List<String> departments = [];
-    if (await storage.containsKey(key: "departments")) {
+    if (await storage.containsKey(key: "departments") && await storage
+        .read(key: "departments") != null) {
       await storage
           .read(key: "departments")
           .then((value) => departments = _decodeListFromString(value!));

@@ -108,6 +108,8 @@
   "offline": "OFFLINE",
   "unableToSendCode": "Klarte ikke sende kode",
   "userAlreadyExists": "Den eposten er allerede registrert",
-  "reject": "Avis"
+  "reject": "Avis",
+  "wrongQuantity": "Antallet er for høyt"
+
 
 }

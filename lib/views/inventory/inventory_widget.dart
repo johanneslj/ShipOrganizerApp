@@ -6,6 +6,8 @@ import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:location/location.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import 'item.dart';
 
@@ -53,7 +55,8 @@ class Inventory extends StatelessWidget {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        _controllers[index] = (TextEditingController(text: items[index].stock.toString()));
+        _controllers[index] =
+            (TextEditingController(text: items[index].stock.toString()));
         return getListTile(context, index);
       },
 /*     separatorBuilder: (BuildContext context, int index) =>
@@ -63,15 +66,18 @@ class Inventory extends StatelessWidget {
 
   /// Returns the correct ListTile depending on whether it is for the recommended inventory or not.
   ListTile getListTile(BuildContext context, int index) {
-    bool tablet = (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Tablet);
+    bool tablet =
+        (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Tablet);
     if (isRecommended) {
       if (_controllers[index].text.isNotEmpty) {
-        _controllers[index].selection =
-            TextSelection.fromPosition(TextPosition(offset: _controllers[index].text.length));
+        _controllers[index].selection = TextSelection.fromPosition(
+            TextPosition(offset: _controllers[index].text.length));
       }
 
       return ListTile(
-          contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          contentPadding: tablet
+              ? const EdgeInsets.fromLTRB(8, 20, 8, 20)
+              : const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: Text(
             items[index].productName,
             style: Theme.of(context).textTheme.headline5,
@@ -85,7 +91,8 @@ class Inventory extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints.expand(width: 96, height: 48),
+                      constraints:
+                          const BoxConstraints.expand(width: 96, height: 48),
                       child: TextField(
                         controller: _controllers[index],
                         keyboardType: TextInputType.number,
@@ -95,18 +102,23 @@ class Inventory extends StatelessWidget {
                         ],
                         onEditingComplete: () => {
                           if (_controllers[index].text.isNotEmpty)
-                            {items[index].stock = int.parse(_controllers[index].text)},
+                            {
+                              items[index].stock =
+                                  int.parse(_controllers[index].text)
+                            },
                           FocusManager.instance.primaryFocus?.unfocus()
                         },
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                             constraints: const BoxConstraints(maxWidth: 200),
-                            contentPadding:
-                                const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 0),
+                            contentPadding: const EdgeInsets.only(
+                                left: 0, bottom: 0, top: 0, right: 0),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).colorScheme.primary, width: 4.0))),
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 4.0))),
                         style: Theme.of(context).textTheme.headline5,
                       ),
                     ),
@@ -117,13 +129,15 @@ class Inventory extends StatelessWidget {
               )));
     } else {
       return ListTile(
-          contentPadding: tablet? const EdgeInsets.fromLTRB(8, 20, 8, 20): const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          contentPadding: tablet
+              ? const EdgeInsets.fromLTRB(8, 20, 8, 20)
+              : const EdgeInsets.fromLTRB(8, 8, 8, 8),
           title: InkWell(
               child: Text(
-                    items[index].productName,
-                    style: Theme.of(context).textTheme.headline5,
-                    overflow: TextOverflow.clip,
-                  ),
+                items[index].productName,
+                style: Theme.of(context).textTheme.headline5,
+                overflow: TextOverflow.clip,
+              ),
               onDoubleTap: () => {
                     Navigator.push(
                         context,
@@ -159,34 +173,47 @@ class Inventory extends StatelessWidget {
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: true);
         }).then((amount) async => {
-          if (amount is int) {
-            item.stock = item.stock + amount,
-            await updateStock(item.productNumber,amount, context),}
+          if (amount is int)
+            {
+              item.stock = item.stock + amount,
+              await updateStock(item.productNumber, amount, context),
+            }
         });
   }
 
   /// Creates a dialog to get amount to remove, then handles removing the requested amount.
-  void _onRemove(BuildContext context, Item item) async{
+  void _onRemove(BuildContext context, Item item) async {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddRemoveItemDialog(item: item, isAdd: false);
-        }).then((amount) async =>  {
-          if (amount is int) {
-            item.stock = item.stock - amount,
-            await updateStock(item.productNumber,-amount, context)
-          }
+        }).then((amount) async => {
+          if (amount is int)
+            {
+              if (item.stock - amount >= 0)
+                {
+                  item.stock = item.stock - amount,
+                  await updateStock(item.productNumber, -amount, context)}
+              else
+                {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.wrongQuantity)))
+                }
+            }
         });
   }
+
   /// Update the stock on the specified product.
   /// Uses product number, username, location of the device and the decrease or increase amount
   /// Makes call to apiService to update the api
-  Future<void> updateStock(String? itemNumber, int amount, BuildContext context) async {
+  Future<void> updateStock(
+      String? itemNumber, int amount, BuildContext context) async {
     var currentLocation = await _location.getLocation();
     var latitude = currentLocation.latitude!;
     var longitude = currentLocation.longitude!;
     var username = await apiService.storage.read(key: "username");
-    await apiService.updateStock(itemNumber!,username!,amount,latitude,longitude);
+    await apiService.updateStock(
+        itemNumber!, username!, amount, latitude, longitude);
     onConfirm!();
   }
 }
