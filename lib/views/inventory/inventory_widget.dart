@@ -8,7 +8,6 @@ import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:location/location.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 import 'item.dart';
 
 /// Widget that displays the input items as a ListView.
@@ -91,39 +90,40 @@ class Inventory extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ConstrainedBox(
-                      constraints:
-                          const BoxConstraints.expand(width: 96, height: 48),
-                      child: TextField(
-                        controller: _controllers[index],
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10)
-                        ],
-                        onEditingComplete: () => {
-                          if (_controllers[index].text.isNotEmpty)
-                            {
-                              items[index].stock =
-                                  int.parse(_controllers[index].text)
-                            },
-                          FocusManager.instance.primaryFocus?.unfocus()
-                        },
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                            constraints: const BoxConstraints(maxWidth: 200),
-                            contentPadding: const EdgeInsets.only(
-                                left: 0, bottom: 0, top: 0, right: 0),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    width: 4.0))),
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                  )
+                        constraints:
+                            const BoxConstraints.expand(width: 96, height: 48),
+                        child: TextField(
+                          controller: _controllers[index],
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(10)
+                          ],
+                          onChanged: (text) => {
+                            if (_controllers[index].text.isNotEmpty)
+                              {
+                                items[index].stock =
+                                    int.parse(_controllers[index].text),
+                                FocusManager.instance.primaryFocus?.unfocus()
 
+                              },
+                          },
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                              constraints:
+                              const BoxConstraints(maxWidth: 200),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0, bottom: 0, top: 0, right: 0),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
+                                      width: 4.0))),
+                          style: Theme.of(context).textTheme.headline5,
+                        ),),
+                  ),
                   // IconButton(onPressed: () => onConfirm, icon: const Icon(Icons.check, size: 32.0)),
                 ],
               )));
@@ -193,11 +193,13 @@ class Inventory extends StatelessWidget {
               if (item.stock - amount >= 0)
                 {
                   item.stock = item.stock - amount,
-                  await updateStock(item.productNumber, -amount, context)}
+                  await updateStock(item.productNumber, -amount, context)
+                }
               else
                 {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.wrongQuantity)))
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text(AppLocalizations.of(context)!.wrongQuantity)))
                 }
             }
         });

@@ -247,13 +247,14 @@ class _NewItemState extends State<NewItem> {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
                                         if (widget.isCreateNew) {
-                                          addNewItem(
-                                              productNameController.value.text,
-                                              productNumberController
-                                                  .value.text,
-                                              desiredStockController.value.text,
-                                              stockController.value.text,
-                                              barcodeController.value.text);
+                                            addNewItem(
+                                                productNameController.value.text,
+                                                productNumberController
+                                                    .value.text,
+                                                desiredStockController.value.text,
+                                                stockController.value.text,
+                                                barcodeController.value.text);
+
                                         } else {
                                           editItem(
                                               productNameController.value.text,
@@ -322,6 +323,7 @@ class _NewItemState extends State<NewItem> {
       searchQuery = newQuery;
     });
   }
+
 
   /// Edits an already existing item
   /// Stock cant be edited so it is not required to be passed here

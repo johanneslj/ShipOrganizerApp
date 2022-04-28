@@ -109,7 +109,7 @@
   "unableToSendCode": "Klarte ikke sende kode",
   "userAlreadyExists": "Den eposten er allerede registrert",
   "reject": "Avis",
-  "wrongQuantity": "Antallet er for høyt"
-
+  "wrongQuantity": "Antallet er for høyt",
+  "productNumberExists": "Produktnummeret eksisterer"
 
 }
