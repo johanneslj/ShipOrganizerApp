@@ -54,6 +54,11 @@ class Inventory extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         _controllers[index] = (TextEditingController(text: items[index].stock.toString()));
+        if (index == items.length - 1) {
+          return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 55),
+              child: getListTile(context, index));
+        }
         return getListTile(context, index);
       },
 /*     separatorBuilder: (BuildContext context, int index) =>
