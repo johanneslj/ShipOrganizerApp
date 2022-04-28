@@ -91,6 +91,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   }
 
   void onOrderStockUp() {
+
     Navigator.push(
         context,
         MaterialPageRoute(

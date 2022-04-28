@@ -108,5 +108,7 @@
   "offline": "OFFLINE",
   "unableToSendCode": "Failed to send code",
   "userAlreadyExists": "That email is already registered",
-  "reject": "Reject"
+  "reject": "Reject",
+  "wrongQuantity": "The quantity is to large",
+  "productNumberExists": "Product number already exists"
 }

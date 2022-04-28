@@ -21,8 +21,8 @@ class ApiService {
   Dio dio = Dio();
 
   //String baseUrl = "http://10.22.186.180:8080/";
-  //String baseUrl = "http://10.22.195.237:8080/"; // Johannes
-  String baseUrl = "http://68.183.9.200:6868/"; // Simon
+  //String baseUrl = "http://10.22.193.237:8080/"; // Johannes
+  String baseUrl = "http://68.183.9.200:6868/"; // Server
   String imagesBaseUrl =
       "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
   late DateTime lastUpdatedDate = DateTime(1900);
@@ -416,7 +416,8 @@ class ApiService {
 
   Future<List<String>> _getStoredDepartments() async {
     List<String> departments = [];
-    if (await storage.containsKey(key: "departments")) {
+    if (await storage.containsKey(key: "departments") && await storage
+        .read(key: "departments") != null) {
       await storage
           .read(key: "departments")
           .then((value) => departments = _decodeListFromString(value!));
@@ -537,6 +538,7 @@ class ApiService {
   Future<bool> createNewProduct(String productName, String productNumber,
       String desiredStock, String stock, String barcode) async {
     bool success = false;
+    var response;
     try {
       await _setBearerForAuthHeader();
       var data = {
@@ -548,16 +550,22 @@ class ApiService {
         "department": await getActiveDepartment(),
         "dateTime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
       };
-      var response =
+       response =
           await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
-    } catch (e) {
-      _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+    } on DioError catch (e) {
+      if(e.response?.statusCode == 400 && e.response?.data == "Exists"){
+        _showErrorToast(AppLocalizations.of(buildContext)!.productNumberExists);
+
+      }else{
+        _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
+      }
     }
     return success;
   }
+
 
   Future<bool> editProduct(String productName, String productNumber,
       String desiredStock, String barcode) async {
@@ -680,8 +688,9 @@ class ApiService {
       List<Item> items, List<String> emailAddresses) async {
     await _setBearerForAuthHeader();
     bool success = false;
+    String department = await getActiveDepartment();
 
-    var data = {"items": items, "receivers": emailAddresses};
+    var data = {"items": items, "receivers": emailAddresses,"department": department};
     try {
       var response =
           await dio.post(baseUrl + "api/product/create-pdf", data: data);
