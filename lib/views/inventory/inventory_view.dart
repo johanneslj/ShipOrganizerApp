@@ -133,7 +133,7 @@ class _InventoryViewState extends State<InventoryView> {
                 preferredSize:
                     // Creates top padding for the top bar so that it starts below status/notification bar.
                     Size(MediaQuery.of(context).size.width,
-                        MediaQuery.of(context).viewPadding.top + 40.0),
+                        MediaQuery.of(context).viewPadding.top + 50.0),
                 child: Column(children: [
                   TopBar(
                     onSearch: onSearch,

@@ -50,7 +50,7 @@ class _SelectDepartmentView extends State<SelectDepartmentView> {
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
-      body: Center(
+      body: SingleChildScrollView(
           child: Padding(
         padding:
             const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
@@ -62,7 +62,7 @@ class _SelectDepartmentView extends State<SelectDepartmentView> {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyText1),
           ),
-          Expanded(
+          SingleChildScrollView(
             child: Column(
               children: departments,
             ),

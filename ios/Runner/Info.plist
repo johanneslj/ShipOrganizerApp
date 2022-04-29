@@ -12,6 +12,11 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>nb</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>ship_organizer_app</string>
 	<key>CFBundlePackageType</key>
@@ -21,25 +26,33 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FUAllFilesUploadedMessage</key>
+	<string>All files have been uploaded</string>
 	<key>FUMaximumConnectionsPerHost</key>
 	<integer>3</integer>
 	<key>FUMaximumUploadOperation</key>
 	<integer>3</integer>
 	<key>FUTimeoutInSeconds</key>
 	<integer>3600</integer>
-	<key>FUAllFilesUploadedMessage</key>
-	<string>All files have been uploaded</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Always and when in use!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Can I have location always?</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Older devices need location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need location when in use</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Explanation on why the camera access is needed.</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -55,18 +68,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need location when in use</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Always and when in use!</string>
-	<key>NSLocationUsageDescription</key>
-	<string>Older devices need location.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Can I have location always?</string>
-	<key>CFBundleLocalizations</key>
-    <array>
-       <string>en</string>
-       <string>nb</string>
-    </array>
 </dict>
 </plist>

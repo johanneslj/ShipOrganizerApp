@@ -94,7 +94,7 @@ class _MyAccount extends State<MyAccount> {
             : _generateOnlineAppBar(context, storage),
         body: _isLoading
             ? circularProgress()
-            : Center(
+            : SingleChildScrollView(
                 child: Padding(
                 padding: const EdgeInsets.only(
                     left: 30, right: 30, top: 60, bottom: 10),
@@ -106,9 +106,12 @@ class _MyAccount extends State<MyAccount> {
                         style: Theme.of(context).textTheme.bodyText1),
                   ),
                   mobile
-                      ? Expanded(
-                          child: Column(children: getMenuItems(admin, context)),
-                        )
+                      ? SingleChildScrollView(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 20),
+                              child: Column(
+                                  children: getMenuItems(admin, context))))
                       : Expanded(
                           child: GridView.count(
                             crossAxisCount: tabletCrossAxisCount,

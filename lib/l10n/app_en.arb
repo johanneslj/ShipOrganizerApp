@@ -95,7 +95,6 @@
   "uploadImage": "Upload image",
   "verificationCode": "Verification code",
   "verifyCode": "Verify code",
-
   "badRequest": "Bad request",
   "couldNotChangePassword": "Could not change password",
   "couldntLogOut": "Failed to sign out",
