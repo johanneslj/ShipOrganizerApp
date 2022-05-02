@@ -94,35 +94,50 @@ class _MyAccount extends State<MyAccount> {
             : _generateOnlineAppBar(context, storage),
         body: _isLoading
             ? circularProgress()
-            : SingleChildScrollView(
-                child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 30, right: 30, top: 60, bottom: 10),
-                child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
-                    child: Text(fullName,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyText1),
-                  ),
-                  mobile
-                      ? SingleChildScrollView(
+            : mobile
+                ? SingleChildScrollView(
+                    child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 60, bottom: 10),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
+                        child: Text(fullName,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
+                      ),
+                      SingleChildScrollView(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 0, right: 0, top: 10),
+                              child: Column(
+                                  children: getMenuItems(admin, context)))),
+                    ]),
+                  ))
+                : Center(
+                    child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 60, bottom: 10),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
+                        child: Text(fullName,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1),
+                      ),
+                      Expanded(
                           child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 20),
-                              child: Column(
-                                  children: getMenuItems(admin, context))))
-                      : Expanded(
-                          child: GridView.count(
-                            crossAxisCount: tabletCrossAxisCount,
-                            crossAxisSpacing: 5.0,
-                            mainAxisSpacing: 5.0,
-                            padding: const EdgeInsets.all(2.0),
-                            children: getGridTiles(admin, context),
-                          ),
-                        )
-                ]),
-              )));
+                              child: GridView.count(
+                                crossAxisCount: tabletCrossAxisCount,
+                                crossAxisSpacing: 5.0,
+                                mainAxisSpacing: 5.0,
+                                padding: const EdgeInsets.all(2.0),
+                                children: getGridTiles(admin, context),
+                              ))),
+                    ]),
+                  )));
   }
 
   PreferredSize _generateOnlineAppBar(
