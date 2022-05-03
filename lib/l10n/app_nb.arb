@@ -110,6 +110,8 @@
   "userAlreadyExists": "Den eposten er allerede registrert",
   "reject": "Avis",
   "wrongQuantity": "Antallet er for høyt",
-  "productNumberExists": "Produktnummeret eksisterer"
+  "productNumberExists": "Produktnummeret eksisterer",
+  "productNameNoComma":"Vennligst ikke bruk «,» i navnet"
+
 
 }

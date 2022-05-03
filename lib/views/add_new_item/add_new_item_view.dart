@@ -102,18 +102,26 @@ class _NewItemState extends State<NewItem> {
                     Text(AppLocalizations.of(context)!.productName),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: TextFormField(
-                        controller: productNameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context)!.enterValidText;
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.productName,
-                            hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor)),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: productNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!.enterValidText;
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!.productName,
+                                hintStyle: TextStyle(
+                                    color: Theme.of(context).disabledColor)),
+                          ),
+                          Text(AppLocalizations.of(context)!.productNameNoComma,style:TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize:15,
+                          )),
+                        ],
                       ),
                     ),
                     Text(AppLocalizations.of(context)!.productNumber),
