@@ -119,7 +119,7 @@ class _NewItemState extends State<NewItem> {
                           ),
                           Text(AppLocalizations.of(context)!.productNameNoComma,style:TextStyle(
                             color: Theme.of(context).colorScheme.error,
-                            fontSize:15,
+                            fontSize:16,
                           )),
                         ],
                       ),
