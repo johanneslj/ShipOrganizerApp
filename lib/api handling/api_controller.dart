@@ -21,8 +21,8 @@ class ApiService {
   Dio dio = Dio();
 
   //String baseUrl = "http://10.22.186.180:8080/";
-  //String baseUrl = "http://10.22.193.237:8080/"; // Johannes
-  String baseUrl = "http://68.183.9.200:6868/"; // Server
+  String baseUrl = "http://10.22.193.237:8080/"; // Johannes
+  //String baseUrl = "http://68.183.9.200:6868/"; // Server
   String imagesBaseUrl =
       "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
   late DateTime lastUpdatedDate = DateTime(1900);
@@ -567,12 +567,13 @@ class ApiService {
   }
 
 
-  Future<bool> editProduct(String productName, String productNumber,
+  Future<bool> editProduct(int id,String productName, String productNumber,
       String desiredStock, String barcode) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
       var data = {
+        "productID":id,
         "productName": productName,
         "productNumber": productNumber,
         "desiredStock": desiredStock,
@@ -778,8 +779,9 @@ class ApiService {
   void _updateItemsFromApiToList(List<Item> updatedItems, List<Item> items) {
     for (Item updatedItem in updatedItems) {
       final index = items.indexWhere(
-          (element) => element.productNumber == updatedItem.productNumber);
+          (element) => element.id == updatedItem.id);
       if (index >= 0) {
+        items[index].productNumber = updatedItem.productNumber;
         items[index].stock = updatedItem.stock;
         items[index].productName = updatedItem.productName;
         items[index].barcode = updatedItem.barcode;
@@ -817,6 +819,7 @@ class ApiService {
   List<Item> _getItemsFromJson(List<dynamic> storageItems) {
     List<Item> items = [];
     for (var product in storageItems) {
+      int id = 0;
       String name = "";
       String number = "";
       String ean13 = "";
@@ -824,6 +827,9 @@ class ApiService {
       int desiredStock = 0;
       product.forEach((key, value) {
         switch (key) {
+          case "id":
+            id = value;
+            break;
           case "barcode":
             ean13 = value;
             break;
@@ -846,7 +852,6 @@ class ApiService {
             } else {
               desiredStock = value;
             }
-
             break;
           case "desiredStock":
             if (value.runtimeType == String) {
@@ -859,6 +864,7 @@ class ApiService {
         }
       });
       items.add(Item(
+          id:id,
           productName: name,
           productNumber: number,
           barcode: ean13,

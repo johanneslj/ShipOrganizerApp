@@ -120,7 +120,7 @@ class _NewItemState extends State<NewItem> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: TextFormField(
-                        readOnly: !widget.isCreateNew,
+                        //readOnly: !widget.isCreateNew,
                         controller: productNumberController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -331,7 +331,10 @@ class _NewItemState extends State<NewItem> {
   /// in the database
   Future<void> editItem(String productName, String productNumber,
       String desiredStock, String barcode) async {
-    bool success = await _apiService.editProduct(
+
+    print(widget.itemToEdit!.id);
+
+    bool success = await _apiService.editProduct(widget.itemToEdit!.id,
         productName, productNumber, desiredStock, barcode);
     if (success) {
       Navigator.pushNamed(context, "/administerProducts");
