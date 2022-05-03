@@ -226,14 +226,10 @@ class _InventoryViewState extends State<InventoryView> {
     for (Item item in items) {
       if (item.productName.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
-      } else if (item.productNumber != null) {
-        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
+      } else if (item.productNumber!.toUpperCase().contains(query.toUpperCase()) && item.productNumber != null) {
           result.add(item);
-        }
-      } else if (item.barcode != null) {
-        if (item.barcode!.contains(query)) {
+      } else if (item.barcode!.contains(query) && item.barcode != null) {
           result.add(item);
-        }
       }
     }
     setState(() {

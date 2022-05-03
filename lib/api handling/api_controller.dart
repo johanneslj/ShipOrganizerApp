@@ -21,8 +21,8 @@ class ApiService {
   Dio dio = Dio();
 
   //String baseUrl = "http://10.22.186.180:8080/";
-  String baseUrl = "http://10.22.193.237:8080/"; // Johannes
-  //String baseUrl = "http://68.183.9.200:6868/"; // Server
+  //String baseUrl = "http://10.22.193.237:8080/"; // Johannes
+  String baseUrl = "http://68.183.9.200:6868/"; // Server
   String imagesBaseUrl =
       "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
   late DateTime lastUpdatedDate = DateTime(1900);
