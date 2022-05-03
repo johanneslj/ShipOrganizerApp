@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'package:path/path.dart' as p;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'dart:io';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
@@ -47,9 +44,9 @@ class _newBill extends State<NewBill> {
   }
 
   Future<void> setSelectedValue() async{
-    String? hei = await apiService.storage.read(key: "activeDepartment");
+    String? department = await apiService.storage.read(key: "activeDepartment");
     setState(() {
-      selectedValue = hei!;
+      selectedValue = department!;
     });
   }
   _imgFromCamera() async {
@@ -190,15 +187,9 @@ class _newBill extends State<NewBill> {
 
   /// Method to submit the selected department and image to the backend server
   Future<void> submitToServer() async {
-    final bytes = _image!.readAsBytesSync();
-    String encoded = base64Encode(bytes);
-    String fileName = p.basename(_image!.path);
     if (_image != null) {
       await apiService.sendOrder(_image!, selectedValue);
     }
-
-    //Send this to backend server
-    //log('selectedValue: $selectedValue encoded image: $encoded FileName: $fileName');
   }
 
   /// Creates a container with a CircularProgressIndicator
