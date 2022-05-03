@@ -95,7 +95,6 @@
   "uploadImage": "Upload image",
   "verificationCode": "Verification code",
   "verifyCode": "Verify code",
-
   "badRequest": "Bad request",
   "couldNotChangePassword": "Could not change password",
   "couldntLogOut": "Failed to sign out",
@@ -110,5 +109,6 @@
   "userAlreadyExists": "That email is already registered",
   "reject": "Reject",
   "wrongQuantity": "The quantity is to large",
-  "productNumberExists": "Product number already exists"
+  "productNumberExists": "Product number already exists",
+  "productNameNoComma":"Please do not use «,» in the name"
 }

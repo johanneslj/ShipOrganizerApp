@@ -133,7 +133,7 @@ class _InventoryViewState extends State<InventoryView> {
                 preferredSize:
                     // Creates top padding for the top bar so that it starts below status/notification bar.
                     Size(MediaQuery.of(context).size.width,
-                        MediaQuery.of(context).viewPadding.top + 40.0),
+                        MediaQuery.of(context).viewPadding.top + 50.0),
                 child: Column(children: [
                   TopBar(
                     onSearch: onSearch,
@@ -226,14 +226,10 @@ class _InventoryViewState extends State<InventoryView> {
     for (Item item in items) {
       if (item.productName.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
-      } else if (item.productNumber != null) {
-        if (item.productNumber!.toUpperCase().contains(query.toUpperCase())) {
+      } else if (item.productNumber!.toUpperCase().contains(query.toUpperCase()) && item.productNumber != null) {
           result.add(item);
-        }
-      } else if (item.barcode != null) {
-        if (item.barcode!.contains(query)) {
+      } else if (item.barcode!.contains(query) && item.barcode != null) {
           result.add(item);
-        }
       }
     }
     setState(() {
