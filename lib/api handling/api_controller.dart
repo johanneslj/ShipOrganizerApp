@@ -548,7 +548,7 @@ class ApiService {
         "stock": stock,
         "barcode": barcode,
         "department": await getActiveDepartment(),
-        "dateTime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+        "dateTime": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())
       };
        response =
           await dio.post(baseUrl + "api/product/new-product", data: data);
@@ -579,7 +579,7 @@ class ApiService {
         "desiredStock": desiredStock,
         "barcode": barcode,
         "department": await getActiveDepartment(),
-        "dateTime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+        "dateTime": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())
       };
       var response =
           await dio.post(baseUrl + "api/product/edit-product", data: data);
@@ -716,7 +716,7 @@ class ApiService {
       "quantity": amount,
       "latitude": latitude,
       "longitude": longitude,
-      "datetime": DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())
+      "datetime": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())
     };
     if (connectionCode == 200) {
       await dio.post(baseUrl + "api/product/set-new-stock", data: data);
@@ -803,7 +803,7 @@ class ApiService {
           data: {"department": department});
     } else {
       String formattedDate =
-          DateFormat('yyyy-MM-dd kk:mm:ss').format(lastUpdatedDate);
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(lastUpdatedDate);
       response = await dio.post(
           baseUrl + "api/product/recently-updated-inventory",
           data: {"department": department, "DateTime": formattedDate});
