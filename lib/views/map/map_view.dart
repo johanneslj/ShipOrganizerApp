@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ship_organizer_app/api handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 
@@ -24,7 +24,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  final Location _location = Location();
 
   ApiService apiService = ApiService.getInstance();
 
@@ -119,10 +118,29 @@ class _MapViewState extends State<MapView> {
   /// the users location
   Future<void> _onMapCreated(GoogleMapController _controller) async {
     _controller = _controller;
-    var currentLocation = await _location.getLocation();
+    var latitude;
+    var longitude;
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    } else {
+      var currentLocation = await Geolocator.getLastKnownPosition();
+      if(currentLocation!=null) {
+        latitude = currentLocation.latitude;
+        longitude = currentLocation.longitude;
+      }
+      else{
+        latitude = 62.4721682497614;
+        longitude= 6.15747281195441;
+      }
+    }
     addMarkers();
     _controller.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(currentLocation.latitude!, currentLocation.longitude!), 7));
+        LatLng(latitude,longitude), 7));
   }
 
   /// Adds markers to the map
