@@ -283,6 +283,9 @@ class _InventoryViewState extends State<InventoryView> {
     if (!mounted) return;
     setState(() {
       _controller.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
+      if(barcodeScanRes.isNotEmpty){
+        onSearch();
+      }
     });
   }
 

@@ -35,7 +35,6 @@ dependencies:
   multi_select_flutter: ^4.0.0
   json_annotation: ^4.0.0-nullsafety.0
   google_maps_flutter: ^2.1.1
-  location: ^4.3.0
   permission_handler: ^8.3.0
   flutter_riverpod: ^0.14.0+3
   dio: ^4.0.4
