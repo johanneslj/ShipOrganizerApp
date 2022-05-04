@@ -165,20 +165,46 @@ class _InventoryViewState extends State<InventoryView> {
       );
     } else {
       return Scaffold(
-        appBar: PreferredSize(
-            preferredSize:
-                // Creates top padding for the top bar so that it starts below status/notification bar.
-                Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).viewPadding.top + 60.0),
-            child: TopBar(
-              onSearch: onSearch,
-              onClear: onClear,
-              filter: showSelectDepartmentMenu,
-              searchFieldController: _controller,
-              isRecommendedView: false,
-              isMobile: false,
-              onScan: scanBarcodeNormal,
-            )),
+        appBar: isOffline
+            ? PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 70.0),
+                child: Column(children: [
+                  TopBar(
+                    onSearch: onSearch,
+                    onClear: onClear,
+                    filter: showSelectDepartmentMenu,
+                    searchFieldController: _controller,
+                    isRecommendedView: false,
+                    isMobile: false,
+                    onScan: scanBarcodeNormal,
+                  ),
+                  Container(
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.warning),
+                          Text(AppLocalizations.of(context)!.offline)
+                        ],
+                      ))
+                ],) )
+            : PreferredSize(
+                preferredSize:
+                    // Creates top padding for the top bar so that it starts below status/notification bar.
+                    Size(MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).viewPadding.top + 60.0),
+                child: TopBar(
+                  onSearch: onSearch,
+                  onClear: onClear,
+                  filter: showSelectDepartmentMenu,
+                  searchFieldController: _controller,
+                  isRecommendedView: false,
+                  isMobile: false,
+                  onScan: scanBarcodeNormal,
+                )),
         body: _isLoading
             ? circularProgress()
             : Row(
@@ -226,10 +252,13 @@ class _InventoryViewState extends State<InventoryView> {
     for (Item item in items) {
       if (item.productName.toUpperCase().contains(query.toUpperCase())) {
         result.add(item);
-      } else if (item.productNumber!.toUpperCase().contains(query.toUpperCase()) && item.productNumber != null) {
-          result.add(item);
+      } else if (item.productNumber!
+              .toUpperCase()
+              .contains(query.toUpperCase()) &&
+          item.productNumber != null) {
+        result.add(item);
       } else if (item.barcode!.contains(query) && item.barcode != null) {
-          result.add(item);
+        result.add(item);
       }
     }
     setState(() {
