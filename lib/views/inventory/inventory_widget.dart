@@ -5,8 +5,8 @@ import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
-import 'package:location/location.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'item.dart';
 
@@ -43,8 +43,6 @@ class Inventory extends StatelessWidget {
   /// Controllers used for TextFields in recommended tiles.
   late List<TextEditingController> _controllers = [];
 
-  final Location _location = Location();
-
   final ApiService apiService = ApiService.getInstance();
 
   @override
@@ -54,7 +52,8 @@ class Inventory extends StatelessWidget {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        _controllers[index] = (TextEditingController(text: items[index].stock.toString()));
+        _controllers[index] =
+            (TextEditingController(text: items[index].stock.toString()));
         if (index == items.length - 1) {
           return Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 55),
@@ -94,39 +93,37 @@ class Inventory extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ConstrainedBox(
-                        constraints:
-                            const BoxConstraints.expand(width: 96, height: 48),
-                        child: TextField(
-                          controller: _controllers[index],
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10)
-                          ],
-                          onChanged: (text) => {
-                            if (_controllers[index].text.isNotEmpty)
-                              {
-                                items[index].stock =
-                                    int.parse(_controllers[index].text),
-                                FocusManager.instance.primaryFocus?.unfocus()
-
-                              },
-                          },
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                              constraints:
-                              const BoxConstraints(maxWidth: 200),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 0, bottom: 0, top: 0, right: 0),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary,
-                                      width: 4.0))),
-                          style: Theme.of(context).textTheme.headline5,
-                        ),),
+                      constraints:
+                          const BoxConstraints.expand(width: 96, height: 48),
+                      child: TextField(
+                        controller: _controllers[index],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10)
+                        ],
+                        onChanged: (text) => {
+                          if (_controllers[index].text.isNotEmpty)
+                            {
+                              items[index].stock =
+                                  int.parse(_controllers[index].text),
+                              FocusManager.instance.primaryFocus?.unfocus()
+                            },
+                        },
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                            constraints: const BoxConstraints(maxWidth: 200),
+                            contentPadding: const EdgeInsets.only(
+                                left: 0, bottom: 0, top: 0, right: 0),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 4.0))),
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ),
                   ),
                   // IconButton(onPressed: () => onConfirm, icon: const Icon(Icons.check, size: 32.0)),
                 ],
@@ -214,9 +211,27 @@ class Inventory extends StatelessWidget {
   /// Makes call to apiService to update the api
   Future<void> updateStock(
       String? itemNumber, int amount, BuildContext context) async {
-    var currentLocation = await _location.getLocation();
-    var latitude = currentLocation.latitude!;
-    var longitude = currentLocation.longitude!;
+    var latitude;
+    var longitude;
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    } else {
+      var currentLocation = await Geolocator.getLastKnownPosition();
+      if(currentLocation!=null) {
+        latitude = currentLocation.latitude;
+        longitude = currentLocation.longitude;
+      }
+      else{
+        latitude = 62.4721682497614;
+        longitude= 6.15747281195441;
+      }
+    }
+
     var username = await apiService.storage.read(key: "username");
     await apiService.updateStock(
         itemNumber!, username!, amount, latitude, longitude);
