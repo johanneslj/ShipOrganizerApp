@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ship_organizer_app/api handling//api_controller.dart';
-import 'package:ship_organizer_app/views/inventory/inventory_view.dart';
+import 'package:ship_organizer_app/api handling/api_controller.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
-import '../../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// A Class which supplies the login view for the app

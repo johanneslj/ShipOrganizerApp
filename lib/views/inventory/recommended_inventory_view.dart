@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/send_report_to_email_view.dart';
 import 'package:ship_organizer_app/views/inventory/side_menu.dart';
