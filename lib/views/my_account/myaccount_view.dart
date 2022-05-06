@@ -307,6 +307,11 @@ class _MyAccount extends State<MyAccount> {
       destination: "/sendBill",
       arguments: admin.toString(),
     ));
+    departmentCardList.add(DepartmentCard(
+      departmentName: AppLocalizations.of(context)!.administerProducts,
+      destination: "/administerProducts",
+      arguments: "false",
+    ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
@@ -316,11 +321,6 @@ class _MyAccount extends State<MyAccount> {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUsers,
         destination: "/administerUsers",
-        arguments: "false",
-      ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.administerProducts,
-        destination: "/administerProducts",
         arguments: "false",
       ));
     }
