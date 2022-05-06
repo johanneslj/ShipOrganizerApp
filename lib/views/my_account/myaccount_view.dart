@@ -340,13 +340,13 @@ class _MyAccount extends State<MyAccount> {
         AppLocalizations.of(context)!.missingInventory, "false"));
     departmentCardList.add(gridTileWidget(
         "/sendBill", AppLocalizations.of(context)!.billing, admin.toString()));
+    departmentCardList.add(gridTileWidget("/administerProducts",
+        AppLocalizations.of(context)!.administerProducts, "false"));
     if (admin) {
       departmentCardList.add(gridTileWidget("/createUser",
           AppLocalizations.of(context)!.registerNewUser, "false"));
       departmentCardList.add(gridTileWidget("/administerUsers",
           AppLocalizations.of(context)!.administerUsers, "false"));
-      departmentCardList.add(gridTileWidget("/administerProducts",
-          AppLocalizations.of(context)!.administerProducts, "false"));
     }
     return departmentCardList;
   }
