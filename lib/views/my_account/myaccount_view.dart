@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
-import 'package:ship_organizer_app/views/select_department/department_card.dart';
+import 'package:ship_organizer_app/widgets/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../main.dart';
