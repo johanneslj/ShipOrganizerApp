@@ -29,9 +29,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-
-    });
+    setState(() {});
     bool mobile =
         (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
     _apiService.setContext(context);
@@ -55,28 +53,31 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       body: _isLoading
           ? circularProgress()
           : SingleChildScrollView(
-              child: Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),child: Column(
-                children: [
-                  Table(
-                      border: const TableBorder(
-                          horizontalInside:
-                          BorderSide(width: 0.2, style: BorderStyle.solid)),
-                      columnWidths: widget.isAdministeringUsers
-                          ? const <int, TableColumnWidth>{
-                        0: FlexColumnWidth(0.4),
-                        1: FlexColumnWidth(),
-                        2: FixedColumnWidth(75),
-                      }
-                          : const <int, TableColumnWidth>{
-                        0: FlexColumnWidth(1.05),
-                        1: FlexColumnWidth(),
-                        2: FixedColumnWidth(75),
-                      },
-                      defaultVerticalAlignment:
-                      TableCellVerticalAlignment.middle,
-                      children: tableRows),
-                ],
-              ), ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: Column(
+                  children: [
+                    Table(
+                        border: const TableBorder(
+                            horizontalInside: BorderSide(
+                                width: 0.2, style: BorderStyle.solid)),
+                        columnWidths: widget.isAdministeringUsers
+                            ? const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(0.4),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(75),
+                              }
+                            : const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(1.05),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(75),
+                              },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: tableRows),
+                  ],
+                ),
+              ),
             ),
     );
   }
