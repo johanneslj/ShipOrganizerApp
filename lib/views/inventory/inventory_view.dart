@@ -7,13 +7,13 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/department.dart';
-import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
-import 'package:ship_organizer_app/views/inventory/side_menu.dart';
-import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
+import 'package:ship_organizer_app/widgets/add_remove_item_dialog.dart';
+import 'package:ship_organizer_app/widgets/side_menu.dart';
+import 'package:ship_organizer_app/widgets/top_bar_widget.dart';
 import 'package:ship_organizer_app/widgets/offline_banner.dart';
-import 'inventory_widget.dart';
+import '../../widgets/inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
-import 'item.dart';
+import '../../entities/item.dart';
 
 /// View where the user can see the inventory for their department.
 ///

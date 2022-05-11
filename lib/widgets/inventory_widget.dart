@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
-import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
+import 'package:ship_organizer_app/widgets/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'item.dart';
+import '../entities/item.dart';
 
 /// Widget that displays the input items as a ListView.
 ///

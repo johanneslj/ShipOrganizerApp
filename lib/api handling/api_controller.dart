@@ -9,7 +9,7 @@ import 'package:ship_organizer_app/entities/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
-import 'package:ship_organizer_app/views/inventory/item.dart';
+import 'package:ship_organizer_app/entities/item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 

@@ -6,7 +6,7 @@ import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
-import 'package:ship_organizer_app/views/inventory/item.dart';
+import 'package:ship_organizer_app/entities/item.dart';
 
 /// This is the view for administering users
 ///
