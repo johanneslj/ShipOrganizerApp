@@ -6,7 +6,7 @@ import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/inventory/item.dart';
 
 ///This class represents the possibility to add a new item to the inventory list
-///
+/// or the option of editing an existing one
 
 class NewItem extends StatefulWidget {
   final bool isCreateNew;
@@ -31,21 +31,15 @@ class _NewItemState extends State<NewItem> {
   TextEditingController stockController = TextEditingController();
   TextEditingController desiredStockController = TextEditingController();
 
-  ///Method to scan the barcode
-  // Platform messages are asynchronous, so we initialize in an async method.
+  /// Method to scan a barcode
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("e8f1f2",
+          AppLocalizations.of(context)!.cancel, true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
     setState(() {
       barcodeController.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
@@ -65,6 +59,7 @@ class _NewItemState extends State<NewItem> {
     }
   }
 
+  /// Gets the users active department from api service
   getDepartment() async {
     String activeDepartment = await _apiService.getActiveDepartment();
     setState(() {
@@ -108,19 +103,22 @@ class _NewItemState extends State<NewItem> {
                             controller: productNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context)!.enterValidText;
+                                return AppLocalizations.of(context)!
+                                    .enterValidText;
                               }
                               return null;
                             },
                             decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)!.productName,
+                                hintText:
+                                    AppLocalizations.of(context)!.productName,
                                 hintStyle: TextStyle(
                                     color: Theme.of(context).disabledColor)),
                           ),
-                          Text(AppLocalizations.of(context)!.productNameNoComma,style:TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontSize:16,
-                          )),
+                          Text(AppLocalizations.of(context)!.productNameNoComma,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                                fontSize: 16,
+                              )),
                         ],
                       ),
                     ),
@@ -255,14 +253,13 @@ class _NewItemState extends State<NewItem> {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
                                         if (widget.isCreateNew) {
-                                            addNewItem(
-                                                productNameController.value.text,
-                                                productNumberController
-                                                    .value.text,
-                                                desiredStockController.value.text,
-                                                stockController.value.text,
-                                                barcodeController.value.text);
-
+                                          addNewItem(
+                                              productNameController.value.text,
+                                              productNumberController
+                                                  .value.text,
+                                              desiredStockController.value.text,
+                                              stockController.value.text,
+                                              barcodeController.value.text);
                                         } else {
                                           editItem(
                                               productNameController.value.text,
@@ -314,6 +311,7 @@ class _NewItemState extends State<NewItem> {
     );
   }
 
+  /// Gets the title of the view depending on the mode its in
   Widget getTitle(BuildContext context) {
     return widget.isCreateNew
         ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -332,16 +330,12 @@ class _NewItemState extends State<NewItem> {
     });
   }
 
-
   /// Edits an already existing item
   /// Stock cant be edited so it is not required to be passed here
   /// Product number cant be edited but is necessary to identify the product
   /// in the database
   Future<void> editItem(String productName, String productNumber,
       String desiredStock, String barcode) async {
-
-    print(widget.itemToEdit!.id);
-
     bool success = await _apiService.editProduct(widget.itemToEdit!.id,
         productName, productNumber, desiredStock, barcode);
     if (success) {
@@ -349,6 +343,8 @@ class _NewItemState extends State<NewItem> {
     }
   }
 
+  /// Handles what happens when the user presses create ne item
+  /// Uses API service to create a new item in the backend
   Future<void> addNewItem(String productName, String productNumber,
       String desiredStock, String stock, String barcode) async {
     bool success = await _apiService.createNewProduct(
@@ -358,6 +354,7 @@ class _NewItemState extends State<NewItem> {
     }
   }
 
+  /// Attempts to delete the selected product from the backend
   Future<bool> deleteProduct() async {
     bool success =
         await _apiService.deleteProduct(productNumberController.value.text);
