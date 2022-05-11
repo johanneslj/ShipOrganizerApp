@@ -3,7 +3,6 @@ import 'dart:core';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ship_organizer_app/entities/Order.dart';
 import 'package:ship_organizer_app/entities/report.dart';
@@ -20,8 +19,6 @@ class ApiService {
   FlutterSecureStorage storage = const FlutterSecureStorage();
   Dio dio = Dio();
 
-  //String baseUrl = "http://10.22.186.180:8080/";
-  //String baseUrl = "http://10.22.193.237:8080/"; // Johannes
   String baseUrl = "http://68.183.9.200:6868/"; // Server
   String imagesBaseUrl =
       "https://maoyishiporganizer.fra1.digitaloceanspaces.com/images/";
@@ -29,6 +26,7 @@ class ApiService {
 
   ApiService._internal();
 
+  /// used to set up a singleton api service
   factory ApiService(BuildContext? context) {
     if (context != null) {
       _apiService.buildContext = context;
@@ -36,10 +34,12 @@ class ApiService {
     return _apiService;
   }
 
+  /// Gets the instance of the api service
   static ApiService getInstance() {
     return _apiService;
   }
 
+  /// Sets the build context so the api service can push user to views
   void setContext(BuildContext context) {
     buildContext = context;
   }
@@ -50,19 +50,21 @@ class ApiService {
     try {
       await dio.get(baseUrl + "connection").then((value) =>
           value.statusCode != null ? code = value.statusCode! : null);
-    } on DioError catch (e) {
+    } on DioError {
       return 101;
     }
     return code;
   }
 
-  // Setts Authorization token for the api call
+  /// Sets Authorization token for the api call
   Future<void> _setBearerForAuthHeader() async {
     String? token = await _getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     dio.options.headers["Content-Type"] = "application/json";
   }
 
+  /// A method to create a list from a string
+  /// There is an expected format on the string so that is whats handled here
   List<String> _decodeListFromString(String string) {
     List<String> list = [];
     if (string.startsWith("[")) {
@@ -225,6 +227,8 @@ class ApiService {
     return success;
   }
 
+  /// Handles the different errors that can be received
+  /// when trying to register a user
   void _handleRegistrationDioError(DioError e) {
     switch (e.response!.statusCode) {
       case 403:
@@ -244,6 +248,8 @@ class ApiService {
     }
   }
 
+  /// Handles the different errors that can be received
+  /// When trying to set password
   void _handleNewPasswordDioError(DioError e) {
     switch (e.response!.statusCode) {
       case 304:
@@ -279,6 +285,7 @@ class ApiService {
     await writeNameToStorage();
   }
 
+  /// Enters the users full name into local storage
   Future<void> writeNameToStorage() async {
     String name;
     if (200 == await testConnection()) {
@@ -290,6 +297,7 @@ class ApiService {
     storage.write(key: "name", value: name);
   }
 
+  /// Gets a list of all the users from the API server
   Future<List<User>> _getAllUsersFromApi() async {
     List<User> users = [];
     var response = await dio.get(baseUrl + "api/user/all-users");
@@ -306,13 +314,14 @@ class ApiService {
     return users;
   }
 
+  /// Method for verifying that the code entered by a user
+  /// when trying to set password is correct
   Future<bool> _verifyCodeAndGetSuccess(
       String email, String verificationCode) async {
     _setBearerForAuthHeader();
     var data = {"email": email, "code": verificationCode};
     Response response = await dio
         .post(baseUrl + "api/user/check-valid-verification-code", data: data);
-    print(response);
     return response.statusCode == 200;
   }
 
@@ -360,18 +369,6 @@ class ApiService {
     return success;
   }
 
-  Future<bool> checkThatCorrectInfoIsWritten() async {
-    try {
-      if (await storage.containsKey(key: "userRights") ||
-          await storage.containsKey(key: "departments")) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      return true;
-    }
-  }
-
   /// Signs a user out
   /// This removes everything stored in storage
   /// returns true if was able to delete everything
@@ -414,10 +411,12 @@ class ApiService {
     return departments;
   }
 
+  /// Gets the list of departments that are stored in local storage
+  /// if there are any in the storage
   Future<List<String>> _getStoredDepartments() async {
     List<String> departments = [];
-    if (await storage.containsKey(key: "departments") && await storage
-        .read(key: "departments") != null) {
+    if (await storage.containsKey(key: "departments") &&
+        await storage.read(key: "departments") != null) {
       await storage
           .read(key: "departments")
           .then((value) => departments = _decodeListFromString(value!));
@@ -538,7 +537,7 @@ class ApiService {
   Future<bool> createNewProduct(String productName, String productNumber,
       String desiredStock, String stock, String barcode) async {
     bool success = false;
-    var response;
+    Response response;
     try {
       await _setBearerForAuthHeader();
       var data = {
@@ -550,30 +549,30 @@ class ApiService {
         "department": await getActiveDepartment(),
         "dateTime": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())
       };
-       response =
+      response =
           await dio.post(baseUrl + "api/product/new-product", data: data);
       if (response.statusCode == 200) {
         success = true;
       }
     } on DioError catch (e) {
-      if(e.response?.statusCode == 400 && e.response?.data == "Exists"){
+      if (e.response?.statusCode == 400 && e.response?.data == "Exists") {
         _showErrorToast(AppLocalizations.of(buildContext)!.productNumberExists);
-
-      }else{
+      } else {
         _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
       }
     }
     return success;
   }
 
-
-  Future<bool> editProduct(int id,String productName, String productNumber,
+  /// Method for editing a product, sending id productname productnumber,
+  /// desiredstock and barcode to update the database with the new details
+  Future<bool> editProduct(int id, String productName, String productNumber,
       String desiredStock, String barcode) async {
     bool success = false;
     try {
       await _setBearerForAuthHeader();
       var data = {
-        "productID":id,
+        "productID": id,
         "productName": productName,
         "productNumber": productNumber,
         "desiredStock": desiredStock,
@@ -625,23 +624,6 @@ class ApiService {
     return success;
   }
 
-  //OLD
-  Future<List<Item>> getAllItems() async {
-    List<Item> items = [];
-    try {
-      await _setBearerForAuthHeader();
-      String department = await getActiveDepartment();
-      Response response = await dio.post(baseUrl + "api/product/get-inventory",
-          data: {"department": department});
-      if (response.statusCode == 200) {
-        items = _getItemsFromResponse(response);
-      }
-    } catch (e) {
-      _showErrorToast(AppLocalizations.of(buildContext)!.somethingWentWrong);
-    }
-    return items;
-  }
-
   ///Gets all products from the backend server
   ///Returns a list of all the products
   Future<List<Item>> getItems(String department) async {
@@ -685,13 +667,20 @@ class ApiService {
     return items;
   }
 
+  /// Sends a list of emails to the backend, along with the
+  /// inventory that is missing, this sends an email to all the adresses
+  /// with a pdf containing the missing inventory
   Future<bool> sendMissingInventory(
       List<Item> items, List<String> emailAddresses) async {
     await _setBearerForAuthHeader();
     bool success = false;
     String department = await getActiveDepartment();
 
-    var data = {"items": items, "receivers": emailAddresses,"department": department};
+    var data = {
+      "items": items,
+      "receivers": emailAddresses,
+      "department": department
+    };
     try {
       var response =
           await dio.post(baseUrl + "api/product/create-pdf", data: data);
@@ -706,6 +695,8 @@ class ApiService {
   }
 
   /// Update stock for a specific product
+  /// Uses product number, username, amount, and location to create a record
+  /// of the update in the database
   Future<void> updateStock(String productNumber, String username, int amount,
       double latitude, double longitude) async {
     int? connectionCode = await testConnection();
@@ -731,6 +722,8 @@ class ApiService {
     }
   }
 
+  /// Updates the local storage product amount with the given amount on the
+  /// given product number
   Future<void> _updateLocalStorageStock(
       String productNumber, int amount) async {
     List<Item> storedItems =
@@ -741,6 +734,10 @@ class ApiService {
     storage.write(key: "items", value: jsonEncode(storedItems));
   }
 
+  /// Fetches recently updated items, if the local storage is empty
+  /// it writes all the api items directly,
+  /// If the local storage is not empty it is updated with the items that have
+  /// been fetched
   Future<List<Item>> _updateStoreAndGetItems(
       String? localStorage, String department) async {
     List<Item> updatedItemList = [];
@@ -766,6 +763,7 @@ class ApiService {
     return updatedItemList;
   }
 
+  /// Updates the local storage with the items that have been updated
   Future<List<Item>> _updateAndStoreItems(
       List<Item> apiItems, List<Item> updatedItemList) async {
     String? storageString = await storage.read(key: "items");
@@ -776,10 +774,11 @@ class ApiService {
     return updatedItemList;
   }
 
+  /// If an item has been updated its details in local storage are
+  /// changed here
   void _updateItemsFromApiToList(List<Item> updatedItems, List<Item> items) {
     for (Item updatedItem in updatedItems) {
-      final index = items.indexWhere(
-          (element) => element.id == updatedItem.id);
+      final index = items.indexWhere((element) => element.id == updatedItem.id);
       if (index >= 0) {
         items[index].productNumber = updatedItem.productNumber;
         items[index].stock = updatedItem.stock;
@@ -792,6 +791,12 @@ class ApiService {
     }
   }
 
+  /// Gets the inventory depending on if;
+  /// The local storage inventory is empty
+  /// The last updated year is 1900
+  /// If its either of those it gets all products from the selected department
+  /// If neither is true it gets items which have been updated
+  /// after the last time the inventory was fetched
   Future<Response<dynamic>> _fetchNecessaryResponseWithItemsToUpdate(
       String? localStorage, String department) async {
     Response response;
@@ -811,11 +816,13 @@ class ApiService {
     return response;
   }
 
+  /// Gets the products in a JSON format
   List<Item> _getItemsFromResponse(Response<dynamic> response) {
     List<dynamic> products = List<dynamic>.from(response.data);
     return _getItemsFromJson(products);
   }
 
+  /// Translates the JSON into Item objects
   List<Item> _getItemsFromJson(List<dynamic> storageItems) {
     List<Item> items = [];
     for (var product in storageItems) {
@@ -864,7 +871,7 @@ class ApiService {
         }
       });
       items.add(Item(
-          id:id,
+          id: id,
           productName: name,
           productNumber: number,
           barcode: ean13,
@@ -874,6 +881,7 @@ class ApiService {
     return items;
   }
 
+  /// Fetches the inventory stored in local storage
   Future<List<Item>> _getItemsFromStorage(String? localStorage) async {
     List<Item> storedItems = [];
     if (localStorage != null && localStorage.length > 3) {
@@ -983,6 +991,7 @@ class ApiService {
     dio.options.headers.clear();
   }
 
+  /// Gets any pending orders from the api
   Future<List<Order>> _getPendingOrdersFromApi() async {
     List<Order> pendingOrders = [];
     Response response = await dio.get(baseUrl + "orders/admin/pending");
@@ -992,6 +1001,8 @@ class ApiService {
     return pendingOrders;
   }
 
+  /// Creates Order objects for each of the JSON objects fetched
+  /// from the API
   List<Order> _getOrdersFromResponse(Response<dynamic> response) {
     List<Order> pendingOrders = [];
     List<dynamic> orders = List<dynamic>.from(response.data);
@@ -1012,7 +1023,8 @@ class ApiService {
             break;
         }
       });
-      pendingOrders.add(Order(imagename: imageName, department: department,status:status));
+      pendingOrders.add(
+          Order(imagename: imageName, department: department, status: status));
     }
     return pendingOrders;
   }
@@ -1036,6 +1048,7 @@ class ApiService {
     await storage.write(key: "activeDepartment", value: department);
   }
 
+  /// Fetches the departments from the JSON response from the API
   List<String> _getDepartmentsFromResponse(Response<dynamic> response) {
     List<String> departments = [];
     List<Map<String, dynamic>> departmentsList =
@@ -1048,6 +1061,8 @@ class ApiService {
 
   //#endregion
 
+  /// Shows a toast in the application with the given String
+  /// error message
   void _showErrorToast(String errorMessage) {
     ScaffoldMessenger.of(buildContext)
         .showSnackBar(SnackBar(content: Text(errorMessage)));

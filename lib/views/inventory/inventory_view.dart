@@ -267,11 +267,12 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   ///Method to scan the barcode
+  ///
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "e8f1f2", "Cancel", true, ScanMode.BARCODE);
+          "e8f1f2", AppLocalizations.of(context)!.cancel, true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = "Failed to get platform version.";
     }
