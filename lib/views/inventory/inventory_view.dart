@@ -1,5 +1,4 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,7 +9,6 @@ import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/widgets/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/widgets/side_menu.dart';
 import 'package:ship_organizer_app/widgets/top_bar_widget.dart';
-import 'package:ship_organizer_app/widgets/offline_banner.dart';
 import '../../widgets/inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import '../../entities/item.dart';
@@ -49,6 +47,7 @@ class _InventoryViewState extends State<InventoryView> {
     _setUpConnectivitySubscription();
   }
 
+  /// Function for loading the inventory
   dataLoadFunction() async {
     setState(() {
       _isLoading = true;
@@ -70,6 +69,7 @@ class _InventoryViewState extends State<InventoryView> {
     return createView(context, colorScheme);
   }
 
+  /// Checks if the user is online when entering the view
   void _initialConnectionCheck() {
     Connectivity().checkConnectivity().then((result) {
       if (result == ConnectivityResult.none) {
@@ -84,6 +84,8 @@ class _InventoryViewState extends State<InventoryView> {
     });
   }
 
+  /// Sets up a subscription to be notified if the
+  /// User goes offline
   void _setUpConnectivitySubscription() {
     if (mounted) {
       Connectivity().onConnectivityChanged.listen((result) {
@@ -334,12 +336,14 @@ class _InventoryViewState extends State<InventoryView> {
     return popMenuItems;
   }
 
+  /// Changes the selected department in the dropdown
   void changeSelectedRadioButton(int value) {
     setState(() {
       selectedRadioButton = value;
     });
   }
 
+  /// Requests the api service to fetch the inventory
   Future<void> getItems() async {
     List<Item> displayed = [];
     displayed = await apiService.getItems(selectedDepartment.departmentName);
