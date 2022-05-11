@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
-import 'package:ship_organizer_app/entities/Order.dart';
+import 'package:ship_organizer_app/entities/order.dart';
 
 /// Class for the pending bills tab in the send_bill_view
 /// This class is responsible for the view where the admin can
