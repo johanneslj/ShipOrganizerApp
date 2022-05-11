@@ -28,14 +28,14 @@ class _ConfirmedBill extends State<ConfirmedBill> {
     super.initState();
   }
 
+  /// Function to load data when entering the view
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     await getConfirmedOrder();
-    // fetch you data over here
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
   }
 
@@ -43,12 +43,14 @@ class _ConfirmedBill extends State<ConfirmedBill> {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return Scaffold(
-        body: _isLoading ? circularProgress() :
-        GridView.builder(
-            itemCount: confirmedOrders.length,
-            itemBuilder: (BuildContext context, int index) {
-              NetworkImage image = NetworkImage(apiService.imagesBaseUrl + confirmedOrders[index].imagename);
-              return Center(
+      body: _isLoading
+          ? circularProgress()
+          : GridView.builder(
+              itemCount: confirmedOrders.length,
+              itemBuilder: (BuildContext context, int index) {
+                NetworkImage image = NetworkImage(apiService.imagesBaseUrl +
+                    confirmedOrders[index].imagename);
+                return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -78,7 +80,7 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                         ),
                       ),
                       Text(
-                       getStatus(confirmedOrders[index].status,context),
+                        getStatus(confirmedOrders[index].status, context),
                         style: const TextStyle(
                           fontSize: 10.0,
                           fontWeight: FontWeight.bold,
@@ -86,21 +88,24 @@ class _ConfirmedBill extends State<ConfirmedBill> {
                         ),
                       ),
                     ],
-                  ));
-            }, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 5.0,
-        )),
+                  ),
+                );
+              },
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+              ),
+            ),
     );
   }
 
-  String getStatus(int status,BuildContext context){
+  /// Gets the status of the bills
+  String getStatus(int status, BuildContext context) {
     String result = "";
-    if(status==1){
+    if (status == 1) {
       result = AppLocalizations.of(context)!.confirmed;
-    }
-    else{
+    } else {
       result = AppLocalizations.of(context)!.reject;
     }
     return result;
@@ -113,19 +118,20 @@ class _ConfirmedBill extends State<ConfirmedBill> {
         width: 500,
         height: 600,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: image, fit: BoxFit.cover)),
+            image: DecorationImage(image: image, fit: BoxFit.cover)),
       ),
     );
   }
 
+  /// Requests the api service to get the confirmed orders
   Future<void> getConfirmedOrder() async {
     List<Order> orders;
-      orders = await apiService.getAdminConfirmedOrders();
+    orders = await apiService.getAdminConfirmedOrders();
     setState(() {
-        confirmedOrders = orders;
+      confirmedOrders = orders;
     });
   }
+
   /// Creates a container with a CircularProgressIndicator
   Container circularProgress() {
     return Container(
@@ -136,5 +142,4 @@ class _ConfirmedBill extends State<ConfirmedBill> {
       ),
     );
   }
-
 }
