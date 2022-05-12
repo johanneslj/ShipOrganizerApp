@@ -1,16 +1,47 @@
 # ship_organizer_app
 
-Storage and logistics organizer for ship.
+This Application has been developed as part of the bachelor thesis at NTNU Ålesund. It uses a server 
+Api which has been published to digital ocean. 
+
+## Versions
+The software for this app been developed and tested in the following SDK versions
+Dart    2.15.1
+Flutter 2.8.1
 
 ## Getting Started
+#How to Run
+1. Import the project into Android Studio, make sure you have the Appropriate FLutter SDK plugin installed
+2. To check if you have the appropriate SDK versions of Dart and Flutter run 'flutter --version'
+3. Run 'flutter pub get'
+4. The app should be ready, either connect a device or emulate one via Android Studio and run the app
 
-This project is a starting point for a Flutter application.
+## Essential Folders
+Some of the folders are essential to run the app:
+* *assets* - Contains assets shown in the app, app will not start without it
+* *lib*    - Source code of the project
 
-A few resources to get you started if this is your first Flutter project:
+```
+├── .dart_tool
+│   ├── flutter_build
+│   ├── flutter_gen
+│       ├── gen_l10n <-- Generated translation files
+├── android
+├── assets
+├── flutter.yml
+├── ios
+├── l10n.yaml
+├── lib
+│   ├── api handling
+│   ├── config
+│   ├── entities
+│   ├── l10n <-- Raw translation files, any new translations are entered here
+│   ├── offline_queue 
+│   ├── views <-- All the views displayed in the app
+│   ├── widgets <-- Set of custom widgets used in the app
+│   └── main.dart <-- main class for project
+├── pubspec.lock
+├── pubspec.yaml 
+└── README.md
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

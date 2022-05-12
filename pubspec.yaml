@@ -81,8 +81,6 @@ flutter:
   assets:
     - assets/FishingBoatSilhouette.jpg
     - assets/hue.png
-    - assets/EnglishLanguageFlag.png
-    - assets/NorwegianLanguageFlag.png
     - assets/EnglishLanguageFlagRound.png
     - assets/NorwegianLanguageFlagRound.png
     - assets/MaoyiLogo.png

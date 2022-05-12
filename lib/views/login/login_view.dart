@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ship_organizer_app/api handling//api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
