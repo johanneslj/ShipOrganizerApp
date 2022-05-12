@@ -21,15 +21,10 @@ Some of the folders are essential to run the app:
 * *lib*    - Source code of the project
 
 ```
-├── .dart_tool
-│   ├── flutter_build
-│   ├── flutter_gen
-│       ├── gen_l10n <-- Generated translation files
 ├── android
 ├── assets
 ├── flutter.yml
 ├── ios
-├── l10n.yaml
 ├── lib
 │   ├── api handling
 │   ├── config
@@ -39,6 +34,7 @@ Some of the folders are essential to run the app:
 │   ├── views <-- All the views displayed in the app
 │   ├── widgets <-- Set of custom widgets used in the app
 │   └── main.dart <-- main class for project
+├── l10n.yaml
 ├── pubspec.lock
 ├── pubspec.yaml 
 └── README.md
