@@ -40,4 +40,5 @@ Some of the folders are essential to run the app:
 └── README.md
 ```
 
-
+## Authors
+Simon Duggal, Johannes Løvold Josefsen, Hans Andreas Lindgård
