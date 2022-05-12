@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'dart:convert';
 
 class OfflineEnqueueService {
@@ -16,6 +16,7 @@ class OfflineEnqueueService {
     return _service;
   }
 
+  /// Starts the offline service if the device is offline
   startService() async {
     if (await _isOfflineOrServiceAlreadyRunning()) {
       return;
@@ -31,22 +32,26 @@ class OfflineEnqueueService {
     _storeQueueAndStopService();
   }
 
+  /// Adds a network request to the offline queue
   addToQueue(Map<String, dynamic> model) async {
     _queue.add(model);
     _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
   }
 
+  /// Stores the current queue and stops the service
   void _storeQueueAndStopService() {
     _storage.write(key: "OFFLINE_QUEUE", value: _queueToString(_queue));
     _serviceRunning = false;
   }
 
+  /// Updates the queue with whatever is stored in storage
   Future<List<dynamic>> _updateQueueFromStorage() {
     return _storage
       .read(key: "OFFLINE_QUEUE")
       .then((string) => string != null ? _queue = _queueFromString(string) : []);
   }
 
+  /// Checks if the device is offline or if the service is already running
   Future<bool> _isOfflineOrServiceAlreadyRunning() async {
     await _apiService
         .testConnection()
@@ -57,6 +62,7 @@ class OfflineEnqueueService {
     return false;
   }
 
+  /// Process the stored network requests
   Future<void> _processItems(List<Map<String, dynamic>> pendingItems) async {
     for (Map<String, dynamic> item in pendingItems) {
       try {
@@ -69,6 +75,7 @@ class OfflineEnqueueService {
     }
   }
 
+  /// Processes the network request
   _processItem(Map<String, dynamic> model) async {
     switch (model["type"]) {
       case "UPDATE_STOCK":
@@ -77,6 +84,7 @@ class OfflineEnqueueService {
     }
   }
 
+  /// Used to update the stock on local inventory
   void _updateStockOffline(Map<String, dynamic> model) {
     Map<String, dynamic> data = model["data"];
     _apiService.updateStock(
@@ -87,13 +95,16 @@ class OfflineEnqueueService {
         data["longitude"]);
   }
 
+  /// Gets any requests that are pending
   List<Map<String, dynamic>> _getPendingItems() =>
       _queue.where((item) => item["status"] == "PENDING").toList();
 
+  /// Decode the queue from ths String it is stored in in local storage
   List<Map<String,dynamic>> _queueFromString(String string) {
     return List<Map<String, dynamic>>.from(json.decode(string));
   }
 
+  /// Json encodes a given String
   String _queueToString(List<Map<String, dynamic>> queue) {
     return json.encode(queue);
   }

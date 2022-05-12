@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -6,7 +5,7 @@ class OfflineBanner {
   static MaterialBanner getBanner(BuildContext context) {
     return MaterialBanner(
         content: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             color: Theme
                 .of(context)
                 .errorColor,
@@ -24,6 +23,6 @@ class OfflineBanner {
           onPressed: () {
           ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
         },
-        child: Text("Dismiss"))]);
+        child: const Text("Dismiss"))]);
   }
 }

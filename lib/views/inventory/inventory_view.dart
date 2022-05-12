@@ -1,19 +1,17 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/department.dart';
-import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
-import 'package:ship_organizer_app/views/inventory/side_menu.dart';
-import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
-import 'package:ship_organizer_app/widgets/offline_banner.dart';
-import 'inventory_widget.dart';
+import 'package:ship_organizer_app/widgets/add_remove_item_dialog.dart';
+import 'package:ship_organizer_app/widgets/side_menu.dart';
+import 'package:ship_organizer_app/widgets/top_bar_widget.dart';
+import '../../widgets/inventory_widget.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
-import 'item.dart';
+import '../../entities/item.dart';
 
 /// View where the user can see the inventory for their department.
 ///
@@ -49,6 +47,7 @@ class _InventoryViewState extends State<InventoryView> {
     _setUpConnectivitySubscription();
   }
 
+  /// Function for loading the inventory
   dataLoadFunction() async {
     setState(() {
       _isLoading = true;
@@ -70,33 +69,46 @@ class _InventoryViewState extends State<InventoryView> {
     return createView(context, colorScheme);
   }
 
+  /// Checks if the user is online when entering the view
   void _initialConnectionCheck() {
-    Connectivity().checkConnectivity().then((result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isOffline = true;
-        });
-      } else {
-        setState(() {
-          isOffline = false;
-        });
-      }
-    });
+    Connectivity().checkConnectivity().then(
+      (result) {
+        if (result == ConnectivityResult.none) {
+          setState(
+            () {
+              isOffline = true;
+            },
+          );
+        } else {
+          setState(
+            () {
+              isOffline = false;
+            },
+          );
+        }
+      },
+    );
   }
 
+  /// Sets up a subscription to be notified if the
+  /// User goes offline
   void _setUpConnectivitySubscription() {
     if (mounted) {
-      Connectivity().onConnectivityChanged.listen((result) {
-        if (result == ConnectivityResult.none) {
-          setState(() {
-            isOffline = true;
-          });
-        } else {
-          setState(() {
-            isOffline = false;
-          });
-        }
-      });
+      Connectivity().onConnectivityChanged.listen(
+        (result) {
+          if (result == ConnectivityResult.none) {
+            setState(() {
+              isOffline = true;
+            });
+          } else {
+            setState(
+              () {
+                isOffline = false;
+              },
+            );
+          }
+        },
+      );
     }
   }
 
@@ -109,17 +121,18 @@ class _InventoryViewState extends State<InventoryView> {
                     // Creates top padding for the top bar so that it starts below status/notification bar.
                     Size(MediaQuery.of(context).size.width,
                         MediaQuery.of(context).viewPadding.top + 70.0),
-                child: Column(children: [
-                  TopBar(
-                    onSearch: onSearch,
-                    onClear: onClear,
-                    filter: showSelectDepartmentMenu,
-                    searchFieldController: _controller,
-                    isRecommendedView: false,
-                    isMobile: true,
-                    onScan: scanBarcodeNormal,
-                  ),
-                  Container(
+                child: Column(
+                  children: [
+                    TopBar(
+                      onSearch: onSearch,
+                      onClear: onClear,
+                      filter: showSelectDepartmentMenu,
+                      searchFieldController: _controller,
+                      isRecommendedView: false,
+                      isMobile: true,
+                      onScan: scanBarcodeNormal,
+                    ),
+                    Container(
                       color: Colors.red,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -127,24 +140,30 @@ class _InventoryViewState extends State<InventoryView> {
                           const Icon(Icons.warning),
                           Text(AppLocalizations.of(context)!.offline)
                         ],
-                      )),
-                ]))
+                      ),
+                    ),
+                  ],
+                ),
+              )
             : PreferredSize(
                 preferredSize:
                     // Creates top padding for the top bar so that it starts below status/notification bar.
                     Size(MediaQuery.of(context).size.width,
                         MediaQuery.of(context).viewPadding.top + 50.0),
-                child: Column(children: [
-                  TopBar(
-                    onSearch: onSearch,
-                    onClear: onClear,
-                    filter: showSelectDepartmentMenu,
-                    searchFieldController: _controller,
-                    isRecommendedView: false,
-                    isMobile: true,
-                    onScan: scanBarcodeNormal,
-                  ),
-                ])),
+                child: Column(
+                  children: [
+                    TopBar(
+                      onSearch: onSearch,
+                      onClear: onClear,
+                      filter: showSelectDepartmentMenu,
+                      searchFieldController: _controller,
+                      isRecommendedView: false,
+                      isMobile: true,
+                      onScan: scanBarcodeNormal,
+                    ),
+                  ],
+                ),
+              ),
         drawer: const SideMenu(),
         body: _isLoading
             ? circularProgress()
@@ -171,17 +190,18 @@ class _InventoryViewState extends State<InventoryView> {
                     // Creates top padding for the top bar so that it starts below status/notification bar.
                     Size(MediaQuery.of(context).size.width,
                         MediaQuery.of(context).viewPadding.top + 70.0),
-                child: Column(children: [
-                  TopBar(
-                    onSearch: onSearch,
-                    onClear: onClear,
-                    filter: showSelectDepartmentMenu,
-                    searchFieldController: _controller,
-                    isRecommendedView: false,
-                    isMobile: false,
-                    onScan: scanBarcodeNormal,
-                  ),
-                  Container(
+                child: Column(
+                  children: [
+                    TopBar(
+                      onSearch: onSearch,
+                      onClear: onClear,
+                      filter: showSelectDepartmentMenu,
+                      searchFieldController: _controller,
+                      isRecommendedView: false,
+                      isMobile: false,
+                      onScan: scanBarcodeNormal,
+                    ),
+                    Container(
                       color: Colors.red,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -189,8 +209,11 @@ class _InventoryViewState extends State<InventoryView> {
                           const Icon(Icons.warning),
                           Text(AppLocalizations.of(context)!.offline)
                         ],
-                      ))
-                ],) )
+                      ),
+                    )
+                  ],
+                ),
+              )
             : PreferredSize(
                 preferredSize:
                     // Creates top padding for the top bar so that it starts below status/notification bar.
@@ -204,7 +227,8 @@ class _InventoryViewState extends State<InventoryView> {
                   isRecommendedView: false,
                   isMobile: false,
                   onScan: scanBarcodeNormal,
-                )),
+                ),
+              ),
         body: _isLoading
             ? circularProgress()
             : Row(
@@ -214,23 +238,24 @@ class _InventoryViewState extends State<InventoryView> {
                     child: SideMenu(),
                   ),
                   Expanded(
-                      flex: 5,
-                      child: GestureDetector(
-                        // Used to remove keyboard on tap outside.
-                        onTap: () =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        child: RefreshIndicator(
-                            onRefresh: () => getItems(),
-                            child: displayedItems.isEmpty
-                                ? Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .emptyInventory),
-                                  )
-                                : Inventory(
-                                    items: displayedItems, onConfirm: getItems),
-                            color: colorScheme.onPrimary,
-                            backgroundColor: colorScheme.primary),
-                      )),
+                    flex: 5,
+                    child: GestureDetector(
+                      // Used to remove keyboard on tap outside.
+                      onTap: () =>
+                          FocusManager.instance.primaryFocus?.unfocus(),
+                      child: RefreshIndicator(
+                          onRefresh: () => getItems(),
+                          child: displayedItems.isEmpty
+                              ? Center(
+                                  child: Text(AppLocalizations.of(context)!
+                                      .emptyInventory),
+                                )
+                              : Inventory(
+                                  items: displayedItems, onConfirm: getItems),
+                          color: colorScheme.onPrimary,
+                          backgroundColor: colorScheme.primary),
+                    ),
+                  ),
                 ],
               ),
       );
@@ -267,23 +292,19 @@ class _InventoryViewState extends State<InventoryView> {
   }
 
   ///Method to scan the barcode
-  // Platform messages are asynchronous, so we initialize in an async method.
+  ///
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("e8f1f2",
+          AppLocalizations.of(context)!.cancel, true, ScanMode.BARCODE);
     } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
+      barcodeScanRes = "Failed to get platform version.";
     }
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
     setState(() {
       _controller.text = barcodeScanRes != "-1" ? barcodeScanRes : "";
-      if(barcodeScanRes.isNotEmpty){
+      if (barcodeScanRes.isNotEmpty) {
         onSearch();
       }
     });
@@ -338,12 +359,14 @@ class _InventoryViewState extends State<InventoryView> {
     return popMenuItems;
   }
 
+  /// Changes the selected department in the dropdown
   void changeSelectedRadioButton(int value) {
     setState(() {
       selectedRadioButton = value;
     });
   }
 
+  /// Requests the api service to fetch the inventory
   Future<void> getItems() async {
     List<Item> displayed = [];
     displayed = await apiService.getItems(selectedDepartment.departmentName);

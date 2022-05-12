@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/entities/department.dart';
 import 'package:ship_organizer_app/views/inventory/send_report_to_email_view.dart';
-import 'package:ship_organizer_app/views/inventory/side_menu.dart';
-import 'package:ship_organizer_app/views/inventory/top_bar_widget.dart';
-import 'inventory_widget.dart';
-import 'item.dart';
+import 'package:ship_organizer_app/widgets/side_menu.dart';
+import 'package:ship_organizer_app/widgets/top_bar_widget.dart';
+import '../../widgets/inventory_widget.dart';
+import '../../entities/item.dart';
 
 /// View where the user can see the inventory for their department.
 ///
@@ -35,6 +35,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     dataLoadFunction();
   }
 
+  /// Function for fetching the inventory
   dataLoadFunction() async {
     setState(() {
       _isLoading = true;
@@ -89,14 +90,16 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     );
   }
 
+  /// Pushes the user to the send email view
   void onOrderStockUp() {
-
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SendReportToEmail(
-                  items: displayedItems,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => SendReportToEmail(
+          items: displayedItems,
+        ),
+      ),
+    );
   }
 
   /// Clears search bar and sets state for displayed items to all items.
@@ -163,6 +166,7 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
     return popMenuItems;
   }
 
+  /// requests the api service to get the inventory
   Future<void> getItems() async {
     List<Item> displayed = [];
     displayed =
@@ -174,12 +178,11 @@ class _RecommendedInventoryViewState extends State<RecommendedInventoryView> {
   }
 
   ///Method to scan the barcode
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+          "e8f1f2", AppLocalizations.of(context)!.cancel, true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

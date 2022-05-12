@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
-import 'package:ship_organizer_app/views/inventory/add_remove_item_dialog.dart';
+import 'package:ship_organizer_app/widgets/add_remove_item_dialog.dart';
 import 'package:ship_organizer_app/views/map/map_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'item.dart';
+import '../entities/item.dart';
 
 /// Widget that displays the input items as a ListView.
 ///
@@ -211,8 +211,8 @@ class Inventory extends StatelessWidget {
   /// Makes call to apiService to update the api
   Future<void> updateStock(
       String? itemNumber, int amount, BuildContext context) async {
-    var latitude;
-    var longitude;
+    double latitude = 62.4721682497614;
+    double longitude = 6.15747281195441;
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -225,10 +225,6 @@ class Inventory extends StatelessWidget {
       if(currentLocation!=null) {
         latitude = currentLocation.latitude;
         longitude = currentLocation.longitude;
-      }
-      else{
-        latitude = 62.4721682497614;
-        longitude= 6.15747281195441;
       }
     }
 

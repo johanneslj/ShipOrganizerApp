@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ship_organizer_app/api handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/views/set_password/set_password_view.dart';
 import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -60,7 +60,8 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 60, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      left: 30, right: 30, top: 60, bottom: 10),
                   child: Column(
                     children: [
                       Image.asset(
@@ -70,7 +71,9 @@ class _LoginViewState extends State<LoginView> {
                       Text(
                         AppLocalizations.of(context)!.companyName,
                         style: const TextStyle(
-                            color: Color(0xffE8F1F2), fontSize: 20, fontWeight: FontWeight.bold),
+                            color: Color(0xffE8F1F2),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -88,17 +91,22 @@ class _LoginViewState extends State<LoginView> {
                           children: [
                             Text(AppLocalizations.of(context)!.email,
                                 style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary, fontSize: 20)),
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    fontSize: 20)),
                             TextFormField(
-                              validator: (val) => val!.isEmpty || !val.contains("@")
-                                  ? AppLocalizations.of(context)!.enterValidEmail
-                                  : null,
+                              validator: (val) =>
+                                  val!.isEmpty || !val.contains("@")
+                                      ? AppLocalizations.of(context)!
+                                          .enterValidEmail
+                                      : null,
                               keyboardType: TextInputType.emailAddress,
                               // Username text field
                               controller: emailController,
                               decoration: InputDecoration(
                                   hintText: AppLocalizations.of(context)!.email,
-                                  hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
                             ),
                           ],
                         ),
@@ -108,13 +116,18 @@ class _LoginViewState extends State<LoginView> {
                           children: [
                             Text(AppLocalizations.of(context)!.password,
                                 style: TextStyle(
-                                    fontSize: 20, color: Theme.of(context).colorScheme.onPrimary)),
+                                    fontSize: 20,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary)),
                             TextFormField(
                               // Password text field
                               controller: passwordController,
                               decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!.password,
-                                  hintStyle: TextStyle(color: Theme.of(context).disabledColor)),
+                                  hintText:
+                                      AppLocalizations.of(context)!.password,
+                                  hintStyle: TextStyle(
+                                      color: Theme.of(context).disabledColor)),
                               obscureText: true,
                             ),
                           ],
@@ -129,26 +142,33 @@ class _LoginViewState extends State<LoginView> {
                                   height: 100.0,
                                   child: ElevatedButton(
                                       onPressed: () async {
-                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
                                         if (_formKey.currentState!.validate()) {
                                           bool logInSuccessful = await login();
                                           if (logInSuccessful) {
                                             await checkDepartments(context);
                                           } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(context)!.loginFailed)));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .loginFailed)));
                                           }
                                         }
                                       },
-                                      child: Text(AppLocalizations.of(context)!.signIn))),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .signIn))),
                               TextButton(
                                 onPressed: () {
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => (const SetPasswordView())));
+                                          builder: (context) =>
+                                              (const SetPasswordView())));
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.setPassword,
@@ -174,16 +194,21 @@ class _LoginViewState extends State<LoginView> {
 
   bool isLoading = false;
 
+  /// Function for toggling if the view is waiting for a response or not
   setLoading(bool state) => setState(() => isLoading = state);
 
+  /// Requests the api service to attempt to log inn the user
+  /// with the provided email and password
   Future<bool> login() async {
     setLoading(true);
-    bool success =
-        await apiService.attemptToLogIn(emailController.value.text, passwordController.value.text);
+    bool success = await apiService.attemptToLogIn(
+        emailController.value.text, passwordController.value.text);
     setLoading(false);
     return success;
   }
 
+  /// Checks if the user has multiple departments to decide what view
+  /// the user should be pushed to
   Future<void> checkDepartments(BuildContext context) async {
     List<String> departments = await apiService.getDepartments();
     if (departments.length > 1) {

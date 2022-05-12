@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
 
@@ -64,10 +64,11 @@ class SideMenu extends StatelessWidget {
         ));
   }
 
+  /// Creates a button to push the user to a new place with a route
   Widget _createRouteTextButton(BuildContext context, String text, Icon icon, String route) {
     return TextButton.icon(
         onPressed: () => {
-              if (route != null) {Navigator.pushNamed(context, route)}
+               Navigator.pushNamed(context, route)
             },
         icon: icon,
         label: Text(text, style: Theme.of(context).textTheme.headline6));
