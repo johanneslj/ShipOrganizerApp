@@ -29,7 +29,7 @@ class SideMenu extends StatelessWidget {
                 Center(
                     heightFactor: 2,
                     child: Text(
-                      "Ship Organizer",
+                      "SEAStorage",
                       style: Theme.of(context).textTheme.headline6,
                     )),
                 const Divider(),
