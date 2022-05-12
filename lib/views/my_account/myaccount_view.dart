@@ -312,6 +312,11 @@ class _MyAccount extends State<MyAccount> {
       destination: "/sendBill",
       arguments: admin.toString(),
     ));
+    departmentCardList.add(DepartmentCard(
+      departmentName: AppLocalizations.of(context)!.administerProducts,
+      destination: "/administerProducts",
+      arguments: "false",
+    ));
     if (admin) {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.registerNewUser,
@@ -321,11 +326,6 @@ class _MyAccount extends State<MyAccount> {
       departmentCardList.add(DepartmentCard(
         departmentName: AppLocalizations.of(context)!.administerUsers,
         destination: "/administerUsers",
-        arguments: "false",
-      ));
-      departmentCardList.add(DepartmentCard(
-        departmentName: AppLocalizations.of(context)!.administerProducts,
-        destination: "/administerProducts",
         arguments: "false",
       ));
     }
@@ -345,13 +345,13 @@ class _MyAccount extends State<MyAccount> {
         AppLocalizations.of(context)!.missingInventory, "false"));
     departmentCardList.add(gridTileWidget(
         "/sendBill", AppLocalizations.of(context)!.billing, admin.toString()));
+    departmentCardList.add(gridTileWidget("/administerProducts",
+        AppLocalizations.of(context)!.administerProducts, "false"));
     if (admin) {
       departmentCardList.add(gridTileWidget("/createUser",
           AppLocalizations.of(context)!.registerNewUser, "false"));
       departmentCardList.add(gridTileWidget("/administerUsers",
           AppLocalizations.of(context)!.administerUsers, "false"));
-      departmentCardList.add(gridTileWidget("/administerProducts",
-          AppLocalizations.of(context)!.administerProducts, "false"));
     }
     return departmentCardList;
   }

@@ -20,7 +20,6 @@ import 'package:ship_organizer_app/widgets/bottom_navigation_bar_widget.dart';
 import 'package:ship_organizer_app/widgets/bottom_navigation_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connectivity/connectivity.dart';
-
 import 'config/device_screen_type.dart';
 import 'config/theme_config.dart';
 import 'config/ui_utils.dart';
