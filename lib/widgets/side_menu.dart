@@ -68,7 +68,7 @@ class SideMenu extends StatelessWidget {
   Widget _createRouteTextButton(BuildContext context, String text, Icon icon, String route) {
     return TextButton.icon(
         onPressed: () => {
-              if (route != null) {Navigator.pushNamed(context, route)}
+               Navigator.pushNamed(context, route)
             },
         icon: icon,
         label: Text(text, style: Theme.of(context).textTheme.headline6));
