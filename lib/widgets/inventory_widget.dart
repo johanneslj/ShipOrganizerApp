@@ -211,8 +211,8 @@ class Inventory extends StatelessWidget {
   /// Makes call to apiService to update the api
   Future<void> updateStock(
       String? itemNumber, int amount, BuildContext context) async {
-    var latitude;
-    var longitude;
+    double latitude = 62.4721682497614;
+    double longitude = 6.15747281195441;
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -225,10 +225,6 @@ class Inventory extends StatelessWidget {
       if(currentLocation!=null) {
         latitude = currentLocation.latitude;
         longitude = currentLocation.longitude;
-      }
-      else{
-        latitude = 62.4721682497614;
-        longitude= 6.15747281195441;
       }
     }
 

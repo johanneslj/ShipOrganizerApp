@@ -70,6 +70,7 @@ class _TopBarState extends State<TopBar> {
     getDepartments();
   }
 
+  /// Fetches the list of departments a user has access to
   Future<void> getDepartments() async {
     ApiService _apiService = ApiService.getInstance();
     List<String> departments = await _apiService.getDepartments();
@@ -89,6 +90,7 @@ class _TopBarState extends State<TopBar> {
         child: isMobile ? buildMobileRow(context) : buildTabletRow(context));
   }
 
+  /// Builds the top row for tablets
   Row buildTabletRow(BuildContext context) {
     return Row(
       children: [
@@ -109,6 +111,7 @@ class _TopBarState extends State<TopBar> {
     );
   }
 
+  /// Build the top row for phones
   Row buildMobileRow(BuildContext context) {
     return Row(
       children: [
@@ -140,6 +143,7 @@ class _TopBarState extends State<TopBar> {
     );
   }
 
+  /// Builds the search field
   Container buildSearchFieldContainer(BuildContext context) {
     return Container(
         padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -165,6 +169,7 @@ class _TopBarState extends State<TopBar> {
         ));
   }
 
+  /// Gets the camera icon button
   Row getCameraRow(BuildContext context) {
     return Row(
       children: [
@@ -181,6 +186,8 @@ class _TopBarState extends State<TopBar> {
     );
   }
 
+  /// Gets the camera and filter row
+  /// This is only used if the user has more than 1 department
   Row getCameraAndFilterRow(BuildContext context) {
     return Row(
       children: [

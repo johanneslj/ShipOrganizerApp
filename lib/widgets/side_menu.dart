@@ -64,6 +64,7 @@ class SideMenu extends StatelessWidget {
         ));
   }
 
+  /// Creates a button to push the user to a new place with a route
   Widget _createRouteTextButton(BuildContext context, String text, Icon icon, String route) {
     return TextButton.icon(
         onPressed: () => {

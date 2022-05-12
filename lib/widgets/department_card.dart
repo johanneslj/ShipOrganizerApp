@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 
+/// Represents a card containing a department, is pressable
 class DepartmentCard extends StatelessWidget {
   final String departmentName;
   final String destination;
