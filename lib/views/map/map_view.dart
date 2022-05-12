@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ship_organizer_app/api handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/report.dart';
 
 /// A map view
@@ -24,7 +24,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-
   ApiService apiService = ApiService.getInstance();
 
   Map<LatLng, List<Report>> markerLocations = <LatLng, List<Report>>{};
@@ -64,53 +63,51 @@ class _MapViewState extends State<MapView> {
         ),
         markerLocations.isEmpty || (max == min)
             ? const Positioned(child: Text(""))
-            : Positioned(
-                top: 1,
-                right: 1,
-                child: _getMarkerLegend(context)),
+            : Positioned(top: 1, right: 1, child: _getMarkerLegend(context)),
       ]),
     );
   }
 
   Column _getMarkerLegend(BuildContext context) {
     return Column(
+      children: [
+        Container(
+            height: 150.0,
+            width: 75.0,
+            color: const Color(0x8fffffff),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                      height: 150.0,
-                      width: 75.0,
-                      color: const Color(0x8fffffff),
-                      child: Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                              child: Column(
-                                children: [
-                                  Text(max.toString(),
-                                      style: Theme.of(context).textTheme.caption,
-                                      overflow: TextOverflow.ellipsis),
-                                  Text(((max + min) / 2).round().toString(),
-                                      style: Theme.of(context).textTheme.caption,
-                                      overflow: TextOverflow.ellipsis),
-                                  Text(
-                                    min.toString(),
-                                    style: Theme.of(context).textTheme.caption,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              )),
-                          RotatedBox(
-                            quarterTurns: 0,
-                            child: Image.asset(
-                              "assets/hue.png",
-                            ),
-                          ),
-                        ],
-                      ),)
-                ),
+                  Flexible(
+                      child: Column(
+                    children: [
+                      Text(max.toString(),
+                          style: Theme.of(context).textTheme.caption,
+                          overflow: TextOverflow.ellipsis),
+                      Text(((max + min) / 2).round().toString(),
+                          style: Theme.of(context).textTheme.caption,
+                          overflow: TextOverflow.ellipsis),
+                      Text(
+                        min.toString(),
+                        style: Theme.of(context).textTheme.caption,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  )),
+                  RotatedBox(
+                    quarterTurns: 0,
+                    child: Image.asset(
+                      "assets/hue.png",
+                    ),
+                  ),
                 ],
-              );
+              ),
+            )),
+      ],
+    );
   }
 
   /// Happens when the map is first created.
@@ -118,8 +115,9 @@ class _MapViewState extends State<MapView> {
   /// the users location
   Future<void> _onMapCreated(GoogleMapController _controller) async {
     _controller = _controller;
-    var latitude;
-    var longitude;
+    // location of AAlesund city center
+    double latitude = 62.4721682497614;
+    double longitude = 6.15747281195441;
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -129,18 +127,17 @@ class _MapViewState extends State<MapView> {
       }
     } else {
       var currentLocation = await Geolocator.getLastKnownPosition();
-      if(currentLocation!=null) {
+      if (currentLocation != null) {
         latitude = currentLocation.latitude;
         longitude = currentLocation.longitude;
-      }
-      else{
+      } else {
         latitude = 62.4721682497614;
-        longitude= 6.15747281195441;
+        longitude = 6.15747281195441;
       }
     }
     addMarkers();
-    _controller.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(latitude,longitude), 7));
+    _controller.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 7));
   }
 
   /// Adds markers to the map
@@ -158,7 +155,7 @@ class _MapViewState extends State<MapView> {
     List<List<Report>> sortedList = markerLocations.values.toList()
       ..sort((a, b) =>
           getAmountOfItemsAtMarker(a).compareTo(getAmountOfItemsAtMarker(b)));
-    if(sortedList.length  > 1) {
+    if (sortedList.length > 1) {
       max = getAmountOfItemsAtMarker(sortedList.last);
       min = getAmountOfItemsAtMarker(sortedList.first);
     } else {
@@ -224,31 +221,33 @@ class _MapViewState extends State<MapView> {
   /// In it the details of what equipment has been left there is shown
   showMenu(List<Report> item) {
     showModalBottomSheet(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        context: context,
-        builder: (BuildContext context) {
-          return Scrollbar(
-            isAlwaysShown: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                SizedBox(
-                    height: (56 * 6).toDouble(),
-                    child: Stack(
-                      alignment: const Alignment(0, 0),
-                      children: <Widget>[
-                        Positioned(
-                          child: ListView(
-                            children: createListView(item),
-                          ),
-                        )
-                      ],
-                    )),
-              ],
-            ),
-          );
-        });
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      context: context,
+      builder: (BuildContext context) {
+        return Scrollbar(
+          isAlwaysShown: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              SizedBox(
+                height: (56 * 6).toDouble(),
+                child: Stack(
+                  alignment: const Alignment(0, 0),
+                  children: <Widget>[
+                    Positioned(
+                      child: ListView(
+                        children: createListView(item),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   /// Takes in a List of Strings to creates a List of ListTiles

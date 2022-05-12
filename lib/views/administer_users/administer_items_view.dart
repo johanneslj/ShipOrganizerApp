@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/create_user/create_user_view.dart';
-import 'package:ship_organizer_app/views/inventory/item.dart';
+import 'package:ship_organizer_app/entities/item.dart';
 
 /// This is the view for administering users
 ///
@@ -29,9 +29,7 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-
-    });
+    setState(() {});
     bool mobile =
         (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile);
     _apiService.setContext(context);
@@ -55,28 +53,31 @@ class _AdministerUsersViewState extends State<AdministerUsersView> {
       body: _isLoading
           ? circularProgress()
           : SingleChildScrollView(
-              child: Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),child: Column(
-                children: [
-                  Table(
-                      border: const TableBorder(
-                          horizontalInside:
-                          BorderSide(width: 0.2, style: BorderStyle.solid)),
-                      columnWidths: widget.isAdministeringUsers
-                          ? const <int, TableColumnWidth>{
-                        0: FlexColumnWidth(0.4),
-                        1: FlexColumnWidth(),
-                        2: FixedColumnWidth(75),
-                      }
-                          : const <int, TableColumnWidth>{
-                        0: FlexColumnWidth(1.05),
-                        1: FlexColumnWidth(),
-                        2: FixedColumnWidth(75),
-                      },
-                      defaultVerticalAlignment:
-                      TableCellVerticalAlignment.middle,
-                      children: tableRows),
-                ],
-              ), ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: Column(
+                  children: [
+                    Table(
+                        border: const TableBorder(
+                            horizontalInside: BorderSide(
+                                width: 0.2, style: BorderStyle.solid)),
+                        columnWidths: widget.isAdministeringUsers
+                            ? const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(0.4),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(75),
+                              }
+                            : const <int, TableColumnWidth>{
+                                0: FlexColumnWidth(1.05),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(75),
+                              },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: tableRows),
+                  ],
+                ),
+              ),
             ),
     );
   }

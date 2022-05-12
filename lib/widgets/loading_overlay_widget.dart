@@ -35,7 +35,7 @@ class LoadingOverlay extends StatelessWidget {
 
       final modal = [
          Opacity(
-          child: ModalBarrier(dismissible: false, color: Colors.grey),
+          child: const ModalBarrier(dismissible: false, color: Colors.grey),
           opacity: opacity,
         ),
         layOutProgressIndicator

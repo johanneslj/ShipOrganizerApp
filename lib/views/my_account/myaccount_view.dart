@@ -1,10 +1,10 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/config/device_screen_type.dart';
 import 'package:ship_organizer_app/config/ui_utils.dart';
-import 'package:ship_organizer_app/views/select_department/department_card.dart';
+import 'package:ship_organizer_app/widgets/department_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../main.dart';
@@ -37,6 +37,7 @@ class _MyAccount extends State<MyAccount> {
     super.initState();
   }
 
+  /// Function for loading departments and checking permissions
   dataLoadFunction() async {
     setState(() {
       _isLoading = true;
@@ -52,6 +53,7 @@ class _MyAccount extends State<MyAccount> {
     });
   }
 
+  /// Checks if the user is online when entering the view
   void _initialConnectionCheck() {
     Connectivity().checkConnectivity().then((result) {
       if (result == ConnectivityResult.none) {
@@ -66,6 +68,8 @@ class _MyAccount extends State<MyAccount> {
     });
   }
 
+  /// Sets up a subscription to be notified if the
+  /// User goes offline
   void _setUpConnectivitySubscription() {
     if (mounted) {
       Connectivity().onConnectivityChanged.listen((result) {
@@ -203,6 +207,7 @@ class _MyAccount extends State<MyAccount> {
     );
   }
 
+  /// Generates the top bar if the device is offline
   PreferredSize _generateOfflineAppBar(
       BuildContext context, FlutterSecureStorage storage) {
     return PreferredSize(
@@ -213,53 +218,52 @@ class _MyAccount extends State<MyAccount> {
           AppBar(
             actions: [
               PopupMenuButton(
-                  icon: Icon(Icons.language_sharp,
-                      color: Theme.of(context).colorScheme.onPrimary),
-                  iconSize: 35,
-                  itemBuilder: (context) => [
-                        PopupMenuItem(
-                          onTap: () => {
-                            if (storage.read(key: "selectedLanguage") != null)
-                              {
-                                storage.delete(key: "selectedLanguage"),
-                                storage.write(
-                                    key: "selectedLanguage", value: "nb"),
-                              },
-                            MainApp.setLocale(context, Locale("nb")),
-                          },
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "assets/NorwegianLanguageFlag.png",
-                                width: 30,
-                              ),
-                              Text(AppLocalizations.of(context)!.norwegian),
-                            ],
-                          ),
-                          value: 1,
+                icon: Icon(Icons.language_sharp,
+                    color: Theme.of(context).colorScheme.onPrimary),
+                iconSize: 35,
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    onTap: () => {
+                      if (storage.read(key: "selectedLanguage") != null)
+                        {
+                          storage.delete(key: "selectedLanguage"),
+                          storage.write(key: "selectedLanguage", value: "nb"),
+                        },
+                      MainApp.setLocale(context, Locale("nb")),
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/NorwegianLanguageFlag.png",
+                          width: 30,
                         ),
-                        PopupMenuItem(
-                          onTap: () => {
-                            if (storage.read(key: "selectedLanguage") != null)
-                              {
-                                storage.delete(key: "selectedLanguage"),
-                                storage.write(
-                                    key: "selectedLanguage", value: "en"),
-                              },
-                            MainApp.setLocale(context, Locale("en")),
-                          },
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "assets/EnglishLanguageFlag.png",
-                                width: 30,
-                              ),
-                              Text(AppLocalizations.of(context)!.english),
-                            ],
-                          ),
-                          value: 2,
-                        )
-                      ])
+                        Text(AppLocalizations.of(context)!.norwegian),
+                      ],
+                    ),
+                    value: 1,
+                  ),
+                  PopupMenuItem(
+                    onTap: () => {
+                      if (storage.read(key: "selectedLanguage") != null)
+                        {
+                          storage.delete(key: "selectedLanguage"),
+                          storage.write(key: "selectedLanguage", value: "en"),
+                        },
+                      MainApp.setLocale(context, Locale("en")),
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/EnglishLanguageFlag.png",
+                          width: 30,
+                        ),
+                        Text(AppLocalizations.of(context)!.english),
+                      ],
+                    ),
+                    value: 2,
+                  ),
+                ],
+              ),
             ],
             automaticallyImplyLeading: false,
             title: Text(
@@ -268,14 +272,15 @@ class _MyAccount extends State<MyAccount> {
             ),
           ),
           Container(
-              color: Colors.red,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.warning),
-                  Text(AppLocalizations.of(context)!.offline)
-                ],
-              ))
+            color: Colors.red,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.warning),
+                Text(AppLocalizations.of(context)!.offline)
+              ],
+            ),
+          ),
         ],
       ),
     );

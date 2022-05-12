@@ -29,12 +29,12 @@ class _MultiSelectState extends State<MultiSelect> {
     });
   }
 
-  // called when the Cancel button is pressed
+  /// called when the Cancel button is pressed
   void _cancel() {
     Navigator.pop(context);
   }
 
-// called when the Submit button is tapped
+  /// called when the Submit button is tapped
   void _submit() {
     Navigator.pop(context, _selectedItems);
   }

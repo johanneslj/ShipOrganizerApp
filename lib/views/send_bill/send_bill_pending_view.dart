@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
-import 'package:ship_organizer_app/entities/Order.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
+import 'package:ship_organizer_app/entities/order.dart';
 
 /// Class for the pending bills tab in the send_bill_view
 /// This class is responsible for the view where the admin can
@@ -27,14 +27,14 @@ class _pendingBill extends State<PendingBill> {
     super.initState();
   }
 
+  /// Function to load data when entering the view
   dataLoadFunction() async {
     setState(() {
-      _isLoading = true; // your loader has started to load
+      _isLoading = true;
     });
     await getPendingOrder();
-    // fetch you data over here
     setState(() {
-      _isLoading = false; // your loder will stop to finish after the data fetch
+      _isLoading = false;
     });
   }
 
@@ -42,87 +42,89 @@ class _pendingBill extends State<PendingBill> {
   Widget build(BuildContext context) {
     apiService.setContext(context);
     return SafeArea(
-        child: Scaffold(
-            body: _isLoading
-                ? circularProgress()
-                : pendingOrders.isEmpty
-                    ? Column(
+      child: Scaffold(
+        body: _isLoading
+            ? circularProgress()
+            : pendingOrders.isEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
+                          Text(AppLocalizations.of(context)!.noPendingOrders)
+                        ],
+                      ),
+                    ],
+                  )
+                : RefreshIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    onRefresh: () => getPendingOrder(),
+                    child: GridView.builder(
+                      itemCount: pendingOrders.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        NetworkImage image = NetworkImage(
+                            apiService.imagesBaseUrl +
+                                pendingOrders[index].imagename);
+                        return Center(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              CircleAvatar(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      await showDialog(
+                                          context: context,
+                                          builder: (_) => imageDialog(image));
+                                    },
+                                  ),
+                                  radius: 50.0,
+                                  backgroundImage: image),
                               Text(
-                                  AppLocalizations.of(context)!.noPendingOrders)
+                                AppLocalizations.of(context)!.changeImageSize,
+                                style: const TextStyle(
+                                  fontSize: 10.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                pendingOrders[index].department.toString(),
+                                style: const TextStyle(
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () => sendToServer(index, 1),
+                                    child: const Icon(Icons.check,
+                                        color: Colors.green),
+                                  ),
+                                  OutlinedButton(
+                                    onPressed: () => sendToServer(index, 2),
+                                    child: const Icon(Icons.clear,
+                                        color: Colors.red),
+                                  )
+                                ],
+                              )
                             ],
                           ),
-                        ],
-                      )
-                    : RefreshIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        onRefresh: () => getPendingOrder(),
-                        child: GridView.builder(
-                          itemCount: pendingOrders.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            NetworkImage image = NetworkImage(
-                                apiService.imagesBaseUrl +
-                                    pendingOrders[index].imagename);
-                            return Center(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        await showDialog(
-                                            context: context,
-                                            builder: (_) => imageDialog(image));
-                                      },
-                                    ),
-                                    radius: 50.0,
-                                    backgroundImage: image),
-                                Text(
-                                  AppLocalizations.of(context)!.changeImageSize,
-                                  style: const TextStyle(
-                                    fontSize: 10.0,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Text(
-                                  pendingOrders[index].department.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    OutlinedButton(
-                                      onPressed: () => sendToServer(index, 1),
-                                      child: const Icon(Icons.check,
-                                          color: Colors.green),
-                                    ),
-                                    OutlinedButton(
-                                      onPressed: () => sendToServer(index, 2),
-                                      child: const Icon(Icons.clear,
-                                          color: Colors.red),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ));
-                          },
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 5.0,
-                            mainAxisSpacing: 5.0,
-                          ),
-                        ),
-                      )));
+                        );
+                      },
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 5.0,
+                      ),
+                    ),
+                  ),
+      ),
+    );
   }
 
   /// Function to send notice to the server that the bill has been confirmed
@@ -133,6 +135,7 @@ class _pendingBill extends State<PendingBill> {
     getPendingOrder();
   }
 
+  /// Showing the full image in a dialogue window
   Widget imageDialog(NetworkImage image) {
     return Dialog(
       child: Container(
@@ -144,6 +147,7 @@ class _pendingBill extends State<PendingBill> {
     );
   }
 
+  /// Requests the api service to get pending orders
   Future<void> getPendingOrder() async {
     List<Order> order = [];
     if (widget.admin) {

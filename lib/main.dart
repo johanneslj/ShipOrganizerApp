@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ship_organizer_app/api handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/offline_queue/offline_enqueue_service.dart';
 import 'package:ship_organizer_app/views/add_new_item/add_new_item_view.dart';
 import 'package:ship_organizer_app/views/login/login_view.dart';
@@ -77,9 +76,8 @@ class _MainAppState extends State<MainApp> {
       changeLanguage(widget.selectedLanguage!);
     }
 
-    FlutterSecureStorage storage = const FlutterSecureStorage();
     // Try to execute queue when connectivity status changes.
-    var subscription = Connectivity().onConnectivityChanged.listen((event) {
+    Connectivity().onConnectivityChanged.listen((event) {
       OfflineEnqueueService().startService();
     });
 
@@ -102,7 +100,8 @@ class _MainAppState extends State<MainApp> {
         for (Locale locale in locales!) {
           // if device language is supported by the app,
           // return it to set it as current app language
-          if (locale.languageCode.contains("en") || locale.languageCode.contains("nb")) {
+          if (locale.languageCode.contains("en") ||
+              locale.languageCode.contains("nb")) {
             return locale;
           }
         }
@@ -121,13 +120,19 @@ class _MainAppState extends State<MainApp> {
       initialRoute: widget.isLoggedIn ? '/home' : '/',
       routes: {
         '/': (context) => const LoginView(),
-        '/selectDepartment': (context) => SelectDepartmentView(isInitial: false,),
-        '/selectInitialDepartment': (context)=> SelectDepartmentView(isInitial: true,),
+        '/selectDepartment': (context) => SelectDepartmentView(
+              isInitial: false,
+            ),
+        '/selectInitialDepartment': (context) => SelectDepartmentView(
+              isInitial: true,
+            ),
         '/changePassword': (context) => const SetPasswordView(),
-        '/createUser': (context) => CreateUser(isCreateUser: true),
+        '/createUser': (context) => const CreateUser(isCreateUser: true),
         '/inventoryList': (context) => const InventoryView(),
-        '/administerUsers': (context) => const AdministerUsersView(isAdministeringUsers: true),
-        '/administerProducts': (context) => const AdministerUsersView(isAdministeringUsers: false),
+        '/administerUsers': (context) =>
+            const AdministerUsersView(isAdministeringUsers: true),
+        '/administerProducts': (context) =>
+            const AdministerUsersView(isAdministeringUsers: false),
         '/sendBill': (context) => const SendBill(),
         '/inventory': (context) => const InventoryView(),
         '/recommendedInventory': (context) => const RecommendedInventoryView(),
@@ -138,6 +143,7 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
+  /// Method to update the app language
   void setLanguage() async {
     FlutterSecureStorage storage = const FlutterSecureStorage();
     String? language = await storage.read(key: "selectedLanguage");
@@ -167,8 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile){
+    if (getDeviceType(MediaQuery.of(context)) == DeviceScreenType.Mobile) {
       _portraitModeOnly();
     }
     return Scaffold(
@@ -184,25 +189,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
-  @override
-  void dispose() {
-    _enableRotation();
-  }
-
-  void _portraitModeOnly(){
+  /// Sets the orientation to not allow portrait
+  void _portraitModeOnly() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-    ]);
-  }
-
-  void _enableRotation() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
     ]);
   }
 }

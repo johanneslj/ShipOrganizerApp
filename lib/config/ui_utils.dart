@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'device_screen_type.dart';
 
+  /// Gets the different types of devices depending on the screen size
   DeviceScreenType getDeviceType(MediaQueryData mediaQuery) {
 
     var orientation = mediaQuery.orientation;

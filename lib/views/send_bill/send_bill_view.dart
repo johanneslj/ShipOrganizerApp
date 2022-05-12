@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_confirmed_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_new_view.dart';
 import 'package:ship_organizer_app/views/send_bill/send_bill_pending_view.dart';
@@ -27,8 +26,8 @@ class _SendBill extends State<SendBill> {
   @override
   Widget build(BuildContext context) {
     final String args = ModalRoute.of(context)!.settings.arguments as String;
-    if(args.startsWith("true")){
-        admin = true;
+    if (args.startsWith("true")) {
+      admin = true;
     }
     return DefaultTabController(
       length: admin ? 3 : 1,
@@ -62,23 +61,10 @@ class _SendBill extends State<SendBill> {
             children: admin
                 ? [
                     const NewBill(),
-                     PendingBill(admin: admin),
+                    PendingBill(admin: admin),
                     ConfirmedBill(admin: admin)
                   ]
-                : [ PendingBill(admin: admin)]),
-      ),
-    );
-  }
-
-  Widget imageDialog() {
-    return Dialog(
-      child: Container(
-        width: 500,
-        height: 600,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/FishingBoatSilhouette.jpg'),
-                fit: BoxFit.cover)),
+                : [PendingBill(admin: admin)]),
       ),
     );
   }

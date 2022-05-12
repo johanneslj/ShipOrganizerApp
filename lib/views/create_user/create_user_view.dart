@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:ship_organizer_app/entities/user.dart';
 import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 
@@ -42,6 +42,7 @@ class _CreateUserState extends State<CreateUser> {
     getDepartments();
   }
 
+  /// Gets the active department of the user
   void getDepartments() async {
     List<String> _departments = await apiService.getDepartments();
     setState(() {
@@ -49,7 +50,7 @@ class _CreateUserState extends State<CreateUser> {
     });
   }
 
-// This function is triggered when a checkbox is checked or unchecked
+/// This function is triggered when a checkbox is checked or unchecked
   void _itemChange(String itemValue, bool isSelected) {
     setState(() {
       FocusScope.of(context).requestFocus(FocusNode());
@@ -209,7 +210,8 @@ class _CreateUserState extends State<CreateUser> {
                                   minWidth: 250.0,
                                   height: 100.0,
                                   child: ElevatedButton(
-                                      onPressed: isLoading || fullNameController.text.isEmpty
+                                      onPressed: isLoading ||
+                                              fullNameController.text.isEmpty
                                           ? null
                                           : () async {
                                               if (_formKey.currentState!
@@ -241,13 +243,12 @@ class _CreateUserState extends State<CreateUser> {
                                                                     .registerFailed)));
                                                   }
                                                 } else {
-                                                  ScaffoldMessenger.of(
-                                                      context)
+                                                  ScaffoldMessenger.of(context)
                                                       .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          AppLocalizations.of(
-                                                              context)!
-                                                              .selectAtLeastOneDepartment)));
+                                                          content: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .selectAtLeastOneDepartment)));
                                                 }
                                               }
                                             },
@@ -273,6 +274,7 @@ class _CreateUserState extends State<CreateUser> {
     }
   }
 
+  /// Creates the view if the mode is edit user
   Scaffold _createEditUserView(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -470,8 +472,11 @@ class _CreateUserState extends State<CreateUser> {
 
   bool isLoading = false;
 
+  /// Toggle if the view is waiting on a response or not
   setLoading(bool state) => setState(() => isLoading = state);
 
+  /// Sends a request to the API to try to register a new user
+  /// The details of the new user are used to do this
   Future<bool> registerUser(
       String email, String fullName, List<String> departments) async {
     setLoading(true);
@@ -480,6 +485,9 @@ class _CreateUserState extends State<CreateUser> {
     return success;
   }
 
+  /// If in edit user mode it is possible to try to delete
+  /// the user being viewed
+  /// This method makes the API try to delete the user
   Future<bool> deleteUser(String? email) async {
     setLoading(true);
     bool success = await apiService.deleteUser(email!);

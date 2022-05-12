@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ship_organizer_app/api%20handling/api_controller.dart';
+import 'package:ship_organizer_app/api_handling/api_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ship_organizer_app/widgets/loading_overlay_widget.dart';
 
@@ -180,6 +180,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     );
   }
 
+  /// If the user is logged in autofill their email when trying to set new
+  /// password
   Future<bool> _autoFillEmailIfExists() async {
     bool hasKey = false;
     if (emailController.text.isEmpty) {
@@ -192,12 +194,14 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     return hasKey;
   }
 
+  /// Validate that the email entered is valid according to the format
   String? _emailValidator(String? value, BuildContext context) {
     return value!.isNotEmpty && emailRegex.hasMatch(value)
         ? null
         : AppLocalizations.of(context)!.enterValidEmail;
   }
 
+  /// Creates the button to submit email
   ButtonTheme _submitEmailButton(BuildContext context) {
     return ButtonTheme(
         disabledColor: Colors.grey,
@@ -208,7 +212,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             child: Text(AppLocalizations.of(context)!.sendCode)));
   }
 
-  Future<Null> Function()? _onSubmitEmailPressed(BuildContext context) {
+  /// Requests the api service to send a verification code to the email provided
+  Future<void> Function()? _onSubmitEmailPressed(BuildContext context) {
     return isLoading
         ? null
         : () async {
@@ -233,6 +238,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           };
   }
 
+  /// Creates the button to verify code
   ButtonTheme _getVerifyCodeButton() {
     return ButtonTheme(
         disabledColor: Colors.grey,
@@ -243,7 +249,9 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             child: Text(AppLocalizations.of(context)!.verifyCode)));
   }
 
-  Future<Null> Function()? _onVerifyCodePressed() {
+  /// When verify code is pressed, request the api service
+  /// to verify that the code entered matches with the code sent
+  Future<void> Function()? _onVerifyCodePressed() {
     return isLoading
         ? null
         : () async {
@@ -264,6 +272,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
           };
   }
 
+  /// A validator to check that the password entered follow the rules
+  /// for passwords
   String? _getPasswordValidator(String? value) {
     if (!passwordRegex.hasMatch(value!)) {
       _isButtonDisabled = true;
@@ -273,6 +283,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     }
   }
 
+  /// A validator to check that the password is the same as the one entered above
   String? _getConfirmPasswordValidator(String? value) {
     if (value.toString() != passwordController.text) {
       _isButtonDisabled = true;
@@ -285,6 +296,7 @@ class _SetPasswordViewState extends State<SetPasswordView> {
     }
   }
 
+  /// gets the confirm password button
   ButtonTheme _getConfirmPasswordButton() {
     return ButtonTheme(
         disabledColor: Colors.grey,
@@ -295,6 +307,8 @@ class _SetPasswordViewState extends State<SetPasswordView> {
             child: Text(AppLocalizations.of(context)!.confirm)));
   }
 
+  /// The function run when the user presses confirm password
+  /// Requests the api service to update the password of the user
   Future<void> Function()? _onConfirmPasswordPressed() {
     return isLoading
         ? null
