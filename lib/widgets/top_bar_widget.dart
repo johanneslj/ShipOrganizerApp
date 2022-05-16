@@ -98,7 +98,7 @@ class _TopBarState extends State<TopBar> {
           flex: 2,
           child: Center(
             child: Text(
-              "Ship Organizer",
+              "SEAStorage",
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
